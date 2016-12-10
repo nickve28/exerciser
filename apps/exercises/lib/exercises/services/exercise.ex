@@ -14,10 +14,7 @@ defmodule Exercises.Services.Exercise do
   end
 
   def handle_call({:get, id}, _from, state) do
-    stub = %{
-      id: id,
-      name: "foo"
-    }
-    {:reply, stub, state}
+    exercise = Exercises.Repositories.Exercise.get(id)
+    {:reply, exercise, state}
   end
 end
