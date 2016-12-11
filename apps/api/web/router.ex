@@ -15,7 +15,10 @@ defmodule Api.Router do
 
   scope "/" do
     #todo authenticate plug, besides the login endpoint
-    forward "/", Absinthe.Plug,
+    forward "/api", Absinthe.Plug,
+      schema: Api.Schema
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
       schema: Api.Schema
   end
 
