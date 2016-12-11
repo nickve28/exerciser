@@ -1,11 +1,9 @@
 defmodule Api.Schema.Types do
   use Absinthe.Schema.Notation
 
-  object :login do
+  object :user do
     field :id, :id
     field :name, :string
-    field :password, :string
-    field :token, :string
   end
 
   object :exercise do

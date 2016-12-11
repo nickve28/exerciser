@@ -13,6 +13,10 @@ defmodule Api.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :authentication do
+    plug Api.Plugs.Authentication
+  end
+
   scope "/" do
     scope "/api" do
 
@@ -23,7 +27,7 @@ defmodule Api.Router do
       end
 
       scope "/" do
-        #todo auth plug
+        pipe_through [:authentication]
         forward "/graphiql", Absinthe.Plug.GraphiQL,
           schema: Api.Schema
 
