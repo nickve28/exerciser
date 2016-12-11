@@ -14,12 +14,23 @@ defmodule Api.Router do
   end
 
   scope "/" do
-    #todo authenticate plug, besides the login endpoint
-    forward "/api", Absinthe.Plug,
-      schema: Api.Schema
+    scope "/api" do
 
-    forward "/graphiql", Absinthe.Plug.GraphiQL,
-      schema: Api.Schema
+      #Since I want to handle auth as hook, besides this endpoint. Login is a separate rest endpoint
+      scope "/login", Api do
+        pipe_through [:api]
+        post "/", LoginController, :authenticate
+      end
+
+      scope "/" do
+        #todo auth plug
+        forward "/graphiql", Absinthe.Plug.GraphiQL,
+          schema: Api.Schema
+
+        forward "/", Absinthe.Plug,
+          schema: Api.Schema
+      end
+    end
   end
 
   # Other scopes may use custom stacks.
