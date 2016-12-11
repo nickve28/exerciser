@@ -20,17 +20,17 @@ defmodule User.Repositories.User do
 
   def get(id) do
     Repo.get(User, id)
-      |> to_model
+    |> to_model
   end
 
   def get_by(payload) do
     Repo.get_by(User, payload)
-      |> to_model
+    |> to_model
   end
 
   def create(%{name: name, password: password}) do
     user = %User{name: name, password: password}
     Repo.insert(user)
-      |> to_model
+    |> to_model
   end
 end

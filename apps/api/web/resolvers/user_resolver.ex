@@ -1,12 +1,10 @@
 defmodule Api.Resolvers.UserResolver do
   def authenticate(%{name: name, password: password}, _info) do
-    IO.puts name
-
+    User.Services.User.authenticate(%{name: name, password: password})
   end
 
   def authenticate(_, _) do
-    IO.puts "Error"
-    {:error}
+    {:error, "Please provider name and password"}
   end
 end
 

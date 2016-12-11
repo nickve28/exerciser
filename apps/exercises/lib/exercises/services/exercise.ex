@@ -15,6 +15,6 @@ defmodule Exercises.Services.Exercise do
 
   def handle_call({:get, id}, _from, state) do
     exercise = Exercises.Repositories.Exercise.get(id)
-    {:reply, exercise, state}
+    {:reply, {:ok, exercise}, state}
   end
 end

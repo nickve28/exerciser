@@ -33,9 +33,10 @@ defmodule User.Services.User do
     |> sign
     |> get_compact
 
-    user
+    user = user
     |> Map.merge(@empty_pass)
     |> Map.merge(%{token: token})
+    {:ok, user}
   end
 
   defp verify_user(%{password: password} = user, password), do: {:ok, user}

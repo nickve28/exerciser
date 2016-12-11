@@ -4,10 +4,10 @@ defmodule Api.Resolvers.ExerciseResolver do
     reply(exercise)
   end
 
-  defp reply(nil), do: {:error, "Not found"}
-
-  defp reply(exercise), do: {:ok, exercise}
-
   def get(_, _), do: {:error, "No id specified"}
+
+  defp reply({:error, error}), do: {:error, error}
+
+  defp reply({:ok, exercise}), do: {:ok, exercise}
 end
 
