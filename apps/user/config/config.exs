@@ -2,17 +2,20 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :exercises, Exercises.Repo,
+#obviously in real scenarios you wouldnt want this in version control
+config :user, User.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "exercises_repo",
+  database: "user_repo",
   username: "postgres",
   password: "",
   hostname: "localhost"
 
-config :exercises,
-  ecto_repos: [Exercises.Repo]
+config :user, salt: "$2a$12$OwMtd.uRLWHZ.EZphqKDCO"
+config :user, token_secret: "mytoken_secret"
 
-config :exercises, api_token: "55476a0d8ff88f1f28e9e7724cbdc825db1d729b"
+config :user,
+  ecto_repos: [User.Repo]
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,
@@ -21,11 +24,11 @@ config :exercises, api_token: "55476a0d8ff88f1f28e9e7724cbdc825db1d729b"
 
 # You can configure for your application as:
 #
-#     config :exercises, key: :value
+#     config :user, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:exercises, :key)
+#     Application.get_env(:user, :key)
 #
 # Or configure a 3rd-party app:
 #
