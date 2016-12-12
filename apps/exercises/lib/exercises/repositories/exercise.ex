@@ -4,7 +4,9 @@ defmodule Exercises.Repositories.Exercise do
 
   @skeleton %{
     name: nil,
-    id: nil
+    id: nil,
+    description: nil,
+    category: nil
   }
 
   def to_model(nil), do: nil
@@ -12,7 +14,7 @@ defmodule Exercises.Repositories.Exercise do
   def to_model(exercise) do
     @skeleton
     |> Map.merge(exercise)
-    |> Map.take([:name, :id])
+    |> Map.take([:name, :id, :description, :category])
   end
 
   def get(id) do

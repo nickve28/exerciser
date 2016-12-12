@@ -26,10 +26,12 @@ defmodule Api.Router do
         post "/", LoginController, :authenticate
       end
 
+      forward "/graphiql", Absinthe.Plug.GraphiQL,
+        schema: Api.Schema
+
       scope "/" do
         pipe_through [:authentication]
-        forward "/graphiql", Absinthe.Plug.GraphiQL,
-          schema: Api.Schema
+
 
         forward "/", Absinthe.Plug,
           schema: Api.Schema

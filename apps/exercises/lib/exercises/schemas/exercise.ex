@@ -3,6 +3,8 @@ defmodule Exercises.Schemas.Exercise do
 
   schema "exercises" do
     field :name, :string
+    field :description, :string
+    field :category, :string
   end
 end
 

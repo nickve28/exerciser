@@ -9,5 +9,7 @@ defmodule Api.Schema.Types do
   object :exercise do
     field :id, :id
     field :name, :string
+    field :category, :string
+    field :description, :string
   end
 end

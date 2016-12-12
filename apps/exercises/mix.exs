@@ -39,7 +39,9 @@ defmodule Exercises.Mixfile do
     [
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 2.0.0"},
-      {:poolboy, "~> 1.5"}
+      {:poolboy, "~> 1.5"},
+      {:httpoison, "~> 0.10.0", only: :dev},
+      {:poison, "~> 2.2", only: :dev}
     ]
   end
 end
