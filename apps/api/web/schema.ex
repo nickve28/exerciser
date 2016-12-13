@@ -14,7 +14,7 @@ defmodule Api.Schema do
     end
 
     field :me, :user do
-      resolve &Api.Resolvers.ExerciseResolver.get/2
+      resolve &Api.Resolvers.UserResolver.get/2
     end
   end
 
