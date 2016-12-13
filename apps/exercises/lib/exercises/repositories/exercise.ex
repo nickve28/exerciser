@@ -1,6 +1,7 @@
 defmodule Exercises.Repositories.Exercise do
   alias Exercises.Repo
   alias Exercises.Schemas.Exercise
+  import Ecto.Query, only: [from: 2]
 
   @skeleton %{
     name: nil,
@@ -20,5 +21,14 @@ defmodule Exercises.Repositories.Exercise do
   def get(id) do
     Repo.get(Exercise, id)
       |> to_model
+  end
+
+  def list(%{category: category}) do
+    Repo.all(from exercise in Exercise,
+             where: exercise.category == ^category)
+  end
+
+  def list(%{}) do
+    Repo.all(Exercise)
   end
 end
