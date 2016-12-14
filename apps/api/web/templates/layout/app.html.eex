@@ -7,25 +7,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello Api!</title>
+    <title>Exerciser</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
-
   <body>
-    <div class="container">
-      <header class="header">
-        <nav role="navigation">
-          <ul class="nav nav-pills pull-right">
-          </ul>
-        </nav>
-        <span class="logo"></span>
-      </header>
-
-      <main role="main">
-        <%= render @view_module, @view_template, assigns %>
-      </main>
-
-    </div> <!-- /container -->
+    <div id="root" />
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
