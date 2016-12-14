@@ -7,8 +7,7 @@ import ExerciseEntry from '../components/exercise_entry'
 
 class Exercises extends Component {
   componentWillMount() {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mn0.-V4LGxEc3NHApZCeH10EZcpxil8jCFp5E500_FSfJMk'
-    this.props.fetchExercises(token)
+    this.props.fetchExercises()
   }
   render() {
     const {exercises} = this.props

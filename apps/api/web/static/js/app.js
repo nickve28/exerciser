@@ -10,11 +10,15 @@ import App from './components/app'
 import reducers from './reducers/index'
 
 import Exercises from './containers/exercises'
+import Me from './containers/me'
 
 const createStoreWithMiddleware = applyMiddleware(ReduxThunk)(createStore);
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
-    <Exercises />
+    <div>
+      <Me />
+      <Exercises />
+    </div>
   </Provider>
   , document.querySelector('#root'))

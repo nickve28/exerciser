@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import {FETCH_EXERCISES} from '../actions/index'
+import {FETCH_EXERCISES, FETCH_ME} from '../actions/index'
 
 function ExerciseReducer(state = [], action = {}) {
   if (action.type === FETCH_EXERCISES) {
@@ -9,8 +9,16 @@ function ExerciseReducer(state = [], action = {}) {
   return state
 }
 
+function MeReducer(state = {}, action) {
+  if (action.type === FETCH_ME) {
+    return action.payload.me
+  }
+  return state
+}
+
 const reducers = combineReducers({
-  exercises: ExerciseReducer
+  exercises: ExerciseReducer,
+  me: MeReducer
 })
 
 export default reducers
