@@ -18,6 +18,12 @@ defmodule Api.Router do
   end
 
   scope "/" do
+
+    scope "/" do
+      pipe_through [:browser]
+      get "/", Api.PageController, :index
+    end
+
     scope "/api" do
 
       #Since I want to handle auth as hook, besides this endpoint. Login is a separate rest endpoint
