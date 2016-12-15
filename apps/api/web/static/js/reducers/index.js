@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import {FETCH_EXERCISES, FETCH_ME} from '../actions/index'
+import {FETCH_EXERCISES, FETCH_ME, USER_LOGIN} from '../actions/index'
 
 function ExerciseReducer(state = [], action = {}) {
   if (action.type === FETCH_EXERCISES) {
@@ -16,9 +16,18 @@ function MeReducer(state = {}, action) {
   return state
 }
 
+function AuthenticationReducer(state = {token: null}, action) {
+  if (action.type === USER_LOGIN) {
+    localStorage.setItem('auth_token', action.payload.token)
+    return {token: action.payload.token}
+  }
+  return {token: localStorage.getItem('auth_token')}
+}
+
 const reducers = combineReducers({
   exercises: ExerciseReducer,
-  me: MeReducer
+  me: MeReducer,
+  authentication: AuthenticationReducer
 })
 
 export default reducers
