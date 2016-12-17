@@ -13,6 +13,10 @@ config :exercises,
   ecto_repos: [Exercises.Repo]
 
 config :exercises, api_token: "55476a0d8ff88f1f28e9e7724cbdc825db1d729b"
+
+if Mix.env === :test do
+  import_config "test.exs"
+end
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,

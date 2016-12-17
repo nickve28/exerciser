@@ -20,8 +20,12 @@ defmodule Exercises.Services.Exercise do
   end
 
   def handle_call({:get, id}, _from, state) do
-    exercise = Exercises.Repositories.Exercise.get(id)
-    {:reply, {:ok, exercise}, state}
+    result = case Exercises.Repositories.Exercise.get(id) do
+      nil -> {:error, :enotfound}
+      exercise -> {:ok, exercise}
+    end
+
+    {:reply, result, state}
   end
 
   def handle_call({:list, filters}, _from, state) do

@@ -26,9 +26,11 @@ defmodule Exercises.Repositories.Exercise do
   def list(%{category: category}) do
     Repo.all(from exercise in Exercise,
              where: ^category in exercise.categories)
+    |> Enum.map(&to_model/1)
   end
 
   def list(%{}) do
     Repo.all(Exercise)
+    |> Enum.map(&to_model/1)
   end
 end
