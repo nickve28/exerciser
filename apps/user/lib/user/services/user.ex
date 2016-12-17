@@ -2,16 +2,23 @@ defmodule User.Services.User do
   use GenServer
   import Joken
 
+  @type user :: %{name: String.t, password: String.t, id: Integer.t}
+  @type user_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t}
+
   @salt Application.get_env(:user, :salt)
   @token_secret Application.get_env(:user, :token_secret)
   @empty_pass %{password: nil}
+  @one_hour 3600
 
+  @spec start_link([any()]) :: {:ok, pid()}
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
   end
 
+  @spec init(any()) :: {:ok, any()}
   def init(state), do: {:ok, state}
 
+  @spec authenticate(%{name: String.t, password: String.t}) :: {:ok, user_info}
   def authenticate(%{name: username, password: password}) do
     user = :poolboy.transaction(:user_pool, fn pid ->
       GenServer.call(pid, {:get_by, %{name: username}})
@@ -30,6 +37,7 @@ defmodule User.Services.User do
     token = %{id: user[:id]}
     |> token
     |> with_signer(hs256(@token_secret))
+    |> with_exp(@one_hour)
     |> sign
     |> get_compact
 
@@ -47,9 +55,14 @@ defmodule User.Services.User do
     user = :poolboy.transaction(:user_pool, fn pid ->
       GenServer.call(pid, {:get, id})
     end)
-    Map.merge(user, @empty_pass)
+
+    case user do
+      nil -> {:error, :enotfound}
+      user -> {:ok, Map.merge(user, @empty_pass)}
+    end
   end
 
+  @spec create(%{name: String.t, password: String.t}) :: {:ok, user}
   def create(%{name: name, password: password}) do
     :poolboy.transaction(:user_pool, fn pid ->
       GenServer.call(pid, {:create, %{name: name, password: password}})
@@ -73,7 +86,12 @@ defmodule User.Services.User do
       name: name,
       password: hashed_pw
     }
-    user = User.Repositories.User.create(new_user_payload)
-    {:reply, user, state}
+
+    result = case User.Repositories.User.create(new_user_payload) do
+      {:error, reason} -> {:error, reason}
+      user -> {:ok, Map.merge(user, @empty_pass)}
+    end
+
+    {:reply, result, state}
   end
 end

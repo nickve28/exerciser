@@ -5,7 +5,7 @@ use Mix.Config
 #obviously in real scenarios you wouldnt want this in version control
 config :user, User.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "user_repo",
+  database: "users",
   username: "postgres",
   password: "",
   hostname: "localhost"
@@ -42,3 +42,7 @@ config :user,
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
+
+if Mix.env === :test do
+  import_config "text.exs"
+end
