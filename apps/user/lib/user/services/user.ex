@@ -37,7 +37,7 @@ defmodule User.Services.User do
     token = %{id: user[:id]}
     |> token
     |> with_signer(hs256(@token_secret))
-    |> with_exp(@one_hour)
+    |> with_exp(Joken.current_time + @one_hour)
     |> sign
     |> get_compact
 

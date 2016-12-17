@@ -15,7 +15,8 @@ defmodule Api.Plugs.Authentication do
 
   def call(conn, _) do
     case is_authenticated(conn) do
-      {:ok, context} -> put_private(conn, :absinthe, %{context: context})
+      {:ok, context} ->
+        put_private(conn, :absinthe, %{context: context})
       {:error, reason} ->
         conn
         |> send_resp(@unauthenticated, reason)
@@ -40,6 +41,7 @@ defmodule Api.Plugs.Authentication do
     token_data = token
     |> token
     |> with_signer(hs256(@token_secret))
+    |> with_validation("exp", &(&1 > current_time))
     |> verify
     |> get_claims
 
