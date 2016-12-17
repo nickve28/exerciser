@@ -7,7 +7,7 @@ defmodule Exercises.Repositories.Exercise do
     name: nil,
     id: nil,
     description: nil,
-    category: nil
+    categories: nil
   }
 
   def to_model(nil), do: nil
@@ -15,7 +15,7 @@ defmodule Exercises.Repositories.Exercise do
   def to_model(exercise) do
     @skeleton
     |> Map.merge(exercise)
-    |> Map.take([:name, :id, :description, :category])
+    |> Map.take([:name, :id, :description, :categories])
   end
 
   def get(id) do
@@ -25,7 +25,7 @@ defmodule Exercises.Repositories.Exercise do
 
   def list(%{category: category}) do
     Repo.all(from exercise in Exercise,
-             where: exercise.category == ^category)
+             where: ^category in exercise.categories)
   end
 
   def list(%{}) do

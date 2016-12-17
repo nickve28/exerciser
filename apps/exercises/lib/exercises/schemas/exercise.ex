@@ -4,7 +4,7 @@ defmodule Exercises.Schemas.Exercise do
   schema "exercises" do
     field :name, :string
     field :description, :string
-    field :category, :string
+    field :categories, {:array, :string}
   end
 end
 

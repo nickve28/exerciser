@@ -18,7 +18,7 @@ export const fetchExercises = () => {
       authorization: `Bearer ${token}`
     }
     const transport = new HttpTransport(URL, {headers})
-    transport.send(`{exercises { name, id, category, description } }`).then(function (data) {
+    transport.send(`{exercises { name, id, categories, description } }`).then(function (data) {
       return dispatch({
         type: FETCH_EXERCISES,
         payload: data

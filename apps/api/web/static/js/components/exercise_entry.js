@@ -5,7 +5,7 @@ export default ({exercise}) => {
   return (
     <tr>
       <td>{exercise.name}</td>
-      <td>{exercise.category}</td>
+      <td>{_.join(exercise.categories, ',')}</td>
       <td>{_.truncate(exercise.description, 30)}</td>
     </tr>
   )
