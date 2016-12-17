@@ -33,4 +33,9 @@ defmodule Exercises.Repositories.Exercise do
     Repo.all(Exercise)
     |> Enum.map(&to_model/1)
   end
+
+  def create(%{name: name, description: description, categories: categories}) do
+    exercise = %Exercise{name: name, description: description, categories: categories}
+    Exercises.Repo.insert(exercise)
+  end
 end
