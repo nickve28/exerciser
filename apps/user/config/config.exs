@@ -44,5 +44,5 @@ config :user,
 #     import_config "#{Mix.env}.exs"
 
 if Mix.env === :test do
-  import_config "text.exs"
+  import_config "test.exs"
 end
