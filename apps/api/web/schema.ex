@@ -18,4 +18,13 @@ defmodule Api.Schema do
     end
   end
 
+  mutation do
+    field :create_exercise, :exercise do
+      arg :name, non_null(:string)
+      arg :description, non_null(:string)
+      arg :categories, list_of(:string)
+
+      resolve &Api.Resolvers.ExerciseResolver.create/2
+    end
+  end
 end

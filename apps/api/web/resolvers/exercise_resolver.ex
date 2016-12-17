@@ -10,6 +10,10 @@ defmodule Api.Resolvers.ExerciseResolver do
 
   def get(_, _), do: {:error, "No id specified"}
 
+  def create(args, _info) do
+    reply(Exercises.Services.Exercise.create(args))
+  end
+
   defp reply({:error, error}), do: {:error, error}
 
   defp reply({:ok, exercise}), do: {:ok, exercise}
