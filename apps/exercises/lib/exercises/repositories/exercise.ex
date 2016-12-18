@@ -38,4 +38,14 @@ defmodule Exercises.Repositories.Exercise do
     exercise = %Exercise{name: name, description: description, categories: categories}
     Exercises.Repo.insert(exercise)
   end
+
+  def list_categories do
+    #seems hard to do in SQL, so for now the easy way will do
+    Repo.all(from exercise in Exercise,
+             select: exercise.categories)
+    |> Enum.reduce([], fn acc, e ->
+      Enum.uniq(acc ++ e)
+    end)
+    |> Enum.sort
+  end
 end
