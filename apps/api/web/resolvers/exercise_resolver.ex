@@ -8,6 +8,10 @@ defmodule Api.Resolvers.ExerciseResolver do
     reply(exercise)
   end
 
+  def get_categories(_args, _info) do
+    reply(Exercises.Services.Category.list)
+  end
+
   def get(_, _), do: {:error, "No id specified"}
 
   def create(args, _info) do

@@ -16,6 +16,10 @@ defmodule Api.Schema do
     field :me, :user do
       resolve &Api.Resolvers.UserResolver.get/2
     end
+
+    field :categories, list_of(:string) do
+      resolve &Api.Resolvers.ExerciseResolver.get_categories/2
+    end
   end
 
   mutation do
