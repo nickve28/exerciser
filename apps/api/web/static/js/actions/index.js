@@ -68,13 +68,16 @@ export const loginUser = (user, password) => {
 
 export const saveExercise = ({name, description, categories}) => {
   const token = localStorage.getItem('auth_token')
+  const formatted_categories = _.chain(categories)
+                                .map(category => `"${category}"`)
+                                .join(',').value()
   const headers = {
     authorization: `Bearer ${token}`
   }
   return dispatch => {
     const transport = new HttpTransport(URL, {headers})
     return transport.send(`mutation {
-      create_exercise(name: "${name}", categories: "${categories}", description: "${description}") {
+      create_exercise(name: "${name}", categories: [${formatted_categories}], description: "${description}") {
         name, id
       }
     }`).then(function (data) {

@@ -20,7 +20,7 @@ export default class ExerciseForm extends Component {
   _setProperty(prop, e) {
     if (prop === 'categories') {
       const value = _.split(e.target.value, ',')
-      return this.setState(_.merge({}, this.state, {[prop]: value}))
+      return this.setState(_.merge({}, this.state, {categories: value}))
     }
     return this.setState(_.merge({}, this.state, {[prop]: e.target.value}))
   }
