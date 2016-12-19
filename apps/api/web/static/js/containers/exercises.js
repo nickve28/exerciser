@@ -1,26 +1,38 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {fetchExercises, saveExercise} from '../actions/index'
+import {fetchExercises, saveExercise, fetchCategories} from '../actions/index'
 import _ from 'lodash'
 
 import ExerciseEntry from '../components/exercise_entry'
 import ExerciseForm from '../components/exercise_form'
+
+import Promise from 'bluebird'
 
 class Exercises extends Component {
   constructor(props) {
     super(props)
 
     this._handleSubmit = this._handleSubmit.bind(this)
+    this.loadData = this.loadData.bind(this)
   }
 
   componentWillMount() {
-    this.props.fetchExercises()
+    return this.loadData()
+  }
+
+  loadData() {
+    return Promise.join(
+      this.props.fetchExercises(),
+      this.props.fetchCategories()
+    )
   }
 
   _handleSubmit(e, exercise) {
     e.preventDefault()
+    exercise.categories = _.map(exercise.categories, 'value')
+    //maybe introduce bluebird and make it parallel
     return this.props.saveExercise(exercise).then(() => {
-      return this.props.fetchExercises()
+      return this.loadData()
     })
   }
 
@@ -28,7 +40,7 @@ class Exercises extends Component {
     const {exercises} = this.props
     return (
       <div>
-        <ExerciseForm handler={this._handleSubmit} />
+        <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
         <h3>Exercise List</h3>
         <table className="table">
           <thead>
@@ -53,8 +65,9 @@ class Exercises extends Component {
 
 function mapStateToProps(state) {
   return {
-    exercises: state.exercises
+    exercises: state.exercises,
+    categories: state.categories
   }
 }
 
-export default connect(mapStateToProps, {fetchExercises, saveExercise})(Exercises)
+export default connect(mapStateToProps, {fetchExercises, saveExercise, fetchCategories})(Exercises)

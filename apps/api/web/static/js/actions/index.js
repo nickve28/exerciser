@@ -9,6 +9,7 @@ const transport = new HttpTransport(URL)
 
 
 export const FETCH_EXERCISES = 'FETCH_EXERCISES'
+export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 export const SAVE_EXERCISE = 'SAVE_EXERCISE'
 export const FETCH_ME = 'FETCH_ME'
 export const USER_LOGIN = 'USER_LOGIN'
@@ -29,9 +30,25 @@ export const fetchExercises = () => {
       authorization: `Bearer ${token}`
     }
     const transport = new HttpTransport(URL, {headers})
-    transport.send(`{exercises { name, id, categories, description } }`).then(function (data) {
+    return transport.send(`{exercises { name, id, categories, description } }`).then(function (data) {
       return dispatch({
         type: FETCH_EXERCISES,
+        payload: data
+      })
+    }).catch(handleUnauthorized)
+  }
+}
+
+export const fetchCategories = () => {
+  const token = localStorage.getItem('auth_token')
+  return dispatch => {
+    const headers = {
+      authorization: `Bearer ${token}`
+    }
+    const transport = new HttpTransport(URL, {headers})
+    transport.send(`{categories}`).then(function (data) {
+      return dispatch({
+        type: FETCH_CATEGORIES,
         payload: data
       })
     }).catch(handleUnauthorized)

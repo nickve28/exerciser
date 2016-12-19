@@ -1,6 +1,13 @@
 import { combineReducers } from 'redux';
 
-import {FETCH_EXERCISES, FETCH_ME, USER_LOGIN} from '../actions/index'
+import {FETCH_EXERCISES, FETCH_ME, USER_LOGIN, FETCH_CATEGORIES} from '../actions/index'
+
+function CategoryReducer(state = [], action) {
+  if (action.type === FETCH_CATEGORIES) {
+    return action.payload.categories
+  }
+  return state
+}
 
 function ExerciseReducer(state = [], action = {}) {
   if (action.type === FETCH_EXERCISES) {
@@ -27,7 +34,8 @@ function AuthenticationReducer(state = {token: null}, action) {
 const reducers = combineReducers({
   exercises: ExerciseReducer,
   me: MeReducer,
-  authentication: AuthenticationReducer
+  authentication: AuthenticationReducer,
+  categories: CategoryReducer
 })
 
 export default reducers

@@ -4,7 +4,7 @@ defmodule Exercises.Pools.Category do
   @pool_name :category_pool
 
   def start_link do
-    Supervisor.start_link(__MODULE__, [])
+    Supervisor.start_link(__MODULE__, [], name: Exercises.Pools.Category)
   end
 
   def init([]) do

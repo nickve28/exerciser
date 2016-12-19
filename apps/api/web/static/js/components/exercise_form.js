@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {saveExercise} from '../actions/index'
 import _ from 'lodash'
 
+import Select, { Creatable } from 'react-select';
 
 export default class ExerciseForm extends Component {
   constructor(props) {
@@ -19,8 +20,9 @@ export default class ExerciseForm extends Component {
 
   _setProperty(prop, e) {
     if (prop === 'categories') {
-      const value = _.split(e.target.value, ',')
-      return this.setState(_.merge({}, this.state, {categories: value}))
+      const newState = _.cloneDeep(this.state)
+      newState.categories = e
+      return this.setState(newState)
     }
     return this.setState(_.merge({}, this.state, {[prop]: e.target.value}))
   }
@@ -39,10 +41,18 @@ export default class ExerciseForm extends Component {
               <label>Name</label>
               <input className="form-control" value={this.state.name} onChange={(e) => this._setProperty('name', e)} />
             </div>
+
             <div className="form-group">
               <label>Categories</label>
-              <input className="form-control" value={this.state.categories} onChange={(e) => this._setProperty('categories', e)} />
+              <Creatable
+                name="categories"
+                multi={true}
+                options={mapCategories(this.props.categories)}
+                value={this.state.categories}
+                onChange={(e) => this._setProperty('categories', e)}
+              />
             </div>
+
             <div className="form-group">
               <label>Description</label>
               <input className="form-control" value={this.state.description} onChange={(e) => this._setProperty('description', e)} />
@@ -57,4 +67,10 @@ export default class ExerciseForm extends Component {
       )
     }
   }
+}
+
+const mapCategories = (categories) => {
+  return _.map(categories, category => {
+    return {value: category, label: category}
+  })
 }
