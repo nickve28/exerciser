@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {fetchExercises, saveExercise, fetchCategories} from '../actions/index'
+import {fetchExercises, saveExercise, fetchCategories, deleteExercise} from '../actions/index'
 import _ from 'lodash'
 
 import ExerciseEntry from '../components/exercise_entry'
@@ -36,6 +36,13 @@ class Exercises extends Component {
     })
   }
 
+  _handleDelete(exercise) {
+    const {id} = exercise
+    return this.props.deleteExercise(id).then(() => {
+      return this.loadData()
+    })
+  }
+
   render() {
     const {exercises} = this.props
     return (
@@ -48,12 +55,13 @@ class Exercises extends Component {
               <th>Name</th>
               <th>Category</th>
               <th>Description</th>
+              <th>-</th>
             </tr>
           </thead>
           <tbody>
             {
               _.map(exercises, (exercise) => {
-                return <ExerciseEntry key={exercise.id} exercise={exercise} />
+                return <ExerciseEntry key={exercise.id} exercise={exercise} onDelete={() => this._handleDelete(exercise)} />
               })
             }
           </tbody>
@@ -70,4 +78,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, {fetchExercises, saveExercise, fetchCategories})(Exercises)
+export default connect(mapStateToProps, {fetchExercises, saveExercise, fetchCategories, deleteExercise})(Exercises)

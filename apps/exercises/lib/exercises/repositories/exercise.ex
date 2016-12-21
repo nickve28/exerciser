@@ -39,6 +39,11 @@ defmodule Exercises.Repositories.Exercise do
     Exercises.Repo.insert(exercise)
   end
 
+  def delete(id) when is_integer(id) do
+    Exercises.Repo.delete_all(from e in Exercise,
+                              where: ^id == e.id)
+  end
+
   def list_categories do
     #seems hard to do in SQL, so for now the easy way will do
     Repo.all(from exercise in Exercise,

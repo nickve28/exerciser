@@ -18,6 +18,11 @@ defmodule Api.Resolvers.ExerciseResolver do
     reply(Exercises.Services.Exercise.create(args))
   end
 
+  def delete(%{id: id}, _info) do
+    payload = %{id: String.to_integer(id)}
+    reply(Exercises.Services.Exercise.delete(payload))
+  end
+
   defp reply({:error, error}), do: {:error, error}
 
   defp reply({:ok, exercise}), do: {:ok, exercise}

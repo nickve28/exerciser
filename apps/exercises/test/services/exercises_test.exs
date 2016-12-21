@@ -74,4 +74,12 @@ defmodule ExercisesTest do
 
     assert {:ok, %{name: ^expected}} = Services.Exercise.create(payload)
   end
+
+  test "#delete should return :enotfound when no exercise is found", %{exercise: %{id: id}} do
+    assert {:error, :enotfound} === Services.Exercise.delete(%{id: id + 1})
+  end
+
+  test "#delete should return the exercise that is deleted", %{exercise: %{id: id}} do
+    assert {:ok, id} === Services.Exercise.delete(%{id: id})
+  end
 end

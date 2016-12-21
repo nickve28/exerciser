@@ -25,6 +25,12 @@ defmodule Exercises.Services.Exercise do
     end)
   end
 
+  def delete(%{id: id}) do
+    :poolboy.transaction(:exercise_pool, fn pid ->
+      GenServer.call(pid, {:delete, id})
+    end)
+  end
+
   def handle_call({:get, id}, _from, state) do
     result = case Exercises.Repositories.Exercise.get(id) do
       nil -> {:error, :enotfound}
@@ -37,6 +43,15 @@ defmodule Exercises.Services.Exercise do
   def handle_call({:list, filters}, _from, state) do
     exercises = Exercises.Repositories.Exercise.list(filters)
     {:reply, {:ok, exercises}, state}
+  end
+
+  def handle_call({:delete, id}, _from, state) do
+    result = case Exercises.Repositories.Exercise.delete(id) do
+      {count, _} when count === 1 -> {:ok, id}
+      {count, _} when count === 0 -> {:error, :enotfound}
+      _ -> {:error, :internal}
+    end
+    {:reply, result, state}
   end
 
   def handle_call({:create, payload}, _from, state) do
