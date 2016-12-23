@@ -45,6 +45,7 @@ defmodule Api.Mixfile do
       {:poison, "~> 2.0"},
       {:exercises, in_umbrella: true},
       {:user, in_umbrella: true},
+      {:workout, in_umbrella: true},
       {:ex_doc, "~> 0.13", only: :dev}
     ]
   end
