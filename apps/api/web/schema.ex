@@ -20,6 +20,10 @@ defmodule Api.Schema do
     field :categories, list_of(:string) do
       resolve &Api.Resolvers.ExerciseResolver.get_categories/2
     end
+
+    field :workouts, list_of(:workout) do
+      resolve &Api.Resolvers.WorkoutResolver.list/2
+    end
   end
 
   mutation do
