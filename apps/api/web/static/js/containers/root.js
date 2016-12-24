@@ -1,11 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import { Router, Route, Link, browserHistory } from 'react-router'
+import { Router, Route, browserHistory } from 'react-router'
 
-import Exercises from './exercises'
 import Me from './me'
 import LoginForm from './login_form'
+import NavigationBar from '../components/navigation_bar'
 
 import _ from 'lodash'
 
@@ -17,10 +17,13 @@ class Root extends React.Component {
 
     return (
       <div>
-        <Me />
-        <Router history={browserHistory}>
-          <Route path="/" component={Exercises} />
-        </Router>
+        <div>
+          <NavigationBar />
+        </div>
+        <div>
+          <Me />
+          {this.props.children}
+        </div>
       </div>
     )
   }
