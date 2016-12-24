@@ -137,7 +137,7 @@ export const fetchWorkoutsAndExercises = (limit = 10, offset = 0) => {
     transport.send(`{
       workouts(limit: ${limit}, offset: ${offset}) {
         workout_date, performed_exercises {
-          exercise_id, reps, weight
+          exercise_id, reps, weight, sets
         }, description, id },
       exercises {
         id, name, description, categories

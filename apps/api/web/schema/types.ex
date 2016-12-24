@@ -23,6 +23,7 @@ defmodule Api.Schema.Types do
   object :performed_exercise do
     field :exercise_id, :id
     field :reps, :integer
+    field :sets, :integer
     field :weight, :float
   end
 end
