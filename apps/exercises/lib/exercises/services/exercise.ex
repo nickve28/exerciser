@@ -1,5 +1,6 @@
 defmodule Exercises.Services.Exercise do
   use GenServer
+  alias Exercises.Schemas.Exercise
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
@@ -56,47 +57,15 @@ defmodule Exercises.Services.Exercise do
 
   def handle_call({:create, payload}, _from, state) do
     result = payload
-    |> validate_create
-    |> normalize(payload)
+    |> Exercise.validate_payload
     |> create_exercise
+
     {:reply, result, state}
   end
 
-  defp validate_create(payload) do
-    name = case payload[:name] do
-      nil -> {:error, {:name, :required}}
-      value when is_binary(value) -> :ok
-      _ -> {:error, :invalid}
-    end
-
-    description = case payload[:description] do
-      nil -> {:error, {:description, :required}}
-      value when is_binary(value) -> :ok
-      _ -> {:error, :invalid}
-    end
-
-    categories = case payload[:categories] do
-      nil -> {:error, {:categories, :required}}
-      [_ | _] -> :ok
-    end
-
-    all_errors = for {:error, errors} <- [name, description, categories], do: errors
-
-    case all_errors do
-      [] -> :ok
-      errors -> {:error, errors}
-    end
-  end
-
-  defp normalize(:ok, %{name: name, categories: categories} = payload) do
-    %{payload | name: String.capitalize(name), categories: Enum.map(categories, &String.capitalize/1)}
-  end
-
-  defp normalize({:error, errors}, _), do: {:error, errors}
-
   defp create_exercise({:error, errors}), do: {:error, errors}
 
-  defp create_exercise(payload) do
+  defp create_exercise({:ok, payload}) do
     case Exercises.Repositories.Exercise.create(payload) do
       {:error, reason} -> {:error, reason}
       {:ok, exercise} -> {:ok, exercise}

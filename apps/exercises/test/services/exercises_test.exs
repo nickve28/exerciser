@@ -40,19 +40,19 @@ defmodule ExercisesTest do
   test "#insert should fail if no name is given" do
     payload = %{description: "foo", categories: ["bar"]}
 
-    assert {:error, [{:name, :required}]} === Services.Exercise.create(payload)
+    assert {:error, {:invalid, [name: :required]}}=== Services.Exercise.create(payload)
   end
 
   test "#insert should fail if no description is given" do
     payload = %{name: "foo", categories: ["bar"]}
 
-    assert {:error, [{:description, :required}]} === Services.Exercise.create(payload)
+    assert {:error, {:invalid, [description: :required]}} === Services.Exercise.create(payload)
   end
 
   test "#insert should fail if no categories are given" do
     payload = %{name: "foo", description: "bar"}
 
-    assert {:error, [{:categories, :required}]} === Services.Exercise.create(payload)
+    assert {:error, {:invalid, [categories: :required]}} === Services.Exercise.create(payload)
   end
 
   test "#insert should save the exercise" do
