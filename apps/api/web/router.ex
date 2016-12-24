@@ -18,12 +18,6 @@ defmodule Api.Router do
   end
 
   scope "/" do
-
-    scope "/" do
-      pipe_through [:browser]
-      get "/", Api.PageController, :index
-    end
-
     scope "/api" do
 
       #Since I want to handle auth as hook, besides this endpoint. Login is a separate rest endpoint
@@ -42,6 +36,11 @@ defmodule Api.Router do
         forward "/", Absinthe.Plug,
           schema: Api.Schema
       end
+    end
+
+    scope "/" do
+      pipe_through [:browser]
+      get "/*any", Api.PageController, :index
     end
   end
 

@@ -1,6 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
+import { Router, Route, Link, browserHistory } from 'react-router'
+
 import Exercises from './exercises'
 import Me from './me'
 import LoginForm from './login_form'
@@ -16,7 +18,9 @@ class Root extends React.Component {
     return (
       <div>
         <Me />
-        <Exercises />
+        <Router history={browserHistory}>
+          <Route path="/" component={Exercises} />
+        </Router>
       </div>
     )
   }
