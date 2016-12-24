@@ -45,4 +45,15 @@ defmodule Workout.Services.WorkoutTest do
       assert Enum.reverse(Enum.sort_by(dates, fn x -> x end)) === dates
     end
   end
+
+  test "#list should return performed_exercises, which have an exercise id, rep and weight" do
+    exercise = %Schemas.Workout{description: "Saturday workout",
+      workout_date: Ecto.DateTime.cast!(:calendar.local_time), user_id: 1, performed_exercises: [
+        %{exercise_id: 1, reps: 2, weight: 60.0}
+      ]}
+    |> RepoHelper.create
+
+    {:ok, [exercise | _]} = Services.Workout.list(%{user_id: 1})
+    assert %{performed_exercises: [%{exercise_id: 1, reps: 2, weight: 60.0} | _]} = exercise
+  end
 end

@@ -21,6 +21,9 @@ config :workout, Workout.Repo,
 config :workout,
   ecto_repos: [Workout.Repo]
 
+if Mix.env === :test do
+  import_config "test.exs"
+end
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
