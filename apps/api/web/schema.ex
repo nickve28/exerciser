@@ -22,6 +22,8 @@ defmodule Api.Schema do
     end
 
     field :workouts, list_of(:workout) do
+      arg :limit, :integer
+      arg :offset, :integer
       resolve &Api.Resolvers.WorkoutResolver.list/2
     end
   end
