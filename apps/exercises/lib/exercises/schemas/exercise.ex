@@ -14,9 +14,7 @@ defmodule Exercises.Schemas.Exercise do
     |> validate_required([:name, :description, :categories])
 
     case validation.errors do
-      [] ->
-        {:ok, %{params | name: String.capitalize(params[:name]),
-                         categories: Enum.map(params[:categories], &String.capitalize/1)}}
+      [] -> {:ok, params}
       errors -> {:error, {:invalid, to_errors(errors)}}
     end
   end

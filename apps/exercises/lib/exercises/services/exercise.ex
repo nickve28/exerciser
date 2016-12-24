@@ -58,9 +58,17 @@ defmodule Exercises.Services.Exercise do
   def handle_call({:create, payload}, _from, state) do
     result = payload
     |> Exercise.validate_payload
+    |> normalize
     |> create_exercise
 
     {:reply, result, state}
+  end
+
+  defp normalize({:error, errors}), do: {:error, errors}
+
+  defp normalize({:ok, payload}) do
+    {:ok, %{payload | name: String.capitalize(payload[:name]),
+                      categories: Enum.map(payload[:categories], &String.capitalize/1)}}
   end
 
   defp create_exercise({:error, errors}), do: {:error, errors}
