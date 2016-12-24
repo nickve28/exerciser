@@ -56,4 +56,19 @@ defmodule Workout.Services.WorkoutTest do
     {:ok, [exercise | _]} = Services.Workout.list(%{user_id: 1})
     assert %{performed_exercises: [%{exercise_id: 1, reps: 2, weight: 60.0} | _]} = exercise
   end
+
+  test "#get should return 404 if no workout is found" do
+    assert {:error, {:enotfound, _, _}} = Services.Workout.get(%{id: 1})
+  end
+
+  test "#get should return the exercise if it is found" do
+    exercise = %Schemas.Workout{description: "Saturday workout",
+      workout_date: Ecto.DateTime.cast!(:calendar.local_time), user_id: 1, performed_exercises: [
+        %{exercise_id: 1, reps: 2, weight: 60.0}
+      ]}
+    |> RepoHelper.create
+
+    id = exercise.id
+    assert {:ok, %{id: ^id}} = Services.Workout.get(%{id: exercise.id})
+  end
 end

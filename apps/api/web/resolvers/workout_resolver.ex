@@ -5,4 +5,8 @@ defmodule Api.Resolvers.WorkoutResolver do
 
     Workout.Services.Workout.list(payload)
   end
+
+  def get(%{id: id}, _) do
+    Workout.Services.Workout.get(%{id: id})
+  end
 end

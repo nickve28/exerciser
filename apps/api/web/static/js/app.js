@@ -12,6 +12,8 @@ import reducers from './reducers/index'
 import Root from './containers/root'
 import Exercises from './containers/exercises'
 import Workouts from './containers/workouts'
+import WorkoutDetail from './containers/workout_detail'
+
 
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 
@@ -23,7 +25,8 @@ ReactDOM.render(
       <Router history={browserHistory}>
         <Route path="/" component={Root}>
           <IndexRoute component={Exercises} />
-          <Route path ="workouts" component={Workouts} />
+          <Route path ="/workouts" component={Workouts} />
+          <Route path="/workouts/:id" component={WorkoutDetail} />
         </Route>
       </Router>
     </div>

@@ -2,7 +2,7 @@ ExUnit.start()
 
 defmodule Workout.RepoHelper do
   alias Workout.Repo
-  alias Workout.Schemas.{PerformedExercise, Workout}
+  alias Workout.Schemas.{Workout}
 
   def create(data) do
     Repo.insert!(data)

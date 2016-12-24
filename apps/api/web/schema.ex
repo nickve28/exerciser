@@ -26,6 +26,12 @@ defmodule Api.Schema do
       arg :offset, :integer
       resolve &Api.Resolvers.WorkoutResolver.list/2
     end
+
+    field :workout, :workout do
+      arg :id, non_null(:id)
+
+      resolve &Api.Resolvers.WorkoutResolver.get/2
+    end
   end
 
   mutation do
