@@ -13,7 +13,7 @@ defmodule Workout.Repositories.Workout do
 
   def to_model(workout) do
     workout = Map.take(workout, [:id, :user_id, :workout_date, :performed_exercises, :description])
-    %{workout | workout_date: Ecto.DateTime.to_iso8601(workout[:workout_date]),
+    %{workout | workout_date: Timex.format!(workout[:workout_date], "%FT%T%:z", :strftime),
                 performed_exercises: to_model(workout[:performed_exercises])}
   end
 
@@ -38,5 +38,10 @@ defmodule Workout.Repositories.Workout do
     |> to_model
 
     {:ok, result}
+  end
+
+  def create(payload) do
+    workout_payload = Map.merge(%Workout{}, payload)
+    Repo.insert(workout_payload)
   end
 end

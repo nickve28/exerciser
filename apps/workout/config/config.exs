@@ -21,6 +21,12 @@ config :workout, Workout.Repo,
 config :workout,
   ecto_repos: [Workout.Repo]
 
+config :workout,
+  timezone: "Europe/Amsterdam"
+
+config :workout,
+  exercise_repo: Workout.Repositories.Exercise
+
 if Mix.env === :test do
   import_config "test.exs"
 end

@@ -14,7 +14,7 @@ defmodule Workout.RepoHelper do
       new_date = Enum.random(1..28)
       %Workout{
           description: "Test workout ##{number}",
-          workout_date: Ecto.DateTime.cast!({{y, m, new_date}, t}),
+          workout_date: Timex.to_datetime({{y, m, new_date}, t}) |> Timex.Ecto.DateTime.cast!,
           user_id: user_id
       }
     end

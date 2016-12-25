@@ -18,7 +18,7 @@ defmodule Workout.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :postgrex, :ecto, :poolboy],
+    [applications: [:logger, :postgrex, :ecto, :poolboy, :timex, :timex_ecto],
      mod: {Workout, []}]
   end
 
@@ -40,6 +40,8 @@ defmodule Workout.Mixfile do
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 2.0.0"},
       {:poolboy, "~> 1.5"},
+      {:timex, "~> 3.0"},
+      {:timex_ecto, "~> 3.0"},
       {:exercises, in_umbrella: true}
     ]
   end
