@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://unpkg.com/react-select/dist/react-select.css">
   </head>
   <body>
-    <div id="root" class="container" />
+    <div id="root" class="container-fluid app-container" />
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>

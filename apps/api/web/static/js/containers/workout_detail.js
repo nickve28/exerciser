@@ -23,14 +23,12 @@ class WorkoutDetail extends Component {
             <p>Exercises performed</p>
             {_.map(workout.performed_exercises, exercise => {
               return (
-                <p key={exercise.id}>
-                  <ul className="list-group">
-                    <li className="list-group-item">Name: {exercise.name}</li>
-                    <li className="list-group-item">Sets: {exercise.sets}</li>
-                    <li className="list-group-item">Reps: {exercise.reps}</li>
-                    <li className="list-group-item">Weight: {exercise.weight}</li>
-                  </ul>
-                </p>
+                <ul key={exercise.id} className="list-group" style={{marginTop: '5px'}}>
+                  <li className="list-group-item">Name: {exercise.name}</li>
+                  <li className="list-group-item">Sets: {exercise.sets}</li>
+                  <li className="list-group-item">Reps: {exercise.reps}</li>
+                  <li className="list-group-item">Weight: {exercise.weight}</li>
+                </ul>
               )
             })}
           </li>
