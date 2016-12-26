@@ -29,6 +29,16 @@ defmodule ExercisesTest do
     assert Services.Exercise.list(payload) === {:ok, [exercise]}
   end
 
+  test "#list should allow filter on ids" do
+    %{id: id_two} = RepoHelper.create_exercise(%{name: "Squats", description: "Barbell bench press",
+      categories: ["Triceps", "Chest"]})
+    %{id: id_three} = RepoHelper.create_exercise(%{name: "Squats", description: "Barbell bench press",
+      categories: ["Triceps", "Chest"]})
+
+    payload = %{ids: [id_two, id_three]}
+    assert {:ok, [%{id: ^id_two}, %{id: ^id_three}]} = Services.Exercise.list(payload)
+  end
+
   test "#get should return an error if no exercise is found", %{exercise: %{id: id}} do
     assert Services.Exercise.get(id + 1) === {:error, :enotfound}
   end

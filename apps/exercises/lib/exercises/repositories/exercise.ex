@@ -29,6 +29,12 @@ defmodule Exercises.Repositories.Exercise do
     |> Enum.map(&to_model/1)
   end
 
+  def list(%{ids: ids}) do
+    Repo.all(from exercise in Exercise,
+             where: exercise.id in ^ids)
+    |> Enum.map(&to_model/1)
+  end
+
   def list(%{}) do
     Repo.all(Exercise)
     |> Enum.map(&to_model/1)
