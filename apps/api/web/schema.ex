@@ -48,5 +48,13 @@ defmodule Api.Schema do
 
       resolve &Api.Resolvers.ExerciseResolver.delete/2
     end
+
+    field :create_workout, :workout do
+      arg :description, non_null(:string)
+      arg :workout_date, non_null(:string)
+      arg :performed_exercises, list_of(:performed_exercise)
+
+      resolve &Api.Resolvers.WorkoutResolver.create/2
+    end
   end
 end

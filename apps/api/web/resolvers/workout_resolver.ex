@@ -9,4 +9,9 @@ defmodule Api.Resolvers.WorkoutResolver do
   def get(%{id: id}, _) do
     Workout.Services.Workout.get(%{id: id})
   end
+
+  def create(args, %{context: %{user_id: user_id}}) do
+    payload = Map.merge(args, %{user_id: user_id})
+    Workout.Services.Workout.create(payload)
+  end
 end

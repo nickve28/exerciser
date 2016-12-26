@@ -59,7 +59,7 @@ defmodule Workout.Services.Workout do
     case payload[key] do
       nil -> payload
       value ->
-        case Timex.parse(value, "{YYYY}-{0D}-{0D}") do
+        case Timex.parse(value, "{YYYY}-{0M}-{0D}") do
           {:error, _} -> {:error, {:invalid, [{key, "Date not valid"}]}}
           {:ok, date} -> {:ok, Map.put(payload, key, Timex.Ecto.DateTime.cast!(date))}
         end

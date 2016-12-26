@@ -23,10 +23,10 @@ const combineExercises = (workout, exercises) => {
 
 export default (state = INITIAL_STATE, action = {}) => {
   if (action.type === FETCH_WORKOUTS) {
-    return _.merge({}, state, {workouts: toCombinedModel(action.payload)})
+    return _.defaults({workouts: toCombinedModel(action.payload)}, state)
   }
   if (action.type === FETCH_WORKOUT) {
-    return _.merge({}, state, {selectedWorkout: combineExercises(action.payload.workout, action.payload.exercises)})
+    return _.defaults({selectedWorkout: combineExercises(action.payload.workout, action.payload.exercises)}, state)
   }
   return state
 }
