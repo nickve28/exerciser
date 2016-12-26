@@ -76,7 +76,7 @@ defmodule Workout.Services.Workout do
 
   defp validate_exercise_existence({:ok, payload}) do
     exercise_ids = for %{exercise_id: id} <- payload[:performed_exercises], do: id
-    exercises = @exercise_repo.list(%{ids: exercise_ids})
+    {:ok, exercises} = @exercise_repo.list(%{ids: exercise_ids})
 
     found_exercise_ids = for %{id: id} <- exercises, do: id
 

@@ -8,7 +8,7 @@ defmodule Workout.Repositories.Workout do
   def to_model(data) when is_list(data), do: Enum.map(data, &to_model/1)
 
   def to_model(%PerformedExercise{} = model) do
-    Map.take(model, [:exercise_id, :reps, :weight])
+    Map.take(model, [:exercise_id, :reps, :weight, :sets])
   end
 
   def to_model(workout) do
