@@ -6,6 +6,8 @@ import DatePicker from 'react-datepicker'
 
 import {fetchExercises, saveWorkout} from '../actions/index'
 import { browserHistory } from 'react-router';
+import {validateWorkoutCreate, validatePExerciseCreate} from '../helpers/validator'
+import { SubmissionError } from 'redux-form'
 
 import moment from 'moment'
 import _ from 'lodash'
@@ -29,7 +31,7 @@ class NewWorkout extends Component {
     this.props.fetchExercises()
   }
 
-  renderPerformedExercises({fields, meta: { error }}) {
+  renderPerformedExercises({fields}) {
     return (
       <span>
         <ul style={{marginBottom: '5px'}} className="list-group">
@@ -47,18 +49,9 @@ class NewWorkout extends Component {
                   />
                   } />
                 </div>
-                <div className="form-group">
-                  <label style={{marginRight: '5px'}}>Weight</label>
-                  <Field className="form-control" name={`${fieldName}.weight`} component="input" />
-                </div>
-                <div className="form-group">
-                  <label style={{marginRight: '5px'}}>Sets</label>
-                  <Field className="form-control" name={`${fieldName}.sets`} component="input" />
-                </div>
-                <div className="form-group">
-                  <label style={{marginRight: '5px'}}>Reps</label>
-                  <Field className="form-control" name={`${fieldName}.reps`} component="input" />
-                </div>
+                <Field name={`${fieldName}.weight`} component={this.renderField} label="Weight" />
+                <Field name={`${fieldName}.sets`} component={this.renderField} label="Sets" />
+                <Field name={`${fieldName}.reps`} component={this.renderField} label="Reps" />
               </li>
             )
           })}
@@ -70,6 +63,11 @@ class NewWorkout extends Component {
 
   formSubmit(values) {
     let payload = _.cloneDeep(values)
+    const errors = validate(values)
+
+    if (!_.isEmpty(errors)) {
+      throw new SubmissionError(errors)
+    }
     if (!payload.workout_date) payload.workout_date = moment()
     payload.workout_date = moment(payload.workout_date).format('YYYY-MM-DD')
     payload.performed_exercises = _.map(payload.performedExercises, ({exercise_id, reps, weight, sets}) => {
@@ -86,18 +84,28 @@ class NewWorkout extends Component {
     })
   }
 
+  renderField(fieldProps) {
+    const { input, name, label, type, meta: { touched, error } } = fieldProps
+
+    return (
+      <div className="form-group">
+        <label style={{marginRight: '5px'}}>{label}</label>
+        <input {...input} type={type} className="form-control" name={name} />
+        {touched && <span className="error-text">{error}</span>}
+      </div>
+    )
+  }
+
   render() {
     const {handleSubmit} = this.props
+
     return (
       <div>
         <h3>New Workout</h3>
         <form className="form" onSubmit={handleSubmit(this.formSubmit)}>
+          <Field type="text" className="form-control" name="description" label="Description" component={this.renderField} />
           <div className="form-group">
-            <label style={{marginRight: '5px'}}>description</label>
-            <Field type="text" className="form-control" name="description" component="input" />
-          </div>
-          <div className="form-group">
-            <label style={{marginRight: '5px'}}>workout_date</label><br />
+            <label style={{marginRight: '5px'}}>Workout Date</label><br />
             <Field type="text" className="form-control" name="workout_date" component={properties =>
               <DatePicker
                 className="form-control"
@@ -126,12 +134,30 @@ function mapStateToProps(state) {
 }
 
 function validate(data) {
-  console.log(data); //eslint-disable-line no-console
-  return true
+  const topLevelErrors = validateWorkoutCreate(_.omit(data, 'performedExercises'))
+  const exerciseErrors = _.map(data.performedExercises, validatePExerciseCreate)
+
+  const errorMessages = _.reduce(_.get(topLevelErrors, 'error.details'), (memo, {message, path}) => {
+    memo[path] = _.replace(message, /"/g, '')
+    return memo
+  }, {})
+
+  const someErrorsPresentInExercises = _.some(exerciseErrors, ({error}) => error)
+
+  if (someErrorsPresentInExercises) {
+    errorMessages.performedExercises = _.map(exerciseErrors, ({error}) => {
+      return _.reduce(_.get(error, 'details'), (memo, {message, path}) => {
+        memo[path] = _.replace(message, /"/g, '')
+        return memo
+      }, {})
+    })
+  }
+  return errorMessages;
 }
 
 NewWorkout = reduxForm({
   form: 'workout',
+  fields: ['description', 'workout_date', 'performedExercise'],
   validate
 })(NewWorkout)
 
