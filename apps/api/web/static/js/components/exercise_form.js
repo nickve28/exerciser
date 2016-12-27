@@ -32,6 +32,7 @@ export default class ExerciseForm extends Component {
     this.setState(_.merge({}, this.state, {pageData: {showForm: !this.state.pageData.showForm}}))
   }
 
+
   render() {
     if (this.state.pageData.showForm) {
       return (

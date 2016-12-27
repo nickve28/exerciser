@@ -13,6 +13,7 @@ import Root from './containers/root'
 import Exercises from './containers/exercises'
 import Workouts from './containers/workouts'
 import WorkoutDetail from './containers/workout_detail'
+import NewWorkout from './containers/new_workout'
 
 
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
@@ -26,6 +27,7 @@ ReactDOM.render(
         <Route path="/" component={Root}>
           <IndexRoute component={Exercises} />
           <Route path ="/workouts" component={Workouts} />
+          <Route path="/workouts/new" component={NewWorkout} />
           <Route path="/workouts/:id" component={WorkoutDetail} />
         </Route>
       </Router>

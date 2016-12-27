@@ -4,13 +4,15 @@ import CategoryReducer from './category'
 import ExerciseReducer from './exercise'
 import {MeReducer, AuthenticationReducer} from './user'
 import WorkoutReducer from './workout'
+import { reducer as FormReducer } from 'redux-form'
 
 const reducers = combineReducers({
   exercises: ExerciseReducer,
   me: MeReducer,
   authentication: AuthenticationReducer,
   categories: CategoryReducer,
-  workouts: WorkoutReducer
+  workouts: WorkoutReducer,
+  form: FormReducer
 })
 
 export default reducers

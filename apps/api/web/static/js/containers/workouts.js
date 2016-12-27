@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {fetchWorkoutsAndExercises} from '../actions/index'
+import {Link} from 'react-router'
 
 import _ from 'lodash'
 
@@ -15,6 +16,7 @@ class Workouts extends Component {
     const {workouts} = this.props
     return (
       <div>
+        <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
         <table className="table">
           <thead>
             <tr>
