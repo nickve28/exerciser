@@ -12,6 +12,7 @@ export const FETCH_EXERCISES = 'FETCH_EXERCISES'
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 export const FETCH_WORKOUTS = 'FETCH_WORKOUTS'
 export const FETCH_WORKOUT = 'FETCH_WORKOUT'
+export const SAVE_WORKOUT = 'SAVE_WORKOUT'
 export const SAVE_EXERCISE = 'SAVE_EXERCISE'
 export const DELETE_EXERCISE = 'DELETE_EXERCISE'
 export const FETCH_ME = 'FETCH_ME'
@@ -122,6 +123,29 @@ export const saveExercise = ({name, description, categories}) => {
     }`).then(function (data) {
       return dispatch({
         type: SAVE_EXERCISE,
+        payload: data
+      })
+    }).catch(handleUnauthorized)
+  }
+}
+
+export const saveWorkout = ({description, workout_date, performed_exercises}) => {
+  const token = localStorage.getItem('auth_token')
+  const formatted_exercises = _.chain(performed_exercises)
+                               .map(({exercise_id, reps, sets, weight}) => `{exercise_id: ${exercise_id}, reps: ${reps}, weight: ${weight}, sets: ${sets}}`)
+                               .join(',').value()
+  const headers = {
+    authorization: `Bearer ${token}`
+  }
+  return dispatch => {
+    const transport = new HttpTransport(URL, {headers})
+    return transport.send(`mutation {
+      create_workout(description: "${description}", workout_date: "${workout_date}", performed_exercises: [${formatted_exercises}]) {
+        id
+      }
+    }`).then(function (data) {
+      return dispatch({
+        type: SAVE_WORKOUT,
         payload: data
       })
     }).catch(handleUnauthorized)

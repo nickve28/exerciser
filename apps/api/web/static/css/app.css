@@ -3,3 +3,11 @@
   margin-left: 200px;
   margin-right: 200px;
 }
+
+.list-group-item-light-gray {
+  background-color:	#DCDCDC
+}
+
+.list-group-item-gray {
+  background-color: #A9A9A9
+}

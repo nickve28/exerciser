@@ -2,13 +2,13 @@ import React, {Component} from 'react'
 import { Field, reduxForm, FieldArray } from 'redux-form'
 import {connect} from 'react-redux'
 import Select from 'react-select'
+import DatePicker from 'react-datepicker'
 
-import {fetchExercises} from '../actions/index'
+import {fetchExercises, saveWorkout} from '../actions/index'
+import { browserHistory } from 'react-router';
 
 import moment from 'moment'
 import _ from 'lodash'
-
-import PerformedExerciseFields from '../components/performed_exercise_fields'
 
 const EMPTY_EXERCISE = {
   exercise_id: null,
@@ -21,31 +21,22 @@ class NewWorkout extends Component {
   constructor(props) {
     super(props)
 
-    this.addExerciseToPayload = this.addExerciseToPayload.bind(this)
     this.renderPerformedExercises = this.renderPerformedExercises.bind(this)
-
-    this.state = {description: '', workout_date: moment().format('YYYY-MM-DD'), performedExercises: []}
+    this.formSubmit = this.formSubmit.bind(this)
   }
 
   componentWillMount() {
     this.props.fetchExercises()
   }
 
-  addExerciseToPayload() {
-    const currentExercises = this.state.performedExercises
-    const newExercises = _.concat(currentExercises, EMPTY_EXERCISE)
-    const newState = _.defaults({performedExercises: newExercises}, this.state)
-    return this.setState(newState)
-  }
-
-
   renderPerformedExercises({fields, meta: { error }}) {
     return (
       <span>
-        <ul style={{marginBottom: '5px'}}>
+        <ul style={{marginBottom: '5px'}} className="list-group">
           {fields.map((fieldName, index) => {
+            const customLiClass = index % 2 === 0 ? 'list-group-item-gray' : 'list-group-item-light-gray'
             return (
-              <li key={index}>
+              <li className={`list-group-item ${customLiClass}`} key={index}>
                 <div className="form-group">
                   <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>
                   <Field className="form-control" name={`${fieldName}.exercise_id`} component={properties =>
@@ -77,19 +68,43 @@ class NewWorkout extends Component {
     )
   }
 
+  formSubmit(values) {
+    let payload = _.cloneDeep(values)
+    if (!payload.workout_date) payload.workout_date = moment()
+    payload.workout_date = moment(payload.workout_date).format('YYYY-MM-DD')
+    payload.performed_exercises = _.map(payload.performedExercises, ({exercise_id, reps, weight, sets}) => {
+      return {
+        exercise_id: parseInt(exercise_id, 10),
+        reps: parseInt(reps, 10),
+        weight: parseInt(weight, 10),
+        sets: parseInt(sets, 10)
+      }
+    })
+    payload = _.omit(payload, 'performedExercises')
+    this.props.saveWorkout(payload).then(() => {
+      browserHistory.push('/workouts') //best way to navigate..
+    })
+  }
+
   render() {
     const {handleSubmit} = this.props
     return (
       <div>
         <h3>New Workout</h3>
-        <form className="form" onSubmit={handleSubmit}>
+        <form className="form" onSubmit={handleSubmit(this.formSubmit)}>
           <div className="form-group">
             <label style={{marginRight: '5px'}}>description</label>
             <Field type="text" className="form-control" name="description" component="input" />
           </div>
           <div className="form-group">
-            <label style={{marginRight: '5px'}}>workout_date</label>
-            <Field type="text" className="form-control" name="workout_date" component="input" />
+            <label style={{marginRight: '5px'}}>workout_date</label><br />
+            <Field type="text" className="form-control" name="workout_date" component={properties =>
+              <DatePicker
+                className="form-control"
+                selected={properties.input.value || moment()}
+                onChange={(val) => properties.input.onChange(val)}
+              />
+            } />
           </div>
           <FieldArray name="performedExercises" component={this.renderPerformedExercises} />
           <button className="btn btn-primary" type="submit">Create</button>
@@ -120,4 +135,4 @@ NewWorkout = reduxForm({
   validate
 })(NewWorkout)
 
-export default connect(mapStateToProps, {fetchExercises})(NewWorkout)
+export default connect(mapStateToProps, {fetchExercises, saveWorkout})(NewWorkout)
