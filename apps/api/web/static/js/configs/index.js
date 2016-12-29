@@ -7,7 +7,7 @@ let configuration = {
   apiPort: 4000
 }
 
-if (process.env.BRUNCH_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   configuration = {
     apiHost: 'http://192.168.0.11',
     apiPort: 4000
