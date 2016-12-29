@@ -14,4 +14,8 @@ defmodule Api.Resolvers.WorkoutResolver do
     payload = Map.merge(args, %{user_id: user_id})
     Workout.Services.Workout.create(payload)
   end
+
+  def delete(%{id: id}, _) do
+    Workout.Services.Workout.delete(%{id: id})
+  end
 end

@@ -44,4 +44,9 @@ defmodule Workout.Repositories.Workout do
     workout_payload = Map.merge(%Workout{}, payload)
     Repo.insert(workout_payload)
   end
+
+  def delete(id) do
+    Repo.delete_all(from workout in Workout,
+                    where: ^id == workout.id)
+  end
 end

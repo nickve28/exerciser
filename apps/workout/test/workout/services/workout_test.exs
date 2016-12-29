@@ -145,4 +145,23 @@ defmodule Workout.Services.WorkoutTest do
       assert {:ok, %{id: _}} = Workout.Services.Workout.create(payload)
     end
   end
+
+  @tag :delete
+  test "#delete should return :enotfound if workout is not found" do
+    assert {:error, :enotfound} === Workout.Services.Workout.delete(%{id: 1})
+  end
+
+  @tag :delete
+  test "#delete should return the deleted workout" do
+    datetime = Timex.to_datetime(:calendar.local_time)
+    |> Timex.Ecto.DateTime.cast!
+
+    exercise = %Schemas.Workout{description: "Saturday workout",
+      workout_date: datetime, user_id: 1, performed_exercises: [
+        %{exercise_id: 1, reps: 2, weight: 60.0}
+      ]}
+    |> RepoHelper.create
+
+    assert {:ok, exercise.id} === Workout.Services.Workout.delete(%{id: exercise.id})
+  end
 end

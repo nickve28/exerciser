@@ -56,5 +56,11 @@ defmodule Api.Schema do
 
       resolve &Api.Resolvers.WorkoutResolver.create/2
     end
+
+    field :delete_workout, :integer do
+      arg :id, non_null(:integer)
+
+      resolve &Api.Resolvers.WorkoutResolver.delete/2
+    end
   end
 end

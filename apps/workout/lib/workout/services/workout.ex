@@ -32,6 +32,12 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+  def delete(%{id: id}) do
+    :poolboy.transaction(:workout_pool, fn pid ->
+      GenServer.call(pid, {:delete, id})
+    end)
+  end
+
   def handle_call({:get, id}, _from, state) do
     workout = case Workout.Repositories.Workout.get(id) do
       {:ok, nil} -> {:error, {:enotfound, "Workout could not be found", []}}
@@ -43,6 +49,15 @@ defmodule Workout.Services.Workout do
   def handle_call({:list, payload}, _from, state) do
     workouts = Workout.Repositories.Workout.list(payload)
     {:reply, workouts, state}
+  end
+
+  def handle_call({:delete, id}, _from, state) do
+    result = case Workout.Repositories.Workout.delete(id) do
+      {count, _} when count === 1 -> {:ok, id}
+      {count, _} when count === 0 -> {:error, :enotfound}
+      _ -> {:error, :internal}
+    end
+    {:reply, result, state}
   end
 
   def handle_call({:create, payload}, _from, state) do #should treat exercise_id as integer on API

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {fetchWorkoutsAndExercises} from '../actions/index'
+import {fetchWorkoutsAndExercises, deleteWorkout} from '../actions/index'
 import {Link} from 'react-router'
 
 import _ from 'lodash'
@@ -8,8 +8,19 @@ import _ from 'lodash'
 import WorkoutEntry from '../components/workout_entry'
 
 class Workouts extends Component {
+  constructor(props) {
+    super(props)
+    this.onDelete = this.onDelete.bind(this)
+  }
+
   componentWillMount() {
     this.props.fetchWorkoutsAndExercises()
+  }
+
+  onDelete({id}) {
+    this.props.deleteWorkout(id).then(() => {
+      this.props.fetchWorkoutsAndExercises()
+    })
   }
 
   render() {
@@ -26,7 +37,7 @@ class Workouts extends Component {
         <ul className="list-group">
           {
             _.map(workouts, workout => {
-              return <WorkoutEntry key={workout.id} workout={workout} />
+              return <WorkoutEntry key={workout.id} workout={workout} onDelete={_.partial(this.onDelete, workout} />
             })
           }
         <li className="show-more-li-non-styled">
@@ -45,4 +56,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, {fetchWorkoutsAndExercises})(Workouts)
+export default connect(mapStateToProps, {fetchWorkoutsAndExercises, deleteWorkout})(Workouts)
