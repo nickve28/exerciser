@@ -6,6 +6,7 @@ import { Router, Route, browserHistory } from 'react-router'
 import Me from './me'
 import LoginForm from './login_form'
 import NavigationBar from '../components/navigation_bar'
+import Banner from '../components/banner'
 
 import _ from 'lodash'
 
@@ -20,7 +21,10 @@ class Root extends React.Component {
         <div>
           <NavigationBar />
         </div>
-        <div>
+        <div className="container-fluid app-container">
+          <div>
+            <Banner />
+          </div>
           <Me />
           {this.props.children}
         </div>

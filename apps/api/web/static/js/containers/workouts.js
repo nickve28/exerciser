@@ -37,7 +37,7 @@ class Workouts extends Component {
         <ul className="list-group">
           {
             _.map(workouts, workout => {
-              return <WorkoutEntry key={workout.id} workout={workout} onDelete={_.partial(this.onDelete, workout} />
+              return <WorkoutEntry key={workout.id} workout={workout} onDelete={_.partial(this.onDelete, workout)} />
             })
           }
         <li className="show-more-li-non-styled">

@@ -4,6 +4,15 @@
   margin-right: 200px;
 }
 
+.exerciser-logo {
+  width: 450px;
+  height: 75px;
+  display: inline-block;
+  margin-bottom: 1em;
+  background-image: url('/images/exerciser_banner.png');
+  background-size: 519px 71px;
+}
+
 .list-group-item-light-gray {
   background-color:	#DCDCDC
 }
@@ -19,4 +28,20 @@
 .show-more-li-non-styled {
   text-align: center;
   list-style: none
+}
+
+.navbar-app {
+  position: relative;
+  min-height: 50px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  background-color: #000066;
+}
+
+.navbar-app ul li a {
+  color: white;
+}
+
+.navbar-app ul li a:focus {
+  color: #000033;
 }

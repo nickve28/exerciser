@@ -13,7 +13,7 @@
     <link ref="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/0.39.0/react-datepicker.css">
   </head>
   <body>
-    <div id="root" class="container-fluid app-container" />
+    <div id="root" />
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
 </html>
