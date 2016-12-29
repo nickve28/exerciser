@@ -16,24 +16,24 @@ class Workouts extends Component {
     const {workouts} = this.props
     return (
       <div>
-        <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Workout Date</th>
-              <th>Description</th>
-              <th>Exercises</th>
-              <th>-</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              _.map(workouts, (workout) => {
-                return <WorkoutEntry key={workout.id} workout={workout} />
-              })
-            }
-          </tbody>
-        </table>
+        <br />
+        <div>
+          <strong>List of recent workouts</strong>
+          <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
+        </div>
+
+
+        <ul className="list-group">
+          {
+            _.map(workouts, workout => {
+              return <WorkoutEntry key={workout.id} workout={workout} />
+            })
+          }
+        <li className="show-more-li-non-styled">
+          <button className="btn btn-success">Show more</button>
+        </li>
+        </ul>
+
       </div>
     )
   }

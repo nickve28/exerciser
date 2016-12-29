@@ -15,3 +15,8 @@
 .error-text {
   color: #DC143C
 }
+
+.show-more-li-non-styled {
+  text-align: center;
+  list-style: none
+}

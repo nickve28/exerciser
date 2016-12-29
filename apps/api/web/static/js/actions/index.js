@@ -2,8 +2,10 @@ import HttpTransport from 'lokka-transport-http'
 import axios from 'axios'
 import _ from 'lodash'
 
-const URL = 'http://localhost:4000/api/graphql'
-const LOGIN_ENDPOINT = 'http://localhost:4000/api/login'
+import configuration from '../configs/index'
+
+const URL = `${configuration.apiHost}:${configuration.apiPort}/api/graphql`
+const LOGIN_ENDPOINT = `${configuration.apiHost}:${configuration.apiPort}/api/login`
 
 const transport = new HttpTransport(URL)
 
