@@ -21,7 +21,7 @@ defmodule Api.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Api, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :absinthe, :absinthe_plug, :joken, :exercises, :user]]
+     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :absinthe, :absinthe_plug, :joken, :exercises, :user, :cors_plug]]
   end
 
   # Specifies which paths to compile per environment.
