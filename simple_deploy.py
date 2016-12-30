@@ -4,7 +4,7 @@ import fileinput
 import sys
 
 def run_migrations():
-    call(["mix", "ecto.create", "&&", "mix", "ecto.migrate"])
+    call(["MIX_ENV=prod mix ecto.create && mix ecto.migrate"], shell=True)
 
 def build_fe():
     call(["./node_modules/brunch/bin/brunch", "build", "-p"], cwd="./apps/api")
