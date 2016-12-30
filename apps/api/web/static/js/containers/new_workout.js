@@ -40,13 +40,21 @@ class NewWorkout extends Component {
             return (
               <li className={`list-group-item ${customLiClass}`} key={index}>
                 <div className="form-group">
-                  <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>
+                  <div>
+                    <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>
+                    <span className="pull-right glyphicon glyphicon-trash" onClick={() => fields.remove(index)} />
+                  </div>
                   <Field className="form-control" name={`${fieldName}.exercise_id`} component={properties =>
-                    <Select
-                      options={mapExercises(this.props.exercises)}
-                      onChange={params => properties.input.onChange(params.value)}
-                      value={properties.input.value}
-                  />
+                    <div>
+                      <Select
+                        options={mapExercises(this.props.exercises)}
+                        onChange={params => properties.input.onChange(params.value)}
+                        value={properties.input.value}
+                      />
+                      <div>
+                        {properties.meta.touched && <span className="error-text">{properties.meta.error}</span>}
+                      </div>
+                    </div>
                   } />
                 </div>
                 <Field name={`${fieldName}.weight`} component={this.renderField} label="Weight" />
