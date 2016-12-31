@@ -64,7 +64,7 @@ class NewWorkout extends Component {
             )
           })}
         </ul>
-        <a href="#" style={{marginBottom: '5px'}} onClick={() => fields.push(EMPTY_EXERCISE)}>+ Add Exercise</a><br />
+        <a href="javascript:void(0);" style={{marginBottom: '5px'}} onClick={() => fields.push(EMPTY_EXERCISE)}>+ Add Exercise</a><br />
       </span>
     )
   }
