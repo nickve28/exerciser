@@ -1,4 +1,9 @@
 /* This file is for your main application css. */
+
+body {
+  margin-top: 0px !important;
+}
+
 .app-container {
   margin-left: 200px;
   margin-right: 200px;

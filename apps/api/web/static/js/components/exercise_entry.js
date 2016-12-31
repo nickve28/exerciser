@@ -7,7 +7,7 @@ export default ({exercise, onDelete}) => {
       <td>{exercise.name}</td>
       <td>{_.join(exercise.categories, ',')}</td>
       <td>{_.truncate(exercise.description, 30)}</td>
-      <td><button className="btn btn-danger" onClick={onDelete} >X</button></td>
+      <td><button className="btn btn-danger btn-xs" onClick={onDelete} >x</button></td>
     </tr>
   )
 }

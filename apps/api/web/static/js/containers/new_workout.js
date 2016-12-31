@@ -4,13 +4,14 @@ import {connect} from 'react-redux'
 import Select from 'react-select'
 import DatePicker from 'react-datepicker'
 
-import {fetchExercises, saveWorkout} from '../actions/index'
+import {fetchWorkoutsAndExercises, saveWorkout, fetchExercises} from '../actions/index'
 import { browserHistory } from 'react-router';
 import {validateWorkoutCreate, validatePExerciseCreate} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
 
 import moment from 'moment'
 import _ from 'lodash'
+import Promise from 'bluebird'
 
 const EMPTY_EXERCISE = {
   exercise_id: null,
@@ -28,7 +29,7 @@ class NewWorkout extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchExercises()
+    return this.props.fetchExercises()
   }
 
   renderPerformedExercises({fields}) {
@@ -42,14 +43,14 @@ class NewWorkout extends Component {
                 <div className="form-group">
                   <div>
                     <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>
-                    <span className="pull-right glyphicon glyphicon-trash" onClick={() => fields.remove(index)} />
+                    <span className="pull-right glyphicon glyphicon-minus" onClick={() => fields.remove(index)} />
                   </div>
                   <Field className="form-control" name={`${fieldName}.exercise_id`} component={properties =>
                     <div>
                       <Select
                         options={mapExercises(this.props.exercises)}
                         onChange={params => properties.input.onChange(params.value)}
-                        value={properties.input.value}
+                        value={properties.input.value.toString()} //todo all API output should be either integer or string
                       />
                       <div>
                         {properties.meta.touched && <span className="error-text">{properties.meta.error}</span>}
@@ -104,14 +105,23 @@ class NewWorkout extends Component {
     )
   }
 
+  loadTemplate() {
+    this.props.fetchWorkoutsAndExercises(1);
+  }
+
   render() {
     const {handleSubmit} = this.props
 
     return (
       <div>
-        <h3>New Workout</h3>
+        <div>
+          <strong style={{marginRight: '5px'}}>New workout</strong>
+          <span className="pull-right-xs">
+            <a href="javascript:void(0);" onClick={() => this.loadTemplate()}>Load most recent workout template</a>
+          </span>
+        </div>
         <form className="form" onSubmit={handleSubmit(this.formSubmit)}>
-          <Field type="text" className="form-control" name="description" label="Description" component={this.renderField} />
+          <Field type="textarea" className="form-control" name="description" label="Description" component={this.renderField} />
           <div className="form-group">
             <label style={{marginRight: '5px'}}>Workout Date</label><br />
             <Field type="text" className="form-control" name="workout_date" component={properties =>
@@ -138,7 +148,18 @@ function mapExercises(exercises) {
 }
 
 function mapStateToProps(state) {
-  return _.pick(state, 'exercises')
+  const initialValues = _.cloneDeep(_.first(state.workouts.workouts))
+  if (initialValues) {
+    //todo fix value of performed_exercises
+    initialValues.workout_date = moment(initialValues.workout_date)
+    initialValues.performedExercises = initialValues.performed_exercises
+  }
+
+
+  return {
+    exercises: state.exercises,
+    initialValues: initialValues
+  }
 }
 
 function validate(data) {
@@ -169,4 +190,4 @@ NewWorkout = reduxForm({
   validate
 })(NewWorkout)
 
-export default connect(mapStateToProps, {fetchExercises, saveWorkout})(NewWorkout)
+export default connect(mapStateToProps, {fetchWorkoutsAndExercises, saveWorkout, fetchExercises})(NewWorkout)
