@@ -1,7 +1,7 @@
 defmodule Exercises.Repositories.Exercise do
   alias Exercises.Repo
   alias Exercises.Schemas.Exercise
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query#, only: [from: 2]
 
   @skeleton %{
     name: nil,
@@ -23,20 +23,26 @@ defmodule Exercises.Repositories.Exercise do
       |> to_model
   end
 
-  def list(%{category: category}) do
-    Repo.all(from exercise in Exercise,
-             where: ^category in exercise.categories)
-    |> Enum.map(&to_model/1)
+  def list(payload) do
+    from(exercise in Exercise)
+    |> list(payload)
   end
 
-  def list(%{ids: ids}) do
-    Repo.all(from exercise in Exercise,
-             where: exercise.id in ^ids)
-    |> Enum.map(&to_model/1)
+  defp list(query, %{category: category} = payload) do
+    query
+    |> where([exercise], ^category in exercise.categories)
+    |> list(Map.delete(payload, :category))
   end
 
-  def list(%{}) do
-    Repo.all(Exercise)
+  defp list(query, %{ids: ids} = payload) do
+    query
+    |> where([exercise], exercise.id in ^ids)
+    |> list(Map.delete(payload, :ids))
+  end
+
+  defp list(query, %{}) do
+    query
+    |> Repo.all
     |> Enum.map(&to_model/1)
   end
 
