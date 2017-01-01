@@ -62,35 +62,17 @@ defmodule Workout.Services.Workout do
 
   def handle_call({:create, payload}, _from, state) do #should treat exercise_id as integer on API
     result = payload
-    |> cast_to_date(:workout_date)
-    |> validate_create
+    |> Schemas.Workout.create_changeset
     |> validate_exercise_existence
     |> create_workout
 
     {:reply, result, state}
   end
 
-  defp cast_to_date(payload, key) do
-    case payload[key] do
-      nil -> payload
-      value ->
-        case Timex.parse(value, "{YYYY}-{0M}-{0D}") do
-          {:error, _} -> {:error, {:invalid, [{key, "Date not valid"}]}}
-          {:ok, date} -> {:ok, Map.put(payload, key, Timex.Ecto.DateTime.cast!(date))}
-        end
-    end
-  end
-
-  defp validate_create({:error, reason}), do: {:error, reason}
-
-  defp validate_create({:ok, payload}) do
-    Schemas.Workout.validate_create(payload)
-  end
-
   defp validate_exercise_existence({:error, reason}), do: {:error, reason}
 
   defp validate_exercise_existence({:ok, payload}) do
-    exercise_ids = for %{exercise_id: id} <- payload[:performed_exercises], do: id
+    exercise_ids = for %{exercise_id: id} <- payload.performed_exercises, do: id
     {:ok, exercises} = @exercise_repo.list(%{ids: exercise_ids})
 
     found_exercise_ids = for %{id: id} <- exercises, do: id
