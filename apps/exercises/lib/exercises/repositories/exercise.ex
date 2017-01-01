@@ -51,12 +51,8 @@ defmodule Exercises.Repositories.Exercise do
   end
 
   def list_categories do
-    #seems hard to do in SQL, so for now the easy way will do
     Repo.all(from exercise in Exercise,
-             select: exercise.categories)
-    |> Enum.reduce([], fn acc, e ->
-      Enum.uniq(acc ++ e)
-    end)
-    |> Enum.sort
+             select: fragment("DISTINCT unnest(categories) as categories"),
+             order_by: [asc: fragment("categories")])
   end
 end
