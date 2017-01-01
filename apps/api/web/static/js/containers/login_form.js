@@ -27,12 +27,18 @@ class LoginForm extends Component {
 
   onFormSubmit(e) {
     e.preventDefault()
-    this.props.loginUser(this.state.username, this.state.password)
+    this.props.loginUser(this.state.username, this.state.password).then(({payload}) => {
+      if (payload && payload.error)
+        this.setState(_.merge({}, this.state, {error: "Login failed"}))
+      return
+    })
   }
 
   render() {
     return (
-      <div>
+      <div className="container container-fluid">
+        <h3>Log in</h3>
+        <div className="error-text">{this.state.error}</div>
         <form className="form">
           <div className="form-group">
             <label>Username</label>

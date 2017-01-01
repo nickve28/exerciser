@@ -9,7 +9,8 @@ export const MeReducer = (state = {}, action) => {
 
 export const AuthenticationReducer = (state = {token: null}, action) => {
   if (action.type === USER_LOGIN) {
-    localStorage.setItem('auth_token', action.payload.token)
+    if (!action.payload.error)
+      localStorage.setItem('auth_token', action.payload.token)
     return {token: action.payload.token}
   }
   return {token: localStorage.getItem('auth_token')}

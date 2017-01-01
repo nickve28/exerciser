@@ -118,7 +118,7 @@ export const fetchMe = () => {
 export const loginUser = (user, password) => {
   return dispatch => {
     const payload = {name: user, password: password}
-    axios.post(LOGIN_ENDPOINT, payload).then(function (loginData) {
+    return axios.post(LOGIN_ENDPOINT, payload).then(function (loginData) {
       return dispatch({
         type: USER_LOGIN,
         payload: loginData.data
