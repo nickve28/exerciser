@@ -148,13 +148,13 @@ function mapExercises(exercises) {
 }
 
 function mapStateToProps(state) {
-  const initialValues = _.cloneDeep(_.first(state.workouts.workouts))
+  let initialValues = _.cloneDeep(_.first(state.workouts.workouts))
   if (initialValues) {
     //todo fix value of performed_exercises
     initialValues.workout_date = moment(initialValues.workout_date)
     initialValues.performedExercises = initialValues.performed_exercises
+    initialValues = _.omit(initialValues, ['performed_exercises', 'id'])
   }
-
 
   return {
     exercises: state.exercises,
