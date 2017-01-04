@@ -42,9 +42,13 @@ defmodule Workout.Repositories.Workout do
     {:ok, result}
   end
 
-  def create(payload) do
-    workout_payload = Map.merge(%Workout{}, payload)
-    Repo.insert(workout_payload)
+  def create(changeset) do
+    with {:ok, workout} <- Repo.insert(changeset)
+    do
+      {:ok, to_model(workout)}
+    else
+      error -> error
+    end
   end
 
   def update(changeset) do

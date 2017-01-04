@@ -61,7 +61,7 @@ defmodule Workout.Services.Workout do
     id = payload[:id]
     result = with {:ok, workout}         <- find_workout(id),
                   {:ok, update_payload}  <- Workout.Schemas.Workout.update_changeset(workout, payload),
-                  {:ok, _}  <- validate_exercise_existence({:ok, Ecto.Changeset.apply_changes(update_payload)}),
+                  {:ok, _}  <- validate_exercise_existence(payload),
                   {:ok, updated_workout} <- Workout.Repositories.Workout.update(update_payload)
     do
       {:ok, updated_workout}
@@ -82,11 +82,16 @@ defmodule Workout.Services.Workout do
     {:reply, result, state}
   end
 
-  def handle_call({:create, payload}, _from, state) do #should treat exercise_id as integer on API
-    result = payload
-    |> Schemas.Workout.create_changeset
-    |> validate_exercise_existence
-    |> create_workout
+  def handle_call({:create, payload}, _from, state) do
+    result = with {:ok, changeset} <- Schemas.Workout.create_changeset(payload),
+         {:ok, _}         <- validate_exercise_existence(payload),
+         {:ok, workout}   <- Workout.Repositories.Workout.create(changeset)
+    do
+      {:ok, workout}
+    else
+      {:error, reason} -> {:error, reason}
+      _ -> {:error, :internal}
+    end
 
     {:reply, result, state}
   end
@@ -98,9 +103,7 @@ defmodule Workout.Services.Workout do
     end
   end
 
-  defp validate_exercise_existence({:error, reason}), do: {:error, reason}
-
-  defp validate_exercise_existence({:ok, payload}) do
+  defp validate_exercise_existence(payload) do
     exercise_ids = for %{exercise_id: id} <- payload.performed_exercises, do: id
     {:ok, exercises} = @exercise_repo.list(%{ids: exercise_ids})
 
@@ -110,11 +113,5 @@ defmodule Workout.Services.Workout do
       true -> {:ok, payload}
       false -> {:error, {:invalid, [{:exercise_id, "Not found"}]}}
     end
-  end
-
-  defp create_workout({:error, reason}), do: {:error, reason}
-
-  defp create_workout({:ok, payload}) do
-    Workout.Repositories.Workout.create(payload)
   end
 end

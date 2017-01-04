@@ -31,11 +31,7 @@ defmodule Workout.Schemas.Workout do
     |> cast(payload, [:id, :description])
     |> cast_to_date(:workout_date, payload[:workout_date])
     |> put_assoc(:performed_exercises, payload[:performed_exercises])
-
-    case result.errors do
-      [] -> {:ok, result}
-      errors -> {:error, {:invalid, errors}}
-    end
+    |> to_output
   end
 
   defp cast_to_date(changeset, key, value) do
@@ -51,7 +47,7 @@ defmodule Workout.Schemas.Workout do
 
   defp to_output(changeset) do
     case changeset.errors do
-      [] -> {:ok, apply_changes(changeset)}
+      [] -> {:ok, changeset}
       errors -> {:error, {:invalid, errors}}
     end
   end

@@ -6,6 +6,9 @@ defmodule Workout.Services.WorkoutTest do
   alias Workout.Repo
   alias Workout.RepoHelper
 
+
+  @date_format "{YYYY}-{0M}-{0D}"
+
   setup do
     Repo.delete_all(Schemas.Workout)
     :ok
@@ -45,7 +48,7 @@ defmodule Workout.Services.WorkoutTest do
     @tag :list
     test "#list should sort by date descending" do
       assert {:ok, exercises} = Services.Workout.list(%{user_id: 1})
-      dates = Enum.map(exercises, fn %{workout_date: date} -> Timex.parse!(date, "%FT%T%:z", :strftime) end)
+      dates = Enum.map(exercises, fn %{workout_date: date} -> Timex.parse!(date, @date_format) end)
       assert Enum.reverse(Enum.sort_by(dates, fn x -> x end)) === dates
     end
   end
