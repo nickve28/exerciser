@@ -3,6 +3,8 @@ defmodule Workout.Repositories.Workout do
   alias Workout.Schemas.{Workout, PerformedExercise}
   import Ecto.Query, only: [from: 2]
 
+  @date_format "{YYYY}-{0M}-{0D}"
+
   def to_model(nil), do: nil
 
   def to_model(data) when is_list(data), do: Enum.map(data, &to_model/1)
@@ -13,7 +15,7 @@ defmodule Workout.Repositories.Workout do
 
   def to_model(workout) do
     workout = Map.take(workout, [:id, :user_id, :workout_date, :performed_exercises, :description])
-    %{workout | workout_date: Timex.format!(workout[:workout_date], "%FT%T%:z", :strftime),
+    %{workout | workout_date: Timex.format!(workout[:workout_date], @date_format),
                 performed_exercises: to_model(workout[:performed_exercises])}
   end
 
@@ -43,6 +45,15 @@ defmodule Workout.Repositories.Workout do
   def create(payload) do
     workout_payload = Map.merge(%Workout{}, payload)
     Repo.insert(workout_payload)
+  end
+
+  def update(changeset) do
+    with {:ok, updated_model} <- Repo.update(changeset)
+    do
+      {:ok, to_model(updated_model)}
+    else
+      error -> error
+    end
   end
 
   def delete(id) do

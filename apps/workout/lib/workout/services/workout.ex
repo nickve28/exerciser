@@ -32,6 +32,12 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+  def update(%{id: _} = payload) do
+    :poolboy.transaction(:workout_pool, fn pid ->
+      GenServer.call(pid, {:update, payload})
+    end)
+  end
+
   def delete(%{id: id}) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:delete, id})
@@ -51,6 +57,22 @@ defmodule Workout.Services.Workout do
     {:reply, workouts, state}
   end
 
+  def handle_call({:update, payload}, _from, state) do
+    id = payload[:id]
+    result = with {:ok, workout}         <- find_workout(id),
+                  {:ok, update_payload}  <- Workout.Schemas.Workout.update_changeset(workout, payload),
+                  {:ok, _}  <- validate_exercise_existence({:ok, Ecto.Changeset.apply_changes(update_payload)}),
+                  {:ok, updated_workout} <- Workout.Repositories.Workout.update(update_payload)
+    do
+      {:ok, updated_workout}
+    else
+      {:error, error} -> {:error, error}
+      _ -> {:error, :internal}
+    end
+
+    {:reply, result, state}
+  end
+
   def handle_call({:delete, id}, _from, state) do
     result = case Workout.Repositories.Workout.delete(id) do
       {count, _} when count === 1 -> {:ok, id}
@@ -67,6 +89,13 @@ defmodule Workout.Services.Workout do
     |> create_workout
 
     {:reply, result, state}
+  end
+
+  defp find_workout(id) do
+    case Workout.Repositories.Workout.get(id) do
+      {:ok, nil} -> {:error, {:enotfound, "Workout could not be found", []}}
+      result -> result
+    end
   end
 
   defp validate_exercise_existence({:error, reason}), do: {:error, reason}

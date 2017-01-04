@@ -164,4 +164,78 @@ defmodule Workout.Services.WorkoutTest do
 
     assert {:ok, exercise.id} === Workout.Services.Workout.delete(%{id: exercise.id})
   end
+
+  describe "#update" do
+    setup do
+      datetime = Timex.to_datetime(:calendar.local_time)
+      |> Timex.Ecto.DateTime.cast!
+
+      workout = %Schemas.Workout{description: "Saturday workout",
+        workout_date: datetime, user_id: 1, performed_exercises: [
+          %{exercise_id: 1, reps: 2, weight: 60.0}
+        ]}
+      |> RepoHelper.create
+      {:ok, workout: workout}
+    end
+
+    @tag :update
+    test "#update should return :enotfound if no workout can be found", %{workout: %{id: id} = workout} do
+      payload = workout
+      |> Map.take([:id, :description, :workout_date, :performed_exercises])
+      |> Map.merge(%{id: id + 1})
+
+      assert {:error, {:enotfound, _, _}} = Services.Workout.update(payload)
+    end
+
+    @tag :update
+    test "#update should fail if the workout_date update value is invalid", %{workout: %{id: id} = workout} do
+      payload = workout
+      |> Map.take([:id, :description, :workout_date, :performed_exercises])
+      |> Map.merge(%{workout_date: "foo"})
+
+      assert {:error, {:invalid, [{:workout_date, _} | _]}} =
+             Workout.Services.Workout.update(payload)
+    end
+
+    @tag :update
+    test "#update should succeed if the workout_date update value is valid", %{workout: %{id: id} = exercise} do
+      payload = exercise
+      |> Map.take([:id, :description, :workout_date, :performed_exercises])
+      |> Map.merge(%{workout_date: "2017-01-01"})
+
+      assert {:ok, %{id: id, workout_date: "2017-01-01"}} = Workout.Services.Workout.update(payload)
+    end
+
+    @tag :update
+    test "#update should succeed if the description update value is valid", %{workout: %{id: id} = exercise} do
+      payload = exercise
+      |> Map.take([:id, :description, :workout_date, :description, :performed_exercises])
+      |> Map.merge(%{description: "foo", workout_date: "2017-01-01"})
+
+      assert {:ok, %{id: id, description: "foo"}} = Workout.Services.Workout.update(payload)
+      assert {:ok, %{description: "foo"}} = Workout.Services.Workout.get(%{id: id})
+    end
+
+    @tag :update
+    test "#update should create the new associations and remove properly", %{workout: %{id: id} = workout} do
+      payload = workout
+      |> Map.take([:id, :description, :workout_date, :performed_exercises])
+      |> Map.merge(%{workout_date: "2017-01-01", performed_exercises: [%{exercise_id: 2, weight: 1.0, reps: 1, sets: 1}]})
+
+     {:ok, %{performed_exercises: exercises}} = Workout.Services.Workout.update(payload)
+     assert [%{exercise_id: 2}] = exercises
+
+     {:ok, %{performed_exercises: fetched_exercises}} = Workout.Services.Workout.get(%{id: id})
+     assert [%{exercise_id: 2}] = fetched_exercises
+    end
+
+    @tag :update
+    test "#update should fail if one of the exercises does not exist", %{workout: %{id: id} = workout} do
+      payload = workout
+      |> Map.take([:id, :description, :workout_date, :performed_exercises])
+      |> Map.merge(%{workout_date: "2017-01-01", performed_exercises: [%{exercise_id: 0, weight: 1.0, reps: 1, sets: 1}]})
+
+      {:error, {:invalid, [exercise_id: "Not found"]}}
+    end
+  end
 end

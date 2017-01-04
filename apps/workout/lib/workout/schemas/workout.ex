@@ -8,7 +8,7 @@ defmodule Workout.Schemas.Workout do
     field :workout_date, Timex.Ecto.DateTime
     field :description, :string
     field :user_id, :integer
-    has_many :performed_exercises, Workout.Schemas.PerformedExercise
+    has_many :performed_exercises, Workout.Schemas.PerformedExercise, on_replace: :delete
   end
 
   def create_changeset(payload) do
@@ -19,6 +19,23 @@ defmodule Workout.Schemas.Workout do
     |> put_assoc(:performed_exercises, payload[:performed_exercises])
     |> validate_required([:workout_date, :description, :user_id, :performed_exercises])
     |> to_output
+  end
+
+  def update_changeset(workout, payload) do
+    workout_date = Timex.parse!(workout[:workout_date], @date_format)
+    |> Timex.Ecto.DateTime.cast!
+
+    result = %Workout.Schemas.Workout{id: workout[:id],
+      workout_date: workout_date, description: workout[:description]}
+    |> Workout.Repo.preload(:performed_exercises)
+    |> cast(payload, [:id, :description])
+    |> cast_to_date(:workout_date, payload[:workout_date])
+    |> put_assoc(:performed_exercises, payload[:performed_exercises])
+
+    case result.errors do
+      [] -> {:ok, result}
+      errors -> {:error, {:invalid, errors}}
+    end
   end
 
   defp cast_to_date(changeset, key, value) do

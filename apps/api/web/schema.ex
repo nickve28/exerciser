@@ -57,6 +57,15 @@ defmodule Api.Schema do
       resolve &Api.Resolvers.WorkoutResolver.create/2
     end
 
+    field :update_workout, :workout do
+      arg :id, non_null(:integer)
+      arg :description, non_null(:string)
+      arg :workout_date, non_null(:string)
+      arg :performed_exercises, list_of(:performed_exercise)
+
+      resolve &Api.Resolvers.WorkoutResolver.update/2
+    end
+
     field :delete_workout, :integer do
       arg :id, non_null(:integer)
 
