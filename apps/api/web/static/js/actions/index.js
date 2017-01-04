@@ -3,6 +3,7 @@ import axios from 'axios'
 import _ from 'lodash'
 
 import configuration from '../configs/index'
+import Promise from 'bluebird'
 
 const URL = `${configuration.apiHost}:${configuration.apiPort}/api/graphql`
 const LOGIN_ENDPOINT = `${configuration.apiHost}:${configuration.apiPort}/api/login`
@@ -10,24 +11,30 @@ const LOGIN_ENDPOINT = `${configuration.apiHost}:${configuration.apiPort}/api/lo
 const transport = new HttpTransport(URL)
 
 
-export const FETCH_EXERCISES = 'FETCH_EXERCISES'
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 export const FETCH_WORKOUTS = 'FETCH_WORKOUTS'
 export const FETCH_WORKOUT = 'FETCH_WORKOUT'
 export const SAVE_WORKOUT = 'SAVE_WORKOUT'
+
+export const FETCH_EXERCISES = 'FETCH_EXERCISES'
 export const SAVE_EXERCISE = 'SAVE_EXERCISE'
 export const DELETE_EXERCISE = 'DELETE_EXERCISE'
 export const DELETE_WORKOUT = 'DELETE_WORKOUT'
-export const FETCH_ME = 'FETCH_ME'
-export const USER_LOGIN = 'USER_LOGIN'
 
-const handleUnauthorized = (error, foo) => {
+export const FETCH_ME = 'FETCH_ME'
+
+export const USER_LOGIN_PENDING = 'USER_LOGIN_PENDING'
+export const USER_LOGIN = 'USER_LOGIN'
+export const USER_LOGIN_FAILED = 'USER_LOGIN_FAILED'
+export const USER_LOGIN_EXPIRED = 'USER_LOGIN_EXPIRED'
+
+const handleUnauthorized = (error, dispatch) => {
   //no idea how lokka does error handling...
   const isUnauthorized = _.includes(error.toString(), '401')
   if (isUnauthorized) {
     localStorage.removeItem('auth_token')
   }
-  throw error
+  dispatch({type: USER_LOGIN_EXPIRED})
 }
 
 export const fetchExercises = () => {
@@ -42,7 +49,7 @@ export const fetchExercises = () => {
         type: FETCH_EXERCISES,
         payload: data
       })
-    }).catch(handleUnauthorized)
+    }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
@@ -60,7 +67,7 @@ export const deleteExercise = (id) => {
         type: DELETE_EXERCISE,
         payload: data
       })
-    }).catch(handleUnauthorized)
+    }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
@@ -78,7 +85,7 @@ export const deleteWorkout = (id) => {
         type: DELETE_WORKOUT,
         payload: data
       })
-    }).catch(handleUnauthorized)
+    }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
@@ -94,7 +101,7 @@ export const fetchCategories = () => {
         type: FETCH_CATEGORIES,
         payload: data
       })
-    }).catch(handleUnauthorized)
+    }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
@@ -111,14 +118,21 @@ export const fetchMe = () => {
         type: FETCH_ME,
         payload: data
       })
-    }).catch(handleUnauthorized)
+    }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
 export const loginUser = (user, password) => {
   return dispatch => {
+    dispatch({type: USER_LOGIN_PENDING})
+
     const payload = {name: user, password: password}
     return axios.post(LOGIN_ENDPOINT, payload).then(function (loginData) {
+      if (loginData.data.error) {
+        return dispatch({
+          type: USER_LOGIN_FAILED
+        })
+      }
       return dispatch({
         type: USER_LOGIN,
         payload: loginData.data
@@ -146,7 +160,7 @@ export const saveExercise = ({name, description, categories}) => {
         type: SAVE_EXERCISE,
         payload: data
       })
-    }).catch(handleUnauthorized)
+    }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
@@ -169,7 +183,7 @@ export const saveWorkout = ({description, workout_date, performed_exercises}) =>
         type: SAVE_WORKOUT,
         payload: data
       })
-    }).catch(handleUnauthorized)
+    }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
@@ -193,7 +207,7 @@ export const fetchWorkoutsAndExercises = (limit = 10, offset = 0) => {
         type: FETCH_WORKOUTS,
         payload: data
       })
-    }).catch(handleUnauthorized)
+    }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
@@ -217,6 +231,6 @@ export const fetchWorkoutAndExercises = (id) => {
         type: FETCH_WORKOUT,
         payload: data
       })
-    }).catch(handleUnauthorized)
+    }).catch(err => handleUnauthorized(err, dispatch))
   }
 }

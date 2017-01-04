@@ -11,6 +11,7 @@ class LoginForm extends Component {
     this.onUsernameChange = this.onUsernameChange.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
     this.onFormSubmit = this.onFormSubmit.bind(this)
+
   }
 
   onUsernameChange(e) {
@@ -27,17 +28,16 @@ class LoginForm extends Component {
 
   onFormSubmit(e) {
     e.preventDefault()
-    this.props.loginUser(this.state.username, this.state.password).then(({payload}) => {
-      if (payload && payload.error)
-        this.setState(_.merge({}, this.state, {error: "Login failed"}))
-      return
-    })
+    this.props.loginUser(this.state.username, this.state.password)
   }
 
   render() {
     return (
       <div className="container container-fluid">
         <h3>Log in</h3>
+        <div>
+          {loginText(this.props.loginState)}
+        </div>
         <div className="error-text">{this.state.error}</div>
         <form className="form">
           <div className="form-group">
@@ -64,4 +64,20 @@ class LoginForm extends Component {
   }
 }
 
-export default connect(null, {loginUser})(LoginForm)
+const loginText = (loginState) => {
+  if (loginState === 'login_failure') {
+    return <div className="error-text">Login failed</div>
+  }
+  if (loginState === 'logging_in') {
+    return <div>Logging in...</div>
+  }
+  return ''
+}
+
+function mapStateToProps(state) {
+  return {
+    loginState: state.authentication.loginState
+  }
+}
+
+export default connect(mapStateToProps, {loginUser})(LoginForm)
