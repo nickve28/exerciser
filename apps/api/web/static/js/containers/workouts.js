@@ -11,6 +11,8 @@ class Workouts extends Component {
   constructor(props) {
     super(props)
     this.onDelete = this.onDelete.bind(this)
+    this.renderMoreButton = this.renderMoreButton.bind(this)
+    this.loadWorkouts = this.loadWorkouts.bind(this)
   }
 
   componentWillMount() {
@@ -21,6 +23,27 @@ class Workouts extends Component {
     this.props.deleteWorkout(id).then(() => {
       this.props.fetchWorkoutsAndExercises()
     })
+  }
+
+  loadWorkouts(limit, offset) {
+    this.props.fetchWorkoutsAndExercises(limit, offset, {append: true})
+  }
+
+  renderMoreButton() {
+    const {workouts} = this.props
+    const moreAvailable = workouts && workouts.length % 10 === 0
+
+    if (moreAvailable) {
+      const offset = workouts.length
+      const limit = 10
+
+      return (
+        <li className="show-more-li-non-styled">
+          <button onClick={() => this.loadWorkouts(limit, offset)} className="btn btn-success">Show more</button>
+        </li>
+      )
+    }
+    return ''
   }
 
   render() {
@@ -40,9 +63,7 @@ class Workouts extends Component {
               return <WorkoutEntry key={workout.id} workout={workout} onDelete={_.partial(this.onDelete, workout)} />
             })
           }
-        <li className="show-more-li-non-styled">
-          <button className="btn btn-success">Show more</button>
-        </li>
+        {this.renderMoreButton()}
         </ul>
 
       </div>

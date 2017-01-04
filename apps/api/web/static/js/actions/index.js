@@ -13,6 +13,7 @@ const transport = new HttpTransport(URL)
 
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 export const FETCH_WORKOUTS = 'FETCH_WORKOUTS'
+export const FETCH_MORE_WORKOUTS = 'FETCH_MORE_WORKOUTS'
 export const FETCH_WORKOUT = 'FETCH_WORKOUT'
 export const SAVE_WORKOUT = 'SAVE_WORKOUT'
 
@@ -187,7 +188,7 @@ export const saveWorkout = ({description, workout_date, performed_exercises}) =>
   }
 }
 
-export const fetchWorkoutsAndExercises = (limit = 10, offset = 0) => {
+export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {append: false}) => {
   const token = localStorage.getItem('auth_token')
   return dispatch => {
     const headers = {
@@ -203,8 +204,9 @@ export const fetchWorkoutsAndExercises = (limit = 10, offset = 0) => {
         id, name, description, categories
       }
     }`).then(function (data) {
+      const action = append ? FETCH_MORE_WORKOUTS : FETCH_WORKOUTS
       return dispatch({
-        type: FETCH_WORKOUTS,
+        type: action,
         payload: data
       })
     }).catch(err => handleUnauthorized(err, dispatch))
