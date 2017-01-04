@@ -18,6 +18,10 @@ body {
   background-size: 519px 71px;
 }
 
+.clickable:hover {
+  cursor: pointer;
+}
+
 .list-group-item-light-gray {
   background-color:	#DCDCDC
 }

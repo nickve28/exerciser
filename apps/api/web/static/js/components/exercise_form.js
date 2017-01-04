@@ -64,7 +64,7 @@ export default class ExerciseForm extends Component {
       )
     } else {
       return (
-        <button className="btn btn-primary" onClick={(e) => this.formToggle(e)}>Toggle Form</button>
+        <button className="btn btn-primary" onClick={(e) => this.formToggle(e)}>Create Exercise</button>
       )
     }
   }
