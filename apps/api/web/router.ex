@@ -1,4 +1,6 @@
 defmodule Api.Router do
+  @moduledoc false
+
   use Api.Web, :router
 
   pipeline :browser do

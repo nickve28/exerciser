@@ -1,4 +1,5 @@
 defmodule Exercises.Pools.Exercise do
+  @moduledoc false
   use Supervisor
 
   @pool_name :exercise_pool

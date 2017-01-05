@@ -37,4 +37,5 @@ defmodule Api.ErrorHelpers do
       Gettext.dgettext(Api.Gettext, "errors", msg, opts)
     end
   end
+  @moduledoc false
 end

@@ -1,10 +1,11 @@
 defmodule Api.Plugs.Authentication do
+  @moduledoc false
   #alias User.Services.User TODO: verify in repo
   import Joken
 
   @token_secret Application.get_env(:api, :token_secret)
 
-  @behavior Plug
+  @behaviour Plug
 
   @bad_request 400
   @unauthenticated 401

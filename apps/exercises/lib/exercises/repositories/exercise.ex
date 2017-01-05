@@ -1,4 +1,5 @@
 defmodule Exercises.Repositories.Exercise do
+  @moduledoc false
   alias Exercises.Repo
   alias Exercises.Schemas.Exercise
   import Ecto.Query#, only: [from: 2]

@@ -1,6 +1,11 @@
 defmodule Workout.Services.Workout do
   use GenServer
 
+  @type performed_exercise :: %{exercise_id: integer, weight: float, reps: integer, sets: integer}
+  @type workout :: %{id: integer, description: String.t, workout_date: String.t, performed_exercises: [performed_exercise]}
+
+  @type create_workout_payload :: %{description: String.t, workout_date: String.t, performed_exercises: [performed_exercise]}
+
   @exercise_repo Application.get_env(:workout, :exercise_repo)
 
   alias Workout.Schemas
@@ -11,7 +16,8 @@ defmodule Workout.Services.Workout do
 
   def init(state), do: {:ok, state}
 
-  def list(%{user_id: _} = payload) do
+  @spec list(%{user_id: integer}) :: {:ok, [workout]} | {:ok, []}
+  def list(%{user_id: _id} = payload) when is_integer(_id) do
     filtered_payload = Map.take(payload, [:user_id, :limit, :offset])
     filtered_payload = Map.merge(%{limit: 10, offset: 0}, filtered_payload)
 
@@ -20,24 +26,29 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+  @spec get(%{id: integer}) :: {:ok, workout} | {:error, :enotfound}
   def get(%{id: id}) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:get, id})
     end)
   end
 
+  @spec create(create_workout_payload) :: {:ok, workout} | {:error, any}
   def create(payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:create, payload})
     end)
   end
 
+  @spec update(workout) :: {:ok, workout} | {:error, any}
   def update(%{id: _} = payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:update, payload})
     end)
   end
 
+
+  @spec delete(%{id: integer}) :: {:ok, integer} | {:error, :enotfound}
   def delete(%{id: id}) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:delete, id})

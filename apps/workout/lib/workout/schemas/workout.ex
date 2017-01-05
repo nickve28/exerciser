@@ -1,4 +1,5 @@
 defmodule Workout.Schemas.Workout do
+  @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
 

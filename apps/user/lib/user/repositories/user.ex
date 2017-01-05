@@ -1,4 +1,5 @@
 defmodule User.Repositories.User do
+  @moduledoc false
   alias User.Repo
   alias User.Schemas.User
 

@@ -1,4 +1,5 @@
 defmodule Workout.Repositories.MockExercise do
+  @moduledoc false
   def list(%{ids: [0]}) do
     {:ok, []}
   end

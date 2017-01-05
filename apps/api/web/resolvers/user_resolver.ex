@@ -1,4 +1,5 @@
 defmodule Api.Resolvers.UserResolver do
+  @moduledoc false
   def authenticate(%{name: name, password: password}, _info) do
     User.Services.User.authenticate(%{name: name, password: password})
   end

@@ -7,6 +7,7 @@ defmodule Exercises.Services.Category do
 
   def init(state), do: {:ok, state}
 
+  @spec list :: [String.t] | []
   def list do
     :poolboy.transaction(:category_pool, fn pid ->
       GenServer.call(pid, {:list})

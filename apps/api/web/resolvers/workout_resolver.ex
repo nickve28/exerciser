@@ -1,4 +1,5 @@
 defmodule Api.Resolvers.WorkoutResolver do
+  @moduledoc false
   def list(args,  %{context: %{user_id: user_id}}) do
     payload = %{user_id: user_id}
     |> Map.merge(Map.take(args, [:limit, :offset]))

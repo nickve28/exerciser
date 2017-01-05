@@ -1,4 +1,5 @@
 defmodule Api.Schema.Types do
+  @moduledoc false
   use Absinthe.Schema.Notation
 
   object :user do

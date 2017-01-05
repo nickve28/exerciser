@@ -2,30 +2,37 @@ defmodule Exercises.Services.Exercise do
   use GenServer
   alias Exercises.Schemas.Exercise
 
+  @type exercise :: %{id: integer, name: String.t, description: String.t, categories: [String.t]}
+  @type create_payload :: %{name: String.t, description: String.t, categories: [String.t]}
+
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
   end
 
   def init(state), do: {:ok, state}
 
-  def get(id) do
+  @spec get(integer) :: {:ok, exercise} | {:error, :enotfound}
+  def get(id) when is_number(id) do
     :poolboy.transaction(:exercise_pool, fn pid ->
       GenServer.call(pid, {:get, id})
     end)
   end
 
+  @spec list(Map.t) :: {:ok, [exercise]} | {:ok, []}
   def list(payload \\ %{}) do
     :poolboy.transaction(:exercise_pool, fn pid ->
       GenServer.call(pid, {:list, payload})
     end)
   end
 
+  @spec create(create_payload) :: {:ok, exercise} | {:error, any}
   def create(payload) do
     :poolboy.transaction(:exercise_pool, fn pid ->
       GenServer.call(pid, {:create, payload})
     end)
   end
 
+  @spec delete(%{id: integer}) :: {:ok, integer}
   def delete(%{id: id}) do
     :poolboy.transaction(:exercise_pool, fn pid ->
       GenServer.call(pid, {:delete, id})

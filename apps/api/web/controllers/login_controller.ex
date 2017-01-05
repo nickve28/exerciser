@@ -1,4 +1,5 @@
 defmodule Api.LoginController do
+  @moduledoc false
   use Api.Web, :controller
 
   def authenticate(conn, %{"name" => name, "password" => password}) do

@@ -1,4 +1,5 @@
 defmodule User.Pools.User do
+  @moduledoc false
   use Supervisor
 
   @pool_name :user_pool

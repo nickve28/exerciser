@@ -20,5 +20,6 @@ defmodule Api.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
+  @moduledoc false
   use Gettext, otp_app: :api
 end

@@ -1,4 +1,5 @@
 defmodule Api.Schema do
+  @moduledoc false
   use Absinthe.Schema
   import_types Api.Schema.Types
 

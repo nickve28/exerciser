@@ -1,4 +1,5 @@
 defmodule Api.Resolvers.ExerciseResolver do
+  @moduledoc false
   def list(args, _info) do
     reply(Exercises.Services.Exercise.list(args))
   end

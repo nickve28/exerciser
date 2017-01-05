@@ -1,4 +1,5 @@
 defmodule Api.ErrorView do
+  @moduledoc false
   use Api.Web, :view
 
   def render("404.html", _assigns) do
