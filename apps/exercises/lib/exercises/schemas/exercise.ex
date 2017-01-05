@@ -8,14 +8,37 @@ defmodule Exercises.Schemas.Exercise do
     field :categories, {:array, :string}
   end
 
-  def validate_payload(params) do
-    validation = %Exercises.Schemas.Exercise{}
-    |> cast(params, [:name, :description, :categories])
+  def create_changeset(payload) do
+    changeset = %Exercises.Schemas.Exercise{}
+    |> cast(payload, [:name, :description, :categories])
     |> validate_required([:name, :description, :categories])
+    |> cast_capitalize(:name)
+    |> cast_capitalize_all(:categories)
 
-    case validation.errors do
-      [] -> {:ok, params}
+    case changeset.errors do
+      [] -> {:ok, changeset}
       errors -> {:error, {:invalid, to_errors(errors)}}
+    end
+  end
+
+  defp cast_capitalize(changeset, key) do
+    with {:ok, change} <- changeset |> fetch_change(key) do
+
+      changeset
+      |> put_change(key, String.capitalize(change))
+    else
+      _ -> changeset
+    end
+  end
+
+  defp cast_capitalize_all(changeset, key) do
+    with {:ok, change} <- changeset |> fetch_change(key) do
+      capitalized_changes = for value <- change, do: String.capitalize(value)
+
+      changeset
+      |> put_change(key, capitalized_changes)
+    else
+      _ -> changeset
     end
   end
 

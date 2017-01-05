@@ -56,27 +56,11 @@ defmodule Exercises.Services.Exercise do
   end
 
   def handle_call({:create, payload}, _from, state) do
-    result = payload
-    |> Exercise.validate_payload
-    |> normalize
-    |> create_exercise
+    result = case Exercise.create_changeset(payload) do
+      {:ok, changeset} -> Exercises.Repositories.Exercise.create(changeset)
+      {:error, error} -> {:error, error}
+    end
 
     {:reply, result, state}
-  end
-
-  defp normalize({:error, errors}), do: {:error, errors}
-
-  defp normalize({:ok, payload}) do
-    {:ok, %{payload | name: String.capitalize(payload[:name]),
-                      categories: Enum.map(payload[:categories], &String.capitalize/1)}}
-  end
-
-  defp create_exercise({:error, errors}), do: {:error, errors}
-
-  defp create_exercise({:ok, payload}) do
-    case Exercises.Repositories.Exercise.create(payload) do
-      {:error, reason} -> {:error, reason}
-      {:ok, exercise} -> {:ok, exercise}
-    end
   end
 end

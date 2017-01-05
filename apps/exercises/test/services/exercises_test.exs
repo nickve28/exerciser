@@ -71,6 +71,7 @@ defmodule ExercisesTest do
     assert {:ok, %{id: _}} = Services.Exercise.create(payload)
   end
 
+  @tag :normalize
   test "#insert should normalize the categories" do
     payload = %{name: "foo", categories: ["bar"], description: "baz"}
     expected = ["Bar"]
@@ -78,6 +79,7 @@ defmodule ExercisesTest do
     assert {:ok, %{categories: ^expected}} = Services.Exercise.create(payload)
   end
 
+  @tag :normalize
   test "#insert should normalize the name" do
     payload = %{name: "foo", categories: ["bar"], description: "baz"}
     expected = "Foo"

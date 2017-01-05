@@ -46,9 +46,8 @@ defmodule Exercises.Repositories.Exercise do
     |> Enum.map(&to_model/1)
   end
 
-  def create(%{name: name, description: description, categories: categories}) do
-    exercise = %Exercise{name: name, description: description, categories: categories}
-    Exercises.Repo.insert(exercise)
+  def create(changeset) do
+    Exercises.Repo.insert(changeset)
   end
 
   def delete(id) when is_integer(id) do
