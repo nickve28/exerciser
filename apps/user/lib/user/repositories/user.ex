@@ -9,14 +9,16 @@ defmodule User.Repositories.User do
     password: nil
   }
 
-  def to_model(nil), do: nil
+  def to_model(nil), do: {:ok, nil}
 
   def to_model({:ok, user}), do: to_model(user)
 
   def to_model(user) do
-    @skeleton
+    result = @skeleton
     |> Map.merge(user)
     |> Map.take([:name, :id, :password])
+
+    {:ok, result}
   end
 
   def get(id) do

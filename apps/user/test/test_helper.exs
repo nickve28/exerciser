@@ -18,7 +18,9 @@ defmodule User.RepoHelper do
       password: hashed_pw,
     }
 
-    Repo.insert!(user)
-      |> to_model
+    {:ok, user} = Repo.insert!(user)
+    |> to_model
+
+    user
   end
 end

@@ -27,4 +27,6 @@ defmodule User.Services.UserTest do
 
     assert {:ok, %{id: _, name: "Nick", password: nil}} = Services.User.create(payload)
   end
+
+  #todo better test set and at least test auth
 end

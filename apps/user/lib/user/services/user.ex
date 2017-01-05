@@ -4,6 +4,7 @@ defmodule User.Services.User do
 
   @type user :: %{name: String.t, password: String.t, id: Integer.t}
   @type user_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t}
+  @type user_auth_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t, id: integer}
 
   @salt Application.get_env(:user, :salt)
   @token_secret Application.get_env(:user, :token_secret)
@@ -20,46 +21,16 @@ defmodule User.Services.User do
 
   @spec authenticate(%{name: String.t, password: String.t}) :: {:ok, user_info}
   def authenticate(%{name: username, password: password}) do
-    user = :poolboy.transaction(:user_pool, fn pid ->
-      GenServer.call(pid, {:get_by, %{name: username}})
+    :poolboy.transaction(:user_pool, fn pid ->
+      GenServer.call(pid, {:authenticate, %{name: username, password: password}})
     end)
-
-    {:ok, hashed_pw} = :bcrypt.hashpw(password, @salt)
-    hashed_pw = to_string(hashed_pw)
-
-    verify_user(user, hashed_pw)
-    |> to_output
   end
 
-  defp to_output({:error, _} = error), do: error
-
-  defp to_output({:ok, user}) do
-    token = %{id: user[:id]}
-    |> token
-    |> with_signer(hs256(@token_secret))
-    |> with_exp(Joken.current_time + @one_hour)
-    |> sign
-    |> get_compact
-
-    user = user
-    |> Map.merge(@empty_pass)
-    |> Map.merge(%{token: token})
-    {:ok, user}
-  end
-
-  defp verify_user(%{password: password} = user, password), do: {:ok, user}
-
-  defp verify_user(_, _), do: {:error, :password_no_match}
-
+  @spec get(integer) :: {:ok, user_auth_info}
   def get(id) do
-    user = :poolboy.transaction(:user_pool, fn pid ->
+    :poolboy.transaction(:user_pool, fn pid ->
       GenServer.call(pid, {:get, id})
     end)
-
-    case user do
-      nil -> {:error, :enotfound}
-      user -> {:ok, Map.merge(user, @empty_pass)}
-    end
   end
 
   @spec create(%{name: String.t, password: String.t}) :: {:ok, user}
@@ -69,13 +40,11 @@ defmodule User.Services.User do
     end)
   end
 
-  def handle_call({:get_by, payload}, _from, state) do
-    user = User.Repositories.User.get_by(payload)
-    {:reply, user, state}
-  end
-
   def handle_call({:get, id}, _from, state) do
-    user = User.Repositories.User.get(id)
+    user = case User.Repositories.User.get(id) do
+      {:ok, nil} -> {:error, :enotfound}
+      {:ok, user} -> {:ok, Map.merge(user, @empty_pass)}
+    end
     {:reply, user, state}
   end
 
@@ -89,9 +58,48 @@ defmodule User.Services.User do
 
     result = case User.Repositories.User.create(new_user_payload) do
       {:error, reason} -> {:error, reason}
-      user -> {:ok, Map.merge(user, @empty_pass)}
+      {:ok, user} -> {:ok, Map.merge(user, @empty_pass)}
     end
 
     {:reply, result, state}
+  end
+
+  def handle_call({:authenticate, %{name: name, password: password}}, _from, state) do
+    result = with {:ok, user}      <- find_user(%{name: name}),
+                  {:ok, hashed_pw} <- :bcrypt.hashpw(password, @salt),
+                  hashed_pw        <- to_string(hashed_pw),
+                  {:ok, user_data} <- verify_user(user, hashed_pw)
+    do
+      sign_token_for_user(user_data)
+    else
+      error -> error
+    end
+
+    {:reply, result, state}
+  end
+
+  defp find_user(payload) do
+    case User.Repositories.User.get_by(payload) do
+      {:ok, nil} -> {:error, :enotfound}
+      {:ok, user} -> {:ok, user}
+    end
+  end
+
+  defp verify_user(%{password: password} = user, password), do: {:ok, user}
+
+  defp verify_user(_, _), do: {:error, :password_no_match}
+
+  defp sign_token_for_user(user) do
+    token = %{id: user[:id]}
+    |> token
+    |> with_signer(hs256(@token_secret))
+    |> with_exp(Joken.current_time + @one_hour)
+    |> sign
+    |> get_compact
+
+    user = user
+    |> Map.merge(@empty_pass)
+    |> Map.merge(%{token: token})
+    {:ok, user}
   end
 end
