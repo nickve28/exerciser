@@ -2,7 +2,7 @@ use Mix.Config
 
 config :user, User.Repo,
   adapter: Ecto.Adapters.Postgres,
-  database: "users_test",
+  database: "users",
   username: "postgres",
   password: "",
   hostname: "localhost"
