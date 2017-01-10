@@ -34,8 +34,9 @@ const handleUnauthorized = (error, dispatch) => {
   const isUnauthorized = _.includes(error.toString(), '401')
   if (isUnauthorized) {
     localStorage.removeItem('auth_token')
+    dispatch({type: USER_LOGIN_EXPIRED})
   }
-  dispatch({type: USER_LOGIN_EXPIRED})
+  throw error
 }
 
 export const fetchExercises = () => {
