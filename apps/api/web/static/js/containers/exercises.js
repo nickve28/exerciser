@@ -50,20 +50,21 @@ class Exercises extends Component {
     return (
       <div>
         <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
-        <h3>Exercise List</h3>
+        <h3>Exercise Overview</h3>
         <Table>
-          <TableHeader displaySelectAll={false}>
+          <TableBody displayRowCheckbox={false}>
+            {
+              //Temporary workaround until its clear why tableheader creates a new table
+            }
             <TableRow>
               <TableHeaderColumn>Name</TableHeaderColumn>
               <TableHeaderColumn>Categories</TableHeaderColumn>
               <TableHeaderColumn>Description</TableHeaderColumn>
               <TableHeaderColumn>Action</TableHeaderColumn>
             </TableRow>
-          </TableHeader>
-          <TableBody displayRowCheckbox={false}>
             {_.map(this.props.exercises, exercise => {
               return (
-                <ExerciseEntry key={exercise.id}exercise={exercise} />
+                <ExerciseEntry key={exercise.id}exercise={exercise} onDelete={() => this._handleDelete(exercise)} />
               )
             })}
           </TableBody>

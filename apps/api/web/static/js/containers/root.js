@@ -15,7 +15,11 @@ import _ from 'lodash'
 class Root extends React.Component {
   render() {
     if (!_.get(this.props, 'authentication.token')) {
-      return <LoginForm />
+      return (
+        <MuiThemeProvider>
+          <LoginForm />
+        </MuiThemeProvider>
+      )
     }
 
     return (
@@ -25,9 +29,6 @@ class Root extends React.Component {
             <NavigationBar />
           </div>
           <div className="container-fluid app-container">
-            <div>
-              <Banner />
-            </div>
             <Me />
             {this.props.children}
           </div>

@@ -5,8 +5,11 @@ body {
 }
 
 .app-container {
-  margin-left: 200px;
-  margin-right: 200px;
+  width: 50%;
+  margin-top: 80px;
+  z-index: 3;
+  background-color: #f2f2f2;
+  box-shadow: 1px 1px 1px 1px #ccc;
 }
 
 .exerciser-logo {
@@ -39,12 +42,19 @@ body {
   list-style: none
 }
 
-.navbar-app {
-  position: relative;
-  min-height: 50px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
+.color-bar {
+  background-color: #3F51B5;
+  position: absolute;
+  height: 400px;
+  width: 100%;
   background-color: #000066;
+  z-index: -2;
+
+}
+
+.navbar-app {
+  height: 50px;
+  background-color: #1A237E;
 }
 
 .navbar-app ul li a {
@@ -53,4 +63,8 @@ body {
 
 .navbar-app ul li a:focus {
   color: #000033;
+}
+
+.top-padding-20 {
+  padding-top: 20px;
 }
