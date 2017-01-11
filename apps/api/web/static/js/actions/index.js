@@ -197,10 +197,12 @@ export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {ap
     }
     const transport = new HttpTransport(URL, {headers})
     transport.send(`{
-      workouts(limit: ${limit}, offset: ${offset}) {
-        workout_date, performed_exercises {
-          exercise_id, reps, weight, sets
-        }, description, id },
+      me {
+        workouts(limit: ${limit}, offset: ${offset}) {
+          workout_date, performed_exercises {
+            exercise_id, reps, weight, sets
+          }, description, id },
+      },
       exercises {
         id, name, description, categories
       }

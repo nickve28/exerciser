@@ -22,12 +22,6 @@ defmodule Api.Schema do
       resolve &Api.Resolvers.ExerciseResolver.get_categories/2
     end
 
-    field :workouts, list_of(:workout) do
-      arg :limit, :integer
-      arg :offset, :integer
-      resolve &Api.Resolvers.WorkoutResolver.list/2
-    end
-
     field :workout, :workout do
       arg :id, non_null(:id)
 
