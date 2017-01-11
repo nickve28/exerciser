@@ -6,6 +6,8 @@ import _ from 'lodash'
 import ExerciseEntry from '../components/exercise_entry'
 import ExerciseForm from '../components/exercise_form'
 
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table';
+
 import Promise from 'bluebird'
 
 class Exercises extends Component {
@@ -49,23 +51,23 @@ class Exercises extends Component {
       <div>
         <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
         <h3>Exercise List</h3>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Description</th>
-              <th>-</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              _.map(exercises, (exercise) => {
-                return <ExerciseEntry key={exercise.id} exercise={exercise} onDelete={() => this._handleDelete(exercise)} />
-              })
-            }
-          </tbody>
-        </table>
+        <Table>
+          <TableHeader displaySelectAll={false}>
+            <TableRow>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+              <TableHeaderColumn>Categories</TableHeaderColumn>
+              <TableHeaderColumn>Description</TableHeaderColumn>
+              <TableHeaderColumn>Action</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            {_.map(this.props.exercises, exercise => {
+              return (
+                <ExerciseEntry key={exercise.id}exercise={exercise} />
+              )
+            })}
+          </TableBody>
+        </Table>
       </div>
     )
   }

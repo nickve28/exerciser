@@ -8,6 +8,8 @@ import LoginForm from './login_form'
 import NavigationBar from '../components/navigation_bar'
 import Banner from '../components/banner'
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import _ from 'lodash'
 
 class Root extends React.Component {
@@ -17,18 +19,20 @@ class Root extends React.Component {
     }
 
     return (
-      <div>
+      <MuiThemeProvider>
         <div>
-          <NavigationBar />
-        </div>
-        <div className="container-fluid app-container">
           <div>
-            <Banner />
+            <NavigationBar />
           </div>
-          <Me />
-          {this.props.children}
+          <div className="container-fluid app-container">
+            <div>
+              <Banner />
+            </div>
+            <Me />
+            {this.props.children}
+          </div>
         </div>
-      </div>
+      </MuiThemeProvider>
     )
   }
 }
