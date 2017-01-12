@@ -6,7 +6,7 @@ import _ from 'lodash'
 import ExerciseEntry from '../components/exercise_entry'
 import ExerciseForm from '../components/exercise_form'
 
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
 
 import Promise from 'bluebird'
 
