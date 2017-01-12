@@ -49,7 +49,6 @@ class Exercises extends Component {
     const {exercises} = this.props
     return (
       <div>
-        <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
         <h3>Exercise Overview</h3>
         <Table>
           <TableBody displayRowCheckbox={false}>
@@ -69,6 +68,9 @@ class Exercises extends Component {
             })}
           </TableBody>
         </Table>
+        <div className="margin-vertical">
+          <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
+        </div>
       </div>
     )
   }

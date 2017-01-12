@@ -10,6 +10,7 @@ body {
   z-index: 3;
   background-color: #f2f2f2;
   box-shadow: 1px 1px 1px 1px #ccc;
+  min-height: 500px;
 }
 
 .exerciser-logo {
@@ -43,18 +44,18 @@ body {
 }
 
 .color-bar {
-  background-color: #3F51B5;
   position: absolute;
   height: 400px;
   width: 100%;
-  background-color: #000066;
+  /*background-color: #000066;*/
+  background-color: #009688;
   z-index: -2;
 
 }
 
 .navbar-app {
   height: 50px;
-  background-color: #1A237E;
+  background-color: #00796B;
 }
 
 .navbar-app ul li a {
@@ -67,4 +68,9 @@ body {
 
 .top-padding-20 {
   padding-top: 20px;
+}
+
+.margin-vertical {
+  margin-top: 10px;
+  margin-bottom: 20px;
 }

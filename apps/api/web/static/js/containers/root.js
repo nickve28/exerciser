@@ -12,15 +12,18 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import _ from 'lodash'
 
+const BodyData = (props) => {
+  return (
+    <div>
+      <Me />
+      {props.children}
+    </div>
+  )
+}
+
 class Root extends React.Component {
   render() {
-    if (!_.get(this.props, 'authentication.token')) {
-      return (
-        <MuiThemeProvider>
-          <LoginForm />
-        </MuiThemeProvider>
-      )
-    }
+    const isLoggedIn =_.get(this.props, 'authentication.token')
 
     return (
       <MuiThemeProvider>
@@ -29,8 +32,7 @@ class Root extends React.Component {
             <NavigationBar />
           </div>
           <div className="container-fluid app-container">
-            <Me />
-            {this.props.children}
+            {isLoggedIn ? <BodyData>{this.props.children}</BodyData> : <LoginForm />}
           </div>
         </div>
       </MuiThemeProvider>
