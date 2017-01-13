@@ -5,8 +5,12 @@ body {
 }
 
 .app-container {
-  margin-left: 200px;
-  margin-right: 200px;
+  width: 50%;
+  margin-top: 80px;
+  z-index: 3;
+  background-color: #f2f2f2;
+  box-shadow: 1px 1px 1px 1px #ccc;
+  min-height: 500px;
 }
 
 .exerciser-logo {
@@ -22,12 +26,10 @@ body {
   cursor: pointer;
 }
 
-.list-group-item-light-gray {
-  background-color:	#DCDCDC
-}
-
 .list-group-item-gray {
-  background-color: #A9A9A9
+  margin-bottom: 3px;
+  border: 3px solid #E0E0E0;
+  background-color: #F5F5F5;
 }
 
 .error-text {
@@ -39,12 +41,19 @@ body {
   list-style: none
 }
 
+.color-bar {
+  position: absolute;
+  height: 400px;
+  width: 100%;
+  /*background-color: #000066;*/
+  background-color: #009688;
+  z-index: -2;
+
+}
+
 .navbar-app {
-  position: relative;
-  min-height: 50px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
-  background-color: #000066;
+  height: 50px;
+  background-color: #00796B;
 }
 
 .navbar-app ul li a {
@@ -53,4 +62,13 @@ body {
 
 .navbar-app ul li a:focus {
   color: #000033;
+}
+
+.top-padding-20 {
+  padding-top: 20px;
+}
+
+.margin-vertical {
+  margin-top: 10px;
+  margin-bottom: 20px;
 }

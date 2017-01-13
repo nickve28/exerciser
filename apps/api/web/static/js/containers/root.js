@@ -8,27 +8,34 @@ import LoginForm from './login_form'
 import NavigationBar from '../components/navigation_bar'
 import Banner from '../components/banner'
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import _ from 'lodash'
+
+const BodyData = (props) => {
+  return (
+    <div>
+      <Me />
+      {props.children}
+    </div>
+  )
+}
 
 class Root extends React.Component {
   render() {
-    if (!_.get(this.props, 'authentication.token')) {
-      return <LoginForm />
-    }
+    const isLoggedIn =_.get(this.props, 'authentication.token')
 
     return (
-      <div>
+      <MuiThemeProvider>
         <div>
-          <NavigationBar />
-        </div>
-        <div className="container-fluid app-container">
           <div>
-            <Banner />
+            <NavigationBar />
           </div>
-          <Me />
-          {this.props.children}
+          <div className="container-fluid app-container">
+            {isLoggedIn ? <BodyData>{this.props.children}</BodyData> : <LoginForm />}
+          </div>
         </div>
-      </div>
+      </MuiThemeProvider>
     )
   }
 }

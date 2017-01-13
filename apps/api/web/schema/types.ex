@@ -5,6 +5,11 @@ defmodule Api.Schema.Types do
   object :user do
     field :id, :id
     field :name, :string
+    field :workouts, list_of(:workout) do
+      arg :limit, :integer
+      arg :offset, :integer
+      resolve &Api.Resolvers.WorkoutResolver.list/2
+    end
   end
 
   object :exercise do

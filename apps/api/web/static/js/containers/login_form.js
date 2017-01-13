@@ -3,6 +3,10 @@ import {connect} from 'react-redux'
 import {loginUser} from '../actions/index'
 import _ from 'lodash'
 
+import TextField from 'material-ui/TextField'
+import RaisedButton from 'material-ui/RaisedButton'
+import CircularProgress from 'material-ui/CircularProgress'
+
 class LoginForm extends Component {
   constructor(props) {
     super(props)
@@ -35,29 +39,27 @@ class LoginForm extends Component {
     return (
       <div className="container container-fluid">
         <h3>Log in</h3>
-        <div>
-          {loginText(this.props.loginState)}
-        </div>
         <div className="error-text">{this.state.error}</div>
         <form className="form">
           <div className="form-group">
-            <label>Username</label>
-            <input type="text"
-              className="form-control"
+            <div><label>Username</label></div>
+            <TextField type="text"
               value={this.state.username}
               onChange={this.onUsernameChange}
             />
           </div>
           <div className="form-group">
-            <label>Password</label>
-            <input
+            <div><label>Password</label></div>
+            <TextField
               type="password"
-              className="form-control"
               value={this.state.password}
               onChange={this.onPasswordChange}
             />
           </div>
-          <button className="btn btn-primary" onClick={this.onFormSubmit}>Log in</button>
+          <p className="top-padding-20">
+            <RaisedButton label="Log in" primary={true} onClick={this.onFormSubmit} style={{marginRight: '10px'}} />
+            {loginText(this.props.loginState)}
+          </p>
         </form>
       </div>
     )
@@ -69,7 +71,7 @@ const loginText = (loginState) => {
     return <div className="error-text">Login failed</div>
   }
   if (loginState === 'logging_in') {
-    return <div>Logging in...</div>
+    return <CircularProgress size={23} />
   }
   return ''
 }

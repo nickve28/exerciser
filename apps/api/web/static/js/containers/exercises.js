@@ -6,6 +6,8 @@ import _ from 'lodash'
 import ExerciseEntry from '../components/exercise_entry'
 import ExerciseForm from '../components/exercise_form'
 
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
+
 import Promise from 'bluebird'
 
 class Exercises extends Component {
@@ -47,25 +49,28 @@ class Exercises extends Component {
     const {exercises} = this.props
     return (
       <div>
-        <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
-        <h3>Exercise List</h3>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Description</th>
-              <th>-</th>
-            </tr>
-          </thead>
-          <tbody>
+        <h3>Exercise Overview</h3>
+        <Table>
+          <TableBody displayRowCheckbox={false}>
             {
-              _.map(exercises, (exercise) => {
-                return <ExerciseEntry key={exercise.id} exercise={exercise} onDelete={() => this._handleDelete(exercise)} />
-              })
+              //Temporary workaround until its clear why tableheader creates a new table
             }
-          </tbody>
-        </table>
+            <TableRow>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+              <TableHeaderColumn>Categories</TableHeaderColumn>
+              <TableHeaderColumn>Description</TableHeaderColumn>
+              <TableHeaderColumn>Action</TableHeaderColumn>
+            </TableRow>
+            {_.map(this.props.exercises, exercise => {
+              return (
+                <ExerciseEntry key={exercise.id}exercise={exercise} onDelete={() => this._handleDelete(exercise)} />
+              )
+            })}
+          </TableBody>
+        </Table>
+        <div className="margin-vertical">
+          <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
+        </div>
       </div>
     )
   }

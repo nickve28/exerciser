@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
 import { Field, reduxForm, FieldArray } from 'redux-form'
 import {connect} from 'react-redux'
-import Select from 'react-select'
-import DatePicker from 'react-datepicker'
+import DatePicker from 'material-ui/DatePicker'
+import TextField from 'material-ui/TextField'
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
+import RaisedButton from 'material-ui/RaisedButton'
 
 import {fetchWorkoutsAndExercises, saveWorkout, fetchExercises} from '../actions/index'
 import { browserHistory } from 'react-router';
@@ -37,9 +40,8 @@ class NewWorkout extends Component {
       <span>
         <ul style={{marginBottom: '5px'}} className="list-group">
           {fields.map((fieldName, index) => {
-            const customLiClass = index % 2 === 0 ? 'list-group-item-gray' : 'list-group-item-light-gray'
             return (
-              <li className={`list-group-item ${customLiClass}`} key={index}>
+              <li className='list-group-item list-group-item-gray' key={index}>
                 <div className="form-group">
                   <div>
                     <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>
@@ -47,11 +49,16 @@ class NewWorkout extends Component {
                   </div>
                   <Field className="form-control" name={`${fieldName}.exercise_id`} component={properties =>
                     <div>
-                      <Select
-                        options={mapExercises(this.props.exercises)}
-                        onChange={params => properties.input.onChange(params.value)}
-                        value={properties.input.value.toString()} //todo all API output should be either integer or string
-                      />
+                      <SelectField
+                        value={properties.input.value.toString()}
+                        onChange={(e, key, value) => properties.input.onChange(value)}
+                        maxHeight={200}
+                      >
+                        {_.map(this.props.exercises, exercise => {
+                          return <MenuItem value={exercise.id} key={exercise.id} primaryText={exercise.name} />
+                        })}
+                      </SelectField>
+
                       <div>
                         {properties.meta.touched && <span className="error-text">{properties.meta.error}</span>}
                       </div>
@@ -97,9 +104,9 @@ class NewWorkout extends Component {
     const { input, name, label, type, meta: { touched, error } } = fieldProps
 
     return (
-      <div className="form-group">
-        <label style={{marginRight: '5px'}}>{label}</label>
-        <input {...input} type={type} className="form-control" name={name} />
+      <div>
+        <p><label style={{marginRight: '5px'}}>{label}</label></p>
+        <TextField {...input} type={type} name={name} />
         {touched && <span className="error-text">{error}</span>}
       </div>
     )
@@ -121,23 +128,28 @@ class NewWorkout extends Component {
           </span>
         </div>
         <form className="form" onSubmit={handleSubmit(this.formSubmit)}>
-          <Field type="textarea" className="form-control" name="description" label="Description" component={this.renderField} />
-          <div className="form-group">
-            <label style={{marginRight: '5px'}}>Workout Date</label><br />
-            <Field type="text" className="form-control" name="workout_date" component={properties =>
-              <DatePicker
-                className="form-control"
-                selected={properties.input.value || moment()}
-                onChange={(val) => properties.input.onChange(val)}
-              />
-            } />
-          </div>
+          <Field type="textarea" name="description" label="Description" component={this.renderField} />
+          <label style={{marginRight: '5px'}}>Workout Date</label><br />
+          <Field type="text" name="workout_date" component={properties =>
+            <DatePicker
+              name="workout_date"
+              formatDate={formatDate}
+              onChange={(val) => properties.input.onChange(val)}
+              container="inline"
+              mode="landscape"
+              defaultDate={properties.input.value || moment().toDate()}
+            />
+          } />
           <FieldArray name="performedExercises" component={this.renderPerformedExercises} />
-          <button className="btn btn-primary" type="submit">Create</button>
+          <RaisedButton label="Create" primary={true} type="submit" />
       </form>
       </div>
     )
   }
+}
+
+function formatDate(date) {
+  return moment(date).format('YYYY-MM-DD')
 }
 
 

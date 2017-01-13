@@ -3,6 +3,8 @@ import {saveExercise} from '../actions/index'
 import _ from 'lodash'
 
 import Select, { Creatable } from 'react-select';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 
 export default class ExerciseForm extends Component {
   constructor(props) {
@@ -39,12 +41,12 @@ export default class ExerciseForm extends Component {
         <div>
           <form className="form">
             <div className="form-group">
-              <label>Name</label>
-              <input className="form-control" value={this.state.name} onChange={(e) => this._setProperty('name', e)} />
+              <div><label>Name</label></div>
+              <TextField name="name" value={this.state.name} onChange={(e) => this._setProperty('name', e)} />
             </div>
 
             <div className="form-group">
-              <label>Categories</label>
+              <div><label>Categories</label></div>
               <Creatable
                 name="categories"
                 multi={true}
@@ -55,16 +57,16 @@ export default class ExerciseForm extends Component {
             </div>
 
             <div className="form-group">
-              <label>Description</label>
-              <input className="form-control" value={this.state.description} onChange={(e) => this._setProperty('description', e)} />
+              <div><label>Description</label></div>
+              <TextField name="description" value={this.state.description} onChange={(e) => this._setProperty('description', e)} />
             </div>
-            <button className="btn btn-primary" onClick={this._handleSubmit}>Submit</button>
+            <RaisedButton label="Submit" primary={true} onClick={this._handleSubmit} />
           </form>
         </div>
       )
     } else {
       return (
-        <button className="btn btn-primary" onClick={(e) => this.formToggle(e)}>Create Exercise</button>
+        <RaisedButton label="Create Exercise" primary={true} onClick={(e) => this.formToggle(e)} />
       )
     }
   }

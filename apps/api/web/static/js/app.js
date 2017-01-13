@@ -14,11 +14,14 @@ import Exercises from './containers/exercises'
 import Workouts from './containers/workouts'
 import WorkoutDetail from './containers/workout_detail'
 import NewWorkout from './containers/new_workout'
+import injectTapEventPlugin from 'react-tap-event-plugin'
 
 
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 
 const createStoreWithMiddleware = applyMiddleware(ReduxThunk)(createStore);
+
+injectTapEventPlugin();
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
