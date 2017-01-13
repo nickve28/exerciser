@@ -40,9 +40,8 @@ class NewWorkout extends Component {
       <span>
         <ul style={{marginBottom: '5px'}} className="list-group">
           {fields.map((fieldName, index) => {
-            const customLiClass = index % 2 === 0 ? 'list-group-item-gray' : 'list-group-item-light-gray'
             return (
-              <li className={`list-group-item ${customLiClass}`} key={index}>
+              <li className='list-group-item list-group-item-gray' key={index}>
                 <div className="form-group">
                   <div>
                     <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>

@@ -26,12 +26,10 @@ body {
   cursor: pointer;
 }
 
-.list-group-item-light-gray {
-  background-color:	#F5F5F5
-}
-
 .list-group-item-gray {
-  background-color: #E0E0E0
+  margin-bottom: 3px;
+  border: 3px solid #E0E0E0;
+  background-color: #F5F5F5;
 }
 
 .error-text {
