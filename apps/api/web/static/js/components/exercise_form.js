@@ -4,7 +4,6 @@ import _ from 'lodash'
 
 import {TextField, RaisedButton, MenuItem} from 'material-ui'
 import ChipInput from 'material-ui-chip-input'
-import TagsInput from 'react-tagsinput'
 
 export default class ExerciseForm extends Component {
   constructor(props) {
