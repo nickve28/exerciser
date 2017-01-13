@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import {saveExercise} from '../actions/index'
 import _ from 'lodash'
 
-import Select, { Creatable } from 'react-select';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+import {TextField, RaisedButton, MenuItem} from 'material-ui'
+import ChipInput from 'material-ui-chip-input'
+import TagsInput from 'react-tagsinput'
 
 export default class ExerciseForm extends Component {
   constructor(props) {
@@ -29,11 +29,11 @@ export default class ExerciseForm extends Component {
     return this.setState(_.merge({}, this.state, {[prop]: e.target.value}))
   }
 
+
   formToggle(e) {
     e.preventDefault()
     this.setState(_.merge({}, this.state, {pageData: {showForm: !this.state.pageData.showForm}}))
   }
-
 
   render() {
     if (this.state.pageData.showForm) {
@@ -47,12 +47,9 @@ export default class ExerciseForm extends Component {
 
             <div className="form-group">
               <div><label>Categories</label></div>
-              <Creatable
-                name="categories"
-                multi={true}
-                options={mapCategories(this.props.categories)}
-                value={this.state.categories}
-                onChange={(e) => this._setProperty('categories', e)}
+              <ChipInput
+                dataSource={this.props.categories}
+                onChange={categories => this._setProperty('categories', categories)}
               />
             </div>
 
@@ -74,6 +71,11 @@ export default class ExerciseForm extends Component {
 
 const mapCategories = (categories) => {
   return _.map(categories, category => {
-    return {value: category, label: category}
+    return {
+      text: category,
+      value: (
+        <MenuItem primaryText={category} />
+      )
+    }
   })
 }

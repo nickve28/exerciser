@@ -31,8 +31,6 @@ class Exercises extends Component {
 
   _handleSubmit(e, exercise) {
     e.preventDefault()
-    exercise.categories = _.map(exercise.categories, 'value')
-    //maybe introduce bluebird and make it parallel
     return this.props.saveExercise(exercise).then(() => {
       return this.loadData()
     })
