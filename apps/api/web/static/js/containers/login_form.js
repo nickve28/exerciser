@@ -44,6 +44,7 @@ class LoginForm extends Component {
           <div className="form-group">
             <div><label>Username</label></div>
             <TextField type="text"
+              name="username"
               value={this.state.username}
               onChange={this.onUsernameChange}
             />
@@ -52,6 +53,7 @@ class LoginForm extends Component {
             <div><label>Password</label></div>
             <TextField
               type="password"
+              name="password"
               value={this.state.password}
               onChange={this.onPasswordChange}
             />

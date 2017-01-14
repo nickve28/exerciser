@@ -9,8 +9,6 @@
 
     <title>Exerciser</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-    <link rel="stylesheet" href="https://unpkg.com/react-select/dist/react-select.css">
-    <link ref="stylesheet" href="<%= static_path(@conn, "/css/react-datepicker.css") %>">
   </head>
   <body>
     <div id="root" />
