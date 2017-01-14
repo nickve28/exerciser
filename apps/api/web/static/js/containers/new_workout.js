@@ -50,12 +50,13 @@ class NewWorkout extends Component {
                   <Field className="form-control" name={`${fieldName}.exercise_id`} component={properties =>
                     <div>
                       <SelectField
+                        name="exercise_id"
                         value={properties.input.value.toString()}
                         onChange={(e, key, value) => properties.input.onChange(value)}
                         maxHeight={200}
                       >
                         {_.map(this.props.exercises, exercise => {
-                          return <MenuItem value={exercise.id} key={exercise.id} primaryText={exercise.name} />
+                          return <MenuItem name="exercise_list" value={exercise.id} key={exercise.id} primaryText={exercise.name} />
                         })}
                       </SelectField>
 
@@ -102,11 +103,10 @@ class NewWorkout extends Component {
 
   renderField(fieldProps) {
     const { input, name, label, type, meta: { touched, error } } = fieldProps
-
     return (
       <div>
         <p><label style={{marginRight: '5px'}}>{label}</label></p>
-        <TextField {...input} type={type} name={name} />
+        <TextField {...input} type={type} name={input.name} />
         {touched && <span className="error-text">{error}</span>}
       </div>
     )
@@ -163,7 +163,7 @@ function mapStateToProps(state) {
   let initialValues = _.cloneDeep(_.first(state.workouts.workouts))
   if (initialValues) {
     //todo fix value of performed_exercises
-    initialValues.workout_date = moment(initialValues.workout_date)
+    initialValues.workout_date = moment(initialValues.workout_date).toDate()
     initialValues.performedExercises = initialValues.performed_exercises
     initialValues = _.omit(initialValues, ['performed_exercises', 'id'])
   }
