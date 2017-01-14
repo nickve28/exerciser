@@ -1,11 +1,8 @@
 import React, {Component} from 'react'
 import { Field, reduxForm, FieldArray } from 'redux-form'
 import {connect} from 'react-redux'
-import DatePicker from 'material-ui/DatePicker'
-import TextField from 'material-ui/TextField'
-import SelectField from 'material-ui/SelectField'
-import MenuItem from 'material-ui/MenuItem'
-import RaisedButton from 'material-ui/RaisedButton'
+import {Link} from 'react-router'
+import {DatePicker, TextField, SelectField, MenuItem, RaisedButton} from 'material-ui'
 
 import {fetchWorkoutsAndExercises, saveWorkout, fetchExercises} from '../actions/index'
 import { browserHistory } from 'react-router';
@@ -113,7 +110,7 @@ class NewWorkout extends Component {
   }
 
   loadTemplate() {
-    this.props.fetchWorkoutsAndExercises(1);
+    this.props.fetchWorkoutsAndExercises(1)
   }
 
   render() {
@@ -124,9 +121,15 @@ class NewWorkout extends Component {
         <div>
           <strong style={{marginRight: '5px'}}>New workout</strong>
           <span className="pull-right-xs">
-            <a href="javascript:void(0);" onClick={() => this.loadTemplate()}>Load most recent workout template</a>
+            <small>
+              <Link to="/workouts">Go Back</Link>
+            </small>
           </span>
         </div>
+        <small>
+          <a href="javascript:void(0);" onClick={() => this.loadTemplate()}>Load most recent workout template</a>
+        </small>
+
         <form className="form" onSubmit={handleSubmit(this.formSubmit)}>
           <Field type="textarea" name="description" label="Description" component={this.renderField} />
           <label style={{marginRight: '5px'}}>Workout Date</label><br />
