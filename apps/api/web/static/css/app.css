@@ -70,7 +70,7 @@ body {
   }
 
   .navbar-nav li {
-    margin-left: 10px;
+    padding-left: 10px;
   }
 
   .navbar-nav li a {

@@ -36,7 +36,7 @@ const handleUnauthorized = (error, dispatch) => {
     localStorage.removeItem('auth_token')
     dispatch({type: USER_LOGIN_EXPIRED})
   }
-  throw error
+  return error
 }
 
 export const fetchExercises = () => {
