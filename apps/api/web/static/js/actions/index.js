@@ -16,6 +16,7 @@ export const FETCH_WORKOUTS = 'FETCH_WORKOUTS'
 export const FETCH_MORE_WORKOUTS = 'FETCH_MORE_WORKOUTS'
 export const FETCH_WORKOUT = 'FETCH_WORKOUT'
 export const SAVE_WORKOUT = 'SAVE_WORKOUT'
+export const FETCH_WORKOUT_TEMPLATE = 'FETCH_WORKOUT_TEMPLATE'
 
 export const FETCH_EXERCISES = 'FETCH_EXERCISES'
 export const SAVE_EXERCISE = 'SAVE_EXERCISE'
@@ -210,6 +211,32 @@ export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {ap
       const action = append ? FETCH_MORE_WORKOUTS : FETCH_WORKOUTS
       return dispatch({
         type: action,
+        payload: data
+      })
+    }).catch(err => handleUnauthorized(err, dispatch))
+  }
+}
+
+export const fetchWorkoutTemplateAndExercises = () => {
+  const token = localStorage.getItem('auth_token')
+  return dispatch => {
+    const headers = {
+      authorization: `Bearer ${token}`
+    }
+    const transport = new HttpTransport(URL, {headers})
+    transport.send(`{
+      me {
+        workouts(limit: 1) {
+          workout_date, performed_exercises {
+            exercise_id, reps, weight, sets
+          }, description, id },
+      },
+      exercises {
+        id, name, description, categories
+      }
+    }`).then(function (data) {
+      return dispatch({
+        type: FETCH_WORKOUT_TEMPLATE,
         payload: data
       })
     }).catch(err => handleUnauthorized(err, dispatch))

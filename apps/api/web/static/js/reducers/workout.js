@@ -1,4 +1,4 @@
-import {FETCH_WORKOUTS, FETCH_WORKOUT, FETCH_MORE_WORKOUTS} from '../actions/index'
+import {FETCH_WORKOUTS, FETCH_WORKOUT, FETCH_MORE_WORKOUTS, RESET_WORKOUTS, FETCH_WORKOUT_TEMPLATE} from '../actions/index'
 import _ from 'lodash'
 
 const INITIAL_STATE = {selectedExercise: null, exercises: []}
@@ -29,9 +29,15 @@ export default (state = INITIAL_STATE, action = {}) => {
     }
     return _.defaults({workouts: toCombinedModel(payload)}, state)
   }
+
   if (action.type === FETCH_WORKOUT) {
     return _.defaults({selectedWorkout: combineExercises(action.payload.workout, action.payload.exercises)}, state)
   }
+
+  if (action.type === FETCH_WORKOUT_TEMPLATE) {
+    return _.defaults({workoutTemplate: combineExercises(_.first(action.payload.me.workouts), action.payload.exercises)}, state)
+  }
+
   if (action.type === FETCH_MORE_WORKOUTS) {
     const payload = {
       exercises: action.payload.exercises,
@@ -39,5 +45,6 @@ export default (state = INITIAL_STATE, action = {}) => {
     }
     return _.merge({}, state,  {workouts: _.concat(state.workouts, toCombinedModel(payload))})
   }
+
   return state
 }
