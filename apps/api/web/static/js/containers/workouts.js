@@ -85,8 +85,6 @@ function renderNotification(notificationInfo) {
 }
 
 function mapStateToProps(state) {
-  console.log(state); //eslint-disable-line no-console
-
   return {
     workouts: state.workouts.workouts,
     notifications: state.notifications

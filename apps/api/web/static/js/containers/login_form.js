@@ -13,8 +13,6 @@ class LoginForm extends Component {
     this.onUsernameChange = this.onUsernameChange.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
     this.onFormSubmit = this.onFormSubmit.bind(this)
-    this.renderNotification = this.renderNotification.bind(this)
-
   }
 
   onUsernameChange(e) {
@@ -32,16 +30,6 @@ class LoginForm extends Component {
   onFormSubmit(e) {
     e.preventDefault()
     this.props.loginUser(this.state.username, this.state.password)
-  }
-
-  renderNotification() {
-    return (
-      <Snackbar
-        open={this.props.showNotification}
-        message="Your login session expired. Please log in."
-        autoHideDuration={5000}
-      />
-    )
   }
 
   render() {
@@ -70,7 +58,7 @@ class LoginForm extends Component {
           <div className="top-padding-20">
             <RaisedButton label="Log in" primary={true} onClick={this.onFormSubmit} style={{marginRight: '10px'}} />
             {loginText(this.props.loginState)}
-            {this.renderNotification()}
+            {renderNotification(this.props.notifications)}
           </div>
         </form>
       </div>
@@ -88,10 +76,21 @@ const loginText = (loginState) => {
   return ''
 }
 
+
+function renderNotification(notificationInfo) {
+  return (
+    <Snackbar
+      open={notificationInfo.showLoginExpired}
+      message="Your login session expired. Please log in."
+      autoHideDuration={3000}
+    />
+  )
+}
+
 function mapStateToProps(state) {
   return {
     loginState: state.authentication.loginState,
-    showNotification: state.authentication.loginState === 'logged_out' ? true : false
+    notifications: state.notifications
   }
 }
 

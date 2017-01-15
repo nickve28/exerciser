@@ -5,6 +5,7 @@ export const USER_LOGIN_PENDING = 'USER_LOGIN_PENDING'
 export const USER_LOGIN = 'USER_LOGIN'
 export const USER_LOGIN_FAILED = 'USER_LOGIN_FAILED'
 export const USER_LOGIN_EXPIRED = 'USER_LOGIN_EXPIRED'
+export const USER_LOGIN_EXPIRE_END = 'USER_LOGIN_EXPIRE_END'
 
 import axios from 'axios'
 
