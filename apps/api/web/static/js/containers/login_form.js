@@ -58,10 +58,10 @@ class LoginForm extends Component {
               onChange={this.onPasswordChange}
             />
           </div>
-          <p className="top-padding-20">
+          <div className="top-padding-20">
             <RaisedButton label="Log in" primary={true} onClick={this.onFormSubmit} style={{marginRight: '10px'}} />
             {loginText(this.props.loginState)}
-          </p>
+          </div>
         </form>
       </div>
     )
