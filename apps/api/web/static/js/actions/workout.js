@@ -12,7 +12,7 @@ export const FETCH_MORE_WORKOUTS = 'FETCH_MORE_WORKOUTS'
 export const FETCH_WORKOUT = 'FETCH_WORKOUT'
 export const SAVE_WORKOUT = 'SAVE_WORKOUT'
 export const FETCH_WORKOUT_TEMPLATE = 'FETCH_WORKOUT_TEMPLATE'
-export const DELETE_WORKOUT = DELETE_WORKOUT
+export const DELETE_WORKOUT = 'DELETE_WORKOUT'
 
 export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {append: false}) => {
   const token = localStorage.getItem('auth_token')

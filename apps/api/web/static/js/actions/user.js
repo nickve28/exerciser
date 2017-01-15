@@ -1,6 +1,8 @@
 import configuration from '../configs/index'
 export const URL = `${configuration.apiHost}:${configuration.apiPort}/api/graphql`
 
+import handleUnauthorized from './error'
+
 import HttpTransport from 'lokka-transport-http'
 const transport = new HttpTransport(URL)
 

@@ -4,6 +4,8 @@ import CategoryReducer from './category'
 import ExerciseReducer from './exercise'
 import {MeReducer, AuthenticationReducer} from './user'
 import WorkoutReducer from './workout'
+import NotificationReducer from './notification'
+
 import { reducer as FormReducer } from 'redux-form'
 
 const reducers = combineReducers({
@@ -12,6 +14,7 @@ const reducers = combineReducers({
   authentication: AuthenticationReducer,
   categories: CategoryReducer,
   workouts: WorkoutReducer,
+  notifications: NotificationReducer,
   form: FormReducer
 })
 

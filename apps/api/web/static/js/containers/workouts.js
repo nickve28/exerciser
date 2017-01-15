@@ -5,7 +5,7 @@ import {Link} from 'react-router'
 
 import _ from 'lodash'
 
-import {RaisedButton} from 'material-ui'
+import {RaisedButton, Snackbar} from 'material-ui'
 
 import WorkoutEntry from '../components/workout_entry'
 
@@ -67,15 +67,29 @@ class Workouts extends Component {
           }
         {this.renderMoreButton()}
         </ul>
+        {renderNotification(this.props.notifications)}
 
       </div>
     )
   }
 }
 
+function renderNotification(notificationInfo) {
+  return (
+    <Snackbar
+      open={notificationInfo.showWorkoutDeleted}
+      message="The workout has been deleted."
+      autoHideDuration={5000}
+    />
+  )
+}
+
 function mapStateToProps(state) {
+  console.log(state); //eslint-disable-line no-console
+
   return {
-    workouts: state.workouts.workouts
+    workouts: state.workouts.workouts,
+    notifications: state.notifications
   }
 }
 
