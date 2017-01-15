@@ -34,10 +34,6 @@ class LoginForm extends Component {
     this.props.loginUser(this.state.username, this.state.password)
   }
 
-  handleRequestClose() {
-    this.setState(_.defaults({showNotification: false}, this.state))
-  }
-
   renderNotification() {
     return (
       <Snackbar
