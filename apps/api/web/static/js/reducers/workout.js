@@ -1,7 +1,7 @@
 import {FETCH_WORKOUTS, FETCH_WORKOUT, FETCH_MORE_WORKOUTS, RESET_WORKOUTS, FETCH_WORKOUT_TEMPLATE} from '../actions/index'
 import _ from 'lodash'
 
-const INITIAL_STATE = {selectedExercise: null, exercises: []}
+const INITIAL_STATE = {selectedWorkout: null, workouts: [], workoutTemplate: null}
 
 const toCombinedModel = ({exercises, workouts}) => {
   return _.map(workouts, workout => {
@@ -43,7 +43,8 @@ export default (state = INITIAL_STATE, action = {}) => {
       exercises: action.payload.exercises,
       workouts: action.payload.me.workouts
     }
-    return _.merge({}, state,  {workouts: _.concat(state.workouts, toCombinedModel(payload))})
+    const workouts = _.concat(state.workouts, toCombinedModel(payload))
+    return _.defaults({workouts}, state)
   }
 
   return state
