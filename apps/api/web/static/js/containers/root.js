@@ -31,7 +31,7 @@ class Root extends React.Component {
           <div>
             <NavigationBar />
           </div>
-          <div className="container-fluid app-container">
+          <div className="container-fluid app-container app-container-size">
             {isLoggedIn ? <BodyData>{this.props.children}</BodyData> : <LoginForm />}
           </div>
         </div>

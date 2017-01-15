@@ -5,6 +5,8 @@ import {Link} from 'react-router'
 
 import _ from 'lodash'
 
+import {RaisedButton} from 'material-ui'
+
 import WorkoutEntry from '../components/workout_entry'
 
 class Workouts extends Component {
@@ -39,7 +41,7 @@ class Workouts extends Component {
 
       return (
         <li className="show-more-li-non-styled">
-          <button onClick={() => this.loadWorkouts(limit, offset)} className="btn btn-success">Show more</button>
+          <RaisedButton backgroundColor="#a4c639" labelColor="white" onClick={() => this.loadWorkouts(limit, offset)} label="Show more" />
         </li>
       )
     }
