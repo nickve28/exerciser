@@ -3,20 +3,27 @@ import {connect} from 'react-redux'
 
 import { Router, Route, browserHistory } from 'react-router'
 
-import Me from './me'
 import LoginForm from './login_form'
 import NavigationBar from '../components/navigation_bar'
-import Banner from '../components/banner'
+
+import {fetchMe} from '../actions/index'
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import _ from 'lodash'
 
+
+//Todo this class needs rework so components arent defined in two places, just to rerender it with data
 const BodyData = (props) => {
+  const {user} = props
   return (
     <div>
-      <Me />
-      {props.children}
+      <div>
+        <NavigationBar user={user} />
+      </div>
+      <div className="container-fluid app-container app-container-size">
+        {props.children}
+      </div>
     </div>
   )
 }
@@ -25,16 +32,23 @@ class Root extends React.Component {
   render() {
     const isLoggedIn =_.get(this.props, 'authentication.token')
 
-    return (
-      <MuiThemeProvider>
+    let content;
+    if (isLoggedIn) {
+      content = <BodyData user={this.props.user}>{this.props.children}</BodyData>
+    } else {
+      content = (
         <div>
-          <div>
-            <NavigationBar />
-          </div>
+          <div><NavigationBar /></div>
           <div className="container-fluid app-container app-container-size">
-            {isLoggedIn ? <BodyData>{this.props.children}</BodyData> : <LoginForm />}
+            <LoginForm />
           </div>
         </div>
+      )
+    }
+
+    return (
+      <MuiThemeProvider>
+        {content}
       </MuiThemeProvider>
     )
   }
@@ -42,8 +56,9 @@ class Root extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    authentication: state.authentication
+    authentication: state.authentication,
+    user: state.me
   }
 }
 
-export default connect(mapStateToProps)(Root)
+export default connect(mapStateToProps, {fetchMe})(Root)

@@ -6,7 +6,7 @@ body {
 
 .app-container {
   width: 95%;
-  margin-top: 30px;
+  margin-top: 90px;
   z-index: 3;
   background-color: #f2f2f2;
   box-shadow: 1px 1px 1px 1px #ccc;
@@ -53,6 +53,17 @@ body {
   list-style: none
 }
 
+.user-nav {
+  display: flex;
+  margin-right: 50px;
+}
+
+.user-nav-data {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  font-size: 20px;
+}
 
 @media screen and (min-width: 1024px) {
   .navbar-app {
@@ -69,8 +80,23 @@ body {
     z-index: -2;
   }
 
+
+  .float-right {
+    float: right !important;
+  }
+
+  .navbar-nav li:last-child {
+    padding-right: 30px;
+  }
+
+  .navbar-nav {
+    overflow: auto;
+    width: 100%
+  }
+
   .navbar-nav li {
     padding-left: 10px;
+    float: left;
   }
 
   .navbar-nav li a {
@@ -98,9 +124,15 @@ body {
     margin-top: 0px;
   }
 
+
   .navbar-nav li {
     display: inline;
     margin-left: 10px;
+  }
+
+
+  .navbar-nav > li:last-child {
+    float: right;
   }
 
   .navbar-nav li a {
