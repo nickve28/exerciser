@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
 import { Router, Route, browserHistory } from 'react-router'
@@ -14,27 +14,39 @@ import _ from 'lodash'
 
 
 //Todo this class needs rework so components arent defined in two places, just to rerender it with data
-const BodyData = (props) => {
-  const {user} = props
-  return (
-    <div>
+class BodyData extends Component {
+  componentDidMount() {
+    this.props.fetchMe()
+  }
+
+  render() {
+    const {user} = this.props
+
+    return (
       <div>
-        <NavigationBar user={user} />
+        <div>
+          <NavigationBar user={user} />
+        </div>
+        <div className="container-fluid app-container app-container-size">
+          {this.props.children}
+        </div>
       </div>
-      <div className="container-fluid app-container app-container-size">
-        {props.children}
-      </div>
-    </div>
-  )
+    )
+  }
 }
 
-class Root extends React.Component {
+class Root extends Component {
   render() {
     const isLoggedIn =_.get(this.props, 'authentication.token')
 
     let content;
     if (isLoggedIn) {
-      content = <BodyData user={this.props.user}>{this.props.children}</BodyData>
+      content = <BodyData
+        user={this.props.user}
+        fetchMe={this.props.fetchMe}
+        >
+          {this.props.children}
+        </BodyData>
     } else {
       content = (
         <div>
