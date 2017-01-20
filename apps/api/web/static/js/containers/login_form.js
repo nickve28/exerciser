@@ -13,6 +13,7 @@ class LoginForm extends Component {
     this.onUsernameChange = this.onUsernameChange.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
     this.onFormSubmit = this.onFormSubmit.bind(this)
+    this.setShowDialog = this.setShowDialog.bind(this)
   }
 
   onUsernameChange(e) {
@@ -32,9 +33,22 @@ class LoginForm extends Component {
     this.props.loginUser(this.state.username, this.state.password)
   }
 
+  renderNotification(showDialog) {
+    return (
+      <Snackbar
+        open={showDialog || false}
+        message="Your login session expired. Please log in."
+      />
+    )
+  }
+
+  setShowDialog(showDialog) {
+    this.showDialog = showDialog
+  }
+
   render() {
     return (
-      <div className="container container-fluid">
+      <div className="container container-fluid" ref={() => this.setShowDialog(this.props.notifications.showLoginExpired)}>
         <h3>Log in</h3>
         <div className="error-text">{this.state.error}</div>
         <form className="form">
@@ -58,7 +72,7 @@ class LoginForm extends Component {
           <div className="top-padding-20">
             <RaisedButton label="Log in" primary={true} onClick={this.onFormSubmit} style={{marginRight: '10px'}} />
             {loginText(this.props.loginState)}
-            {renderNotification(this.props.notifications)}
+            {this.renderNotification(this.showDialog)}
           </div>
         </form>
       </div>
@@ -74,17 +88,6 @@ const loginText = (loginState) => {
     return <CircularProgress size={23} />
   }
   return ''
-}
-
-
-function renderNotification(notificationInfo) {
-  return (
-    <Snackbar
-      open={notificationInfo.showLoginExpired}
-      message="Your login session expired. Please log in."
-      autoHideDuration={3000}
-    />
-  )
 }
 
 function mapStateToProps(state) {
