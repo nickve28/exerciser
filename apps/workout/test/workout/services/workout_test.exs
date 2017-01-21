@@ -58,14 +58,14 @@ defmodule Workout.Services.WorkoutTest do
     datetime = Timex.to_datetime(:calendar.local_time)
     |> Timex.Ecto.DateTime.cast!
 
-    exercise = %Schemas.Workout{description: "Saturday workout",
+    %Schemas.Workout{description: "Saturday workout",
       workout_date: datetime, user_id: 1, performed_exercises: [
-        %{exercise_id: 1, reps: 2, weight: 60.0}
+        %{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}
       ]}
     |> RepoHelper.create
 
-    {:ok, [exercise | _]} = Services.Workout.list(%{user_id: 1})
-    assert %{performed_exercises: [%{exercise_id: 1, reps: 2, weight: 60.0} | _]} = exercise
+    {:ok, [workout | _]} = Services.Workout.list(%{user_id: 1})
+    assert %{performed_exercises: [%{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}]} === Map.take(workout, [:performed_exercises])
   end
 
   @tag :get
@@ -191,7 +191,7 @@ defmodule Workout.Services.WorkoutTest do
     end
 
     @tag :update
-    test "#update should fail if the workout_date update value is invalid", %{workout: %{id: id} = workout} do
+    test "#update should fail if the workout_date update value is invalid", %{workout: workout} do
       payload = workout
       |> Map.take([:id, :description, :workout_date, :performed_exercises])
       |> Map.merge(%{workout_date: "foo"})
@@ -201,21 +201,21 @@ defmodule Workout.Services.WorkoutTest do
     end
 
     @tag :update
-    test "#update should succeed if the workout_date update value is valid", %{workout: %{id: id} = exercise} do
-      payload = exercise
+    test "#update should succeed if the workout_date update value is valid", %{workout: %{id: id} = workout} do
+      payload = workout
       |> Map.take([:id, :description, :workout_date, :performed_exercises])
       |> Map.merge(%{workout_date: "2017-01-01"})
 
-      assert {:ok, %{id: id, workout_date: "2017-01-01"}} = Workout.Services.Workout.update(payload)
+      assert {:ok, %{id: ^id, workout_date: "2017-01-01"}} = Workout.Services.Workout.update(payload)
     end
 
     @tag :update
-    test "#update should succeed if the description update value is valid", %{workout: %{id: id} = exercise} do
-      payload = exercise
+    test "#update should succeed if the description update value is valid", %{workout: %{id: id} = workout} do
+      payload = workout
       |> Map.take([:id, :description, :workout_date, :description, :performed_exercises])
       |> Map.merge(%{description: "foo", workout_date: "2017-01-01"})
 
-      assert {:ok, %{id: id, description: "foo"}} = Workout.Services.Workout.update(payload)
+      assert {:ok, %{id: ^id, description: "foo"}} = Workout.Services.Workout.update(payload)
       assert {:ok, %{description: "foo"}} = Workout.Services.Workout.get(%{id: id})
     end
 
@@ -233,12 +233,55 @@ defmodule Workout.Services.WorkoutTest do
     end
 
     @tag :update
-    test "#update should fail if one of the exercises does not exist", %{workout: %{id: id} = workout} do
+    test "#update should fail if one of the exercises does not exist", %{workout: workout} do
       payload = workout
       |> Map.take([:id, :description, :workout_date, :performed_exercises])
       |> Map.merge(%{workout_date: "2017-01-01", performed_exercises: [%{exercise_id: 0, weight: 1.0, reps: 1, sets: 1}]})
 
-      {:error, {:invalid, [exercise_id: "Not found"]}}
+      assert {:error, {:invalid, [exercise_id: "Not found"]}} === Workout.Services.Workout.update(payload)
+    end
+  end
+
+  @tag :count
+  test "#count should return 400 when no user_id is given" do
+    assert {:error, {:invalid, [{:user_id, :required}]}} === Workout.Services.Workout.count(%{})
+  end
+
+  describe "when no workouts exist for the user" do
+    setup do
+      datetime = Timex.to_datetime(:calendar.local_time)
+      |> Timex.Ecto.DateTime.cast!
+
+      workout = %Schemas.Workout{description: "Saturday workout",
+        workout_date: datetime, user_id: 2, performed_exercises: [
+          %{exercise_id: 1, reps: 2, weight: 60.0}
+        ]}
+      |> RepoHelper.create
+      {:ok, workout: workout}
+    end
+
+    @tag :count
+    test "#count should return 0" do
+      assert {:ok, 0} === Workout.Services.Workout.count(%{user_id: 1})
+    end
+  end
+
+  describe "when exercises exist for the user" do
+    setup do
+      datetime = Timex.to_datetime(:calendar.local_time)
+      |> Timex.Ecto.DateTime.cast!
+
+      workout = %Schemas.Workout{description: "Saturday workout",
+        workout_date: datetime, user_id: 1, performed_exercises: [
+          %{exercise_id: 1, reps: 2, weight: 60.0}
+        ]}
+      |> RepoHelper.create
+      {:ok, workout: workout}
+    end
+
+    @tag :count
+    test "#count should return the amount of workouts of the user" do
+      assert {:ok, 1} === Workout.Services.Workout.count(%{user_id: 1})
     end
   end
 end

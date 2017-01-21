@@ -27,6 +27,7 @@ export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {ap
           workout_date, performed_exercises {
             exercise_id, reps, weight, sets
           }, description, id },
+        workout_count,
       },
       exercises {
         id, name, description, categories

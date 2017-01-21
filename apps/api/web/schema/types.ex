@@ -10,6 +10,9 @@ defmodule Api.Schema.Types do
       arg :offset, :integer
       resolve &Api.Resolvers.WorkoutResolver.list/2
     end
+    field :workout_count, :integer do
+      resolve &Api.Resolvers.WorkoutResolver.count/2
+    end
   end
 
   object :exercise do

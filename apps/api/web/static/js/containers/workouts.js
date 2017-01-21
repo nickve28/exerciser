@@ -32,8 +32,8 @@ class Workouts extends Component {
   }
 
   renderMoreButton() {
-    const {workouts} = this.props
-    const moreAvailable = workouts && workouts.length % 10 === 0
+    const {workouts, count} = this.props
+    const moreAvailable = workouts && workouts.length < count
 
     if (moreAvailable) {
       const offset = workouts.length
@@ -49,12 +49,12 @@ class Workouts extends Component {
   }
 
   render() {
-    const {workouts} = this.props
+    const {workouts, count} = this.props
     return (
       <div>
         <br />
         <div style={{marginBottom: '50px'}}>
-          <h3 style={{display: 'inline'}}>List of recent workouts</h3>
+          <h3 style={{display: 'inline'}}>List of recent workouts ({count})</h3>
           <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
         </div>
 
@@ -87,6 +87,7 @@ function renderNotification(notificationInfo) {
 function mapStateToProps(state) {
   return {
     workouts: state.workouts.workouts,
+    count: state.workouts.workoutCount,
     notifications: state.notifications
   }
 }
