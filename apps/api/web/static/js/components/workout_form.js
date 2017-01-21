@@ -82,7 +82,7 @@ class WorkoutForm extends Component {
     return (
       <div>
         <div>
-          <strong style={{marginRight: '5px'}}>New workout</strong>
+          <h3 style={{marginRight: '5px', display: 'inline-block'}}>New workout</h3>
           <span className="pull-right-xs">
             <small>
               <Link to="/workouts">Go Back</Link>

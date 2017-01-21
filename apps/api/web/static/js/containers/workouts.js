@@ -53,8 +53,8 @@ class Workouts extends Component {
     return (
       <div>
         <br />
-        <div>
-          <strong>List of recent workouts</strong>
+        <div style={{marginBottom: '50px'}}>
+          <h3 style={{display: 'inline'}}>List of recent workouts</h3>
           <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
         </div>
 
