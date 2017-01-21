@@ -55,6 +55,16 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+  @spec count(%{user_id: integer}) :: {:ok, integer}
+  def count(%{user_id: user_id}) when is_integer(user_id) do
+    :poolboy.transaction(:workout_pool, fn pid ->
+      GenServer.call(pid, {:count, %{user_id: user_id}})
+    end)
+  end
+
+  @spec count(%{}) :: {:error, {:invalid, [{:user_id, :required}]}}
+  def count(%{}), do: {:error, {:invalid, [{:user_id, :required}]}}
+
   def handle_call({:get, id}, _from, state) do
     workout = case Workout.Repositories.Workout.get(id) do
       {:ok, nil} -> {:error, {:enotfound, "Workout could not be found", []}}
@@ -104,6 +114,11 @@ defmodule Workout.Services.Workout do
       _ -> {:error, :internal}
     end
 
+    {:reply, result, state}
+  end
+
+  def handle_call({:count, %{user_id: user_id}}, _from, state) do
+    result = Workout.Repositories.Workout.count(%{user_id: user_id})
     {:reply, result, state}
   end
 

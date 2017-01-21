@@ -65,4 +65,9 @@ defmodule Workout.Repositories.Workout do
     Repo.delete_all(from workout in Workout,
                     where: ^id == workout.id)
   end
+
+  def count(%{user_id: user_id}) do
+    query = from(w in Workout, where: w.user_id == ^user_id)
+    {:ok, Repo.aggregate(query, :count, :id)}
+  end
 end

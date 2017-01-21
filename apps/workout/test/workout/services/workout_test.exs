@@ -241,4 +241,47 @@ defmodule Workout.Services.WorkoutTest do
       {:error, {:invalid, [exercise_id: "Not found"]}}
     end
   end
+
+  @tag :count
+  test "#count should return 400 when no user_id is given" do
+    assert {:error, {:invalid, [{:user_id, :required}]}} === Workout.Services.Workout.count(%{})
+  end
+
+  describe "when no workouts exist for the user" do
+    setup do
+      datetime = Timex.to_datetime(:calendar.local_time)
+      |> Timex.Ecto.DateTime.cast!
+
+      workout = %Schemas.Workout{description: "Saturday workout",
+        workout_date: datetime, user_id: 2, performed_exercises: [
+          %{exercise_id: 1, reps: 2, weight: 60.0}
+        ]}
+      |> RepoHelper.create
+      {:ok, workout: workout}
+    end
+
+    @tag :count
+    test "#count should return 0" do
+      assert {:ok, 0} === Workout.Services.Workout.count(%{user_id: 1})
+    end
+  end
+
+  describe "when exercises exist for the user" do
+    setup do
+      datetime = Timex.to_datetime(:calendar.local_time)
+      |> Timex.Ecto.DateTime.cast!
+
+      workout = %Schemas.Workout{description: "Saturday workout",
+        workout_date: datetime, user_id: 1, performed_exercises: [
+          %{exercise_id: 1, reps: 2, weight: 60.0}
+        ]}
+      |> RepoHelper.create
+      {:ok, workout: workout}
+    end
+
+    @tag :count
+    test "#count should return the amount of workouts of the user" do
+      assert {:ok, 1} === Workout.Services.Workout.count(%{user_id: 1})
+    end
+  end
 end
