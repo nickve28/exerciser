@@ -13,6 +13,30 @@ export const FETCH_WORKOUT = 'FETCH_WORKOUT'
 export const SAVE_WORKOUT = 'SAVE_WORKOUT'
 export const FETCH_WORKOUT_TEMPLATE = 'FETCH_WORKOUT_TEMPLATE'
 export const DELETE_WORKOUT = 'DELETE_WORKOUT'
+export const UPDATE_WORKOUT = 'UPDATE_WORKOUT'
+
+export const updateWorkout = (id, {description, workout_date, performed_exercises}) => {
+  const token = localStorage.getItem('auth_token')
+  const formatted_exercises = _.chain(performed_exercises)
+                               .map(({exercise_id, reps, sets, weight}) => `{exercise_id: ${exercise_id}, reps: ${reps}, weight: ${weight}, sets: ${sets}}`)
+                               .join(',').value()
+  const headers = {
+    authorization: `Bearer ${token}`
+  }
+  return dispatch => {
+    const transport = new HttpTransport(URL, {headers})
+    return transport.send(`mutation {
+      update_workout(id: ${id}, description: "${description}", workout_date: "${workout_date}", performed_exercises: [${formatted_exercises}]) {
+        id
+      }
+    }`).then(function (data) {
+      return dispatch({
+        type: UPDATE_WORKOUT,
+        payload: data
+      })
+    }).catch(err => handleUnauthorized(err, dispatch))
+  }
+}
 
 export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {append: false}) => {
   const token = localStorage.getItem('auth_token')

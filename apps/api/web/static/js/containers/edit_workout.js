@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import {fetchWorkoutTemplateAndExercises, saveWorkout, fetchExercises} from '../actions/index'
+import {fetchWorkoutAndExercises, fetchExercises, updateWorkout} from '../actions/index'
 import { browserHistory } from 'react-router';
 import {validateWorkoutCreate, validatePExerciseCreate} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
@@ -21,32 +21,30 @@ const EMPTY_EXERCISE = {
   sets: null
 }
 
-class NewWorkout extends Component {
+class EditWorkout extends Component {
   constructor(props) {
     super(props)
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
-    this.handleLoadTemplate = this.handleLoadTemplate.bind(this)
   }
 
   componentDidMount() {
-    return this.props.fetchExercises()
+    return Promise.join(
+      this.props.fetchExercises(),
+      this.props.fetchWorkoutAndExercises(this.props.params.id)
+    )
   }
 
   render() {
     return (
       <WorkoutForm
         handleFormSubmit={this.props.handleSubmit(this.handleFormSubmit)}
-        handleLoadTemplate={this.handleLoadTemplate}
-        action="Create"
+        handleLoadTemplate={_.noop}
+        action="Edit"
         exercises={this.props.exercises}
         validate={validate}
       />
     )
-  }
-
-  handleLoadTemplate() {
-    this.props.fetchWorkoutTemplateAndExercises()
   }
 
   handleFormSubmit(values) {
@@ -67,7 +65,8 @@ class NewWorkout extends Component {
       }
     })
     payload = _.omit(payload, 'performedExercises')
-    this.props.saveWorkout(payload).then(() => {
+    const id = this.props.params.id
+    return this.props.updateWorkout(id, payload).then(() => {
       browserHistory.push('/workouts') //best way to navigate..
     })
   }
@@ -97,7 +96,7 @@ function validate(data) {
 }
 
 function mapStateToProps(state) {
-  let initialValues = state.workouts.workoutTemplate
+  let initialValues = state.workouts.selectedWorkout
 
   if (initialValues) {
     //todo fix value of performed_exercises
@@ -112,10 +111,11 @@ function mapStateToProps(state) {
   }
 }
 
-NewWorkout = reduxForm({
+EditWorkout = reduxForm({
   form: 'workout',
   fields: ['description', 'workout_date', 'performedExercise'],
   validate
-})(NewWorkout)
+})(EditWorkout)
 
-export default connect(mapStateToProps, {fetchWorkoutTemplateAndExercises, saveWorkout, fetchExercises})(NewWorkout)
+export default connect(mapStateToProps, {fetchWorkoutAndExercises, fetchExercises, updateWorkout})(EditWorkout)
+
