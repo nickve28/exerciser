@@ -80,7 +80,6 @@ function renderNotification(notificationInfo) {
     <Snackbar
       open={notificationInfo.showWorkoutDeleted}
       message="The workout has been deleted."
-      autoHideDuration={5000}
     />
   )
 }

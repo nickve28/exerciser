@@ -13,6 +13,7 @@ export const FETCH_WORKOUT = 'FETCH_WORKOUT'
 export const SAVE_WORKOUT = 'SAVE_WORKOUT'
 export const FETCH_WORKOUT_TEMPLATE = 'FETCH_WORKOUT_TEMPLATE'
 export const DELETE_WORKOUT = 'DELETE_WORKOUT'
+export const DELETE_WORKOUT_NOTIFICATION_END = 'DELETE_WORKOUT_NOTIFICATION_END'
 export const UPDATE_WORKOUT = 'UPDATE_WORKOUT'
 
 export const updateWorkout = (id, {description, workout_date, performed_exercises}) => {
@@ -149,6 +150,10 @@ export const deleteWorkout = (id) => {
     return transport.send(`mutation {
       delete_workout(id: ${id})
     }`).then(function (data) {
+      setInterval(() => {
+        dispatch({type: DELETE_WORKOUT_NOTIFICATION_END})
+      }, 5000)
+
       return dispatch({
         type: DELETE_WORKOUT,
         payload: data
