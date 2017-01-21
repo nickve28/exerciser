@@ -47,7 +47,8 @@ class Exercises extends Component {
     const {exercises} = this.props
     return (
       <div>
-        <h3>Exercise Overview</h3>
+        <div style={{marginBottom: '10px'}} />
+        <h3 style={{display: 'inline'}} >Exercise Overview</h3>
         <Table>
           <TableBody displayRowCheckbox={false}>
             {

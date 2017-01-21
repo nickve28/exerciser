@@ -8,8 +8,9 @@ export const LOGIN_ENDPOINT = `${configuration.apiHost}:${configuration.apiPort}
 
 export {
   FETCH_WORKOUT, FETCH_WORKOUTS, FETCH_MORE_WORKOUTS, FETCH_WORKOUT_TEMPLATE, SAVE_WORKOUT, DELETE_WORKOUT,
+  UPDATE_WORKOUT, DELETE_WORKOUT_NOTIFICATION_END,
   fetchWorkoutAndExercises, fetchWorkoutsAndExercises, fetchWorkoutTemplateAndExercises,
-  saveWorkout, deleteWorkout
+  saveWorkout, deleteWorkout, updateWorkout
 } from './workout'
 
 export {FETCH_ME, fetchMe} from './user'

@@ -52,7 +52,8 @@ class Workouts extends Component {
     const {workouts, count} = this.props
     return (
       <div>
-        <br />
+        <div style={{marginBottom: '10px'}} />
+
         <div style={{marginBottom: '50px'}}>
           <h3 style={{display: 'inline'}}>List of recent workouts ({count})</h3>
           <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
@@ -79,7 +80,6 @@ function renderNotification(notificationInfo) {
     <Snackbar
       open={notificationInfo.showWorkoutDeleted}
       message="The workout has been deleted."
-      autoHideDuration={5000}
     />
   )
 }

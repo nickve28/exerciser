@@ -22,6 +22,7 @@ class WorkoutForm extends Component {
     this.renderPerformedExercises = this.renderPerformedExercises.bind(this)
   }
 
+
   renderPerformedExercises({fields}) {
     return (
       <span>
@@ -77,20 +78,20 @@ class WorkoutForm extends Component {
   }
 
   render() {
-    const {handleFormSubmit, handleLoadTemplate, exercises} = this.props
+    const {handleFormSubmit, handleLoadTemplate, exercises, action} = this.props
+    const loadTemplateTxt = action === "Create" ? <a href="javascript:void(0);" onClick={handleLoadTemplate}>Load most recent workout template</a> : ''
 
     return (
       <div>
+        <div style={{marginBottom: '10px'}} />
         <div>
-          <h3 style={{marginRight: '5px', display: 'inline-block'}}>New workout</h3>
-          <span className="pull-right-xs">
-            <small>
-              <Link to="/workouts">Go Back</Link>
-            </small>
+          <h3 style={{display: 'inline'}}>{action} Workout</h3>
+          <span className="float-right">
+            <Link to="/workouts">Go Back</Link>
           </span>
         </div>
         <small>
-          <a href="javascript:void(0);" onClick={handleLoadTemplate}>Load most recent workout template</a>
+          {loadTemplateTxt}
         </small>
 
         <form className="form" onSubmit={handleFormSubmit}>
@@ -100,14 +101,17 @@ class WorkoutForm extends Component {
             <DatePicker
               name="workout_date"
               formatDate={formatDate}
-              onChange={(val) => properties.input.onChange(val)}
+              onChange={(e, val) =>  {
+                //e = empty event, 2nd arg = date
+                properties.input.onChange(val)
+              }}
               container="inline"
               mode="landscape"
               defaultDate={properties.input.value || moment().toDate()}
             />
           } />
           <FieldArray name="performedExercises" component={this.renderPerformedExercises} />
-          <RaisedButton label="Create" primary={true} type="submit" />
+          <RaisedButton style={{marginTop: '10px'}} label={this.props.action} primary={true} type="submit" />
       </form>
       </div>
     )

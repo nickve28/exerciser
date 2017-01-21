@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import {fetchWorkoutAndExercises} from '../actions/index'
 import _ from 'lodash'
 
+import {Link} from 'react-router'
+
 class WorkoutDetail extends Component {
   componentWillMount() {
     this.props.fetchWorkoutAndExercises(this.props.params.id)
@@ -15,9 +17,19 @@ class WorkoutDetail extends Component {
 
     return (
       <div>
-        <h3>Details for the workout</h3>
+        <div>
+          <div style={{marginBottom: '10px'}} />
+          <h3 style={{marginRight: '5px', display: 'inline'}}>Details for the workout</h3>
+          <span className="float-right">
+            <span>
+              <Link to={`/workouts/${workout.id}/edit`}>Edit</Link>
+              {"  |  "}
+              <Link to="/workouts">Go Back</Link>
+            </span>
+          </span>
+        </div>
         <ul className="list-group">
-          <li className="list-group-item">Workout Date: {workout.workout_date}</li>
+          <li className="list-group-item">Workout Date: {workout.workout_date.toString()}</li>
           <li className="list-group-item">{workout.description}</li>
           <li className="list-group-item">
             <p>Exercises performed</p>
