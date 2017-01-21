@@ -24,4 +24,8 @@ defmodule Api.Resolvers.WorkoutResolver do
   def delete(%{id: id}, _) do
     Workout.Services.Workout.delete(%{id: id})
   end
+
+  def count(_, %{context: %{user_id: user_id}}) do
+    Workout.Services.Workout.count(%{user_id: user_id})
+  end
 end
