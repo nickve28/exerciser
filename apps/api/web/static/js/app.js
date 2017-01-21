@@ -14,6 +14,8 @@ import Exercises from './containers/exercises'
 import Workouts from './containers/workouts'
 import WorkoutDetail from './containers/workout_detail'
 import NewWorkout from './containers/new_workout'
+import EditWorkout from './containers/edit_workout'
+
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
 
@@ -32,6 +34,7 @@ ReactDOM.render(
           <Route path ="/workouts" component={Workouts} />
           <Route path="/workouts/new" component={NewWorkout} />
           <Route path="/workouts/:id" component={WorkoutDetail} />
+          <Route path="/workouts/:id/edit" component={EditWorkout} />
         </Route>
       </Router>
     </div>
