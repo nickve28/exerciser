@@ -3,7 +3,7 @@ import {FETCH_ME, USER_LOGIN, USER_LOGIN_PENDING, USER_LOGIN_FAILED,
 
 export const MeReducer = (state = {}, action) => {
   if (action.type === FETCH_ME) {
-    return action.payload.me
+    return action.payload
   }
   return state
 }

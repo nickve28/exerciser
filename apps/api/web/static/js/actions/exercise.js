@@ -22,7 +22,7 @@ export const fetchExercises = () => {
     return transport.send(`{exercises { name, id, categories, description } }`).then(function (data) {
       return dispatch({
         type: FETCH_EXERCISES,
-        payload: data
+        payload: data.exercises
       })
     }).catch(err => handleUnauthorized(err, dispatch))
   }
@@ -79,7 +79,7 @@ export const fetchCategories = () => {
     transport.send(`{categories}`).then(function (data) {
       return dispatch({
         type: FETCH_CATEGORIES,
-        payload: data
+        payload: data.categories
       })
     }).catch(err => handleUnauthorized(err, dispatch))
   }

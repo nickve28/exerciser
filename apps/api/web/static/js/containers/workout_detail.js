@@ -4,11 +4,13 @@ import {fetchWorkoutAndExercises} from '../actions/index'
 import _ from 'lodash'
 
 import {Link} from 'react-router'
+import workoutSelector from '../selectors/workout_selector'
 
 class WorkoutDetail extends Component {
   componentWillMount() {
     this.props.fetchWorkoutAndExercises(this.props.params.id)
   }
+
   render() {
     const workout = this.props.workout
     if (!workout) {
@@ -52,7 +54,7 @@ class WorkoutDetail extends Component {
 
 function mapStateToProps(state) {
   return {
-    workout: state.workouts.selectedWorkout
+    workout: workoutSelector(state)
   }
 }
 

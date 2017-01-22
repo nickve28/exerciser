@@ -16,6 +16,8 @@ export const DELETE_WORKOUT = 'DELETE_WORKOUT'
 export const DELETE_WORKOUT_NOTIFICATION_END = 'DELETE_WORKOUT_NOTIFICATION_END'
 export const UPDATE_WORKOUT = 'UPDATE_WORKOUT'
 
+import {FETCH_EXERCISES} from './exercise'
+
 export const updateWorkout = (id, {description, workoutDate, performedExercises}) => {
   const token = localStorage.getItem('auth_token')
   const formattedExercises = _.chain(performedExercises)
@@ -39,7 +41,7 @@ export const updateWorkout = (id, {description, workoutDate, performedExercises}
   }
 }
 
-export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {append: false}) => {
+export const fetchWorkouts = (limit = 10, offset = 0, {append} = {append: false}) => {
   const token = localStorage.getItem('auth_token')
   return dispatch => {
     const headers = {
@@ -53,21 +55,18 @@ export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {ap
             exercise_id, reps, weight, sets
           }, description, id },
         workout_count,
-      },
-      exercises {
-        id, name, description, categories
       }
     }`).then(function (data) {
       const action = append ? FETCH_MORE_WORKOUTS : FETCH_WORKOUTS
       return dispatch({
         type: action,
-        payload: data
+        payload: data.me
       })
     }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
-export const fetchWorkoutTemplateAndExercises = () => {
+export const fetchWorkoutTemplate = () => {
   const token = localStorage.getItem('auth_token')
   return dispatch => {
     const headers = {
@@ -80,14 +79,11 @@ export const fetchWorkoutTemplateAndExercises = () => {
           workout_date, performed_exercises {
             exercise_id, reps, weight, sets
           }, description, id },
-      },
-      exercises {
-        id, name, description, categories
       }
     }`).then(function (data) {
       return dispatch({
         type: FETCH_WORKOUT_TEMPLATE,
-        payload: data
+        payload: data.me.workouts
       })
     }).catch(err => handleUnauthorized(err, dispatch))
   }
@@ -109,10 +105,16 @@ export const fetchWorkoutAndExercises = (id) => {
         id, name, description, categories
       }
     }`).then(function (data) {
-      return dispatch({
+      dispatch({
         type: FETCH_WORKOUT,
-        payload: data
+        payload: data.workout
       })
+
+      return dispatch({
+        type: FETCH_EXERCISES,
+        payload: data.exercises
+      })
+
     }).catch(err => handleUnauthorized(err, dispatch))
   }
 }

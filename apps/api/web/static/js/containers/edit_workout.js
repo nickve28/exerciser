@@ -3,14 +3,13 @@ import { Field, reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import {fetchWorkoutAndExercises, fetchExercises, updateWorkout} from '../actions/index'
+import {fetchWorkoutAndExercises, updateWorkout} from '../actions/index'
 import { browserHistory } from 'react-router';
 import {validateWorkoutCreate, validatePExerciseCreate} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
 
 import moment from 'moment'
 import _ from 'lodash'
-import Promise from 'bluebird'
 
 import WorkoutForm from '../components/workout_form'
 
@@ -31,10 +30,7 @@ class EditWorkout extends Component {
   }
 
   componentDidMount() {
-    return Promise.join(
-      this.props.fetchExercises(),
-      this.props.fetchWorkoutAndExercises(this.props.params.id)
-    )
+    return this.props.fetchWorkoutAndExercises(this.props.params.id)
   }
 
   render() {
@@ -116,5 +112,5 @@ EditWorkout = reduxForm({
   validate
 })(EditWorkout)
 
-export default connect(mapStateToProps, {fetchWorkoutAndExercises, fetchExercises, updateWorkout})(EditWorkout)
+export default connect(mapStateToProps, {fetchWorkoutAndExercises, updateWorkout})(EditWorkout)
 

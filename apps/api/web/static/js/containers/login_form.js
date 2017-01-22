@@ -5,6 +5,19 @@ import _ from 'lodash'
 
 import {TextField, RaisedButton, CircularProgress, Snackbar} from 'material-ui'
 
+const FIELDS = {
+  username: {
+    name: 'username',
+    type: 'text',
+    value: 'username'
+  },
+  password: {
+    name: 'password',
+    type: 'password',
+    value: 'password'
+  }
+}
+
 class LoginForm extends Component {
   constructor(props) {
     super(props)
@@ -46,6 +59,14 @@ class LoginForm extends Component {
     this.showDialog = showDialog
   }
 
+  renderField({name, type, value}, onChange) {
+    return (
+      <div className="form-group">
+        <TextField type={type} name={name} value={this.state[value]} onChange={onChange} />
+      </div>
+    )
+  }
+
   render() {
     return (
       <div className="container container-fluid" ref={() => this.setShowDialog(this.props.notifications.showLoginExpired)}>
@@ -54,20 +75,11 @@ class LoginForm extends Component {
         <form className="form">
           <div className="form-group">
             <div><label>Username</label></div>
-            <TextField type="text"
-              name="username"
-              value={this.state.username}
-              onChange={this.onUsernameChange}
-            />
+            {this.renderField(FIELDS.username, this.onUsernameChange)}
           </div>
           <div className="form-group">
             <div><label>Password</label></div>
-            <TextField
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.onPasswordChange}
-            />
+            {this.renderField(FIELDS.password, this.onPasswordChange)}
           </div>
           <div className="top-padding-20">
             <RaisedButton label="Log in" primary={true} onClick={this.onFormSubmit} style={{marginRight: '10px'}} />

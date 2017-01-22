@@ -16,59 +16,43 @@ const toWorkoutModel = (workoutData) => {
     description, id,
     workoutDate: workoutData.workout_date,
     performedExercises: _.map(workoutData.performed_exercises, pExercise => {
-      const {weight, sets, reps, name} = pExercise
+      const {weight, sets, reps } = pExercise
       return {
         exerciseId: pExercise.exercise_id,
-        weight, sets, reps, name
+        weight, sets, reps
       }
     })
   }
 }
 
-const toCombinedModel = ({exercises, workouts}) => {
-  return _.map(workouts, workout => {
-    return combineExercises(workout, exercises)
-  })
-}
-
-const combineExercises = (workout, exercises) => {
-  const exerciseMap = _.reduce(exercises, (memo, exercise) => {
-    memo[exercise.id] = exercise
-    return memo
-  }, {})
-
-  const mergedExercises = _.map(workout.performed_exercises, pExercise => {
-    return _.merge({}, pExercise, exerciseMap[pExercise.exercise_id])
-  })
-  return toWorkoutModel(_.merge({}, workout, {performed_exercises: mergedExercises}))
-}
-
 export default (state = INITIAL_STATE, action = {}) => {
   if (action.type === FETCH_WORKOUTS) {
-    const payload = {
-      exercises: action.payload.exercises,
-      workouts: action.payload.me.workouts
-    }
-    const workoutCount = action.payload.me.workout_count
-    return _.defaults({workoutCount, workouts: toCombinedModel(payload)}, state)
+    const workoutCount = action.payload.workout_count
+    return _.defaults({
+      workoutCount,
+      workouts: _.map(action.payload.workouts, toWorkoutModel)
+    }, INITIAL_STATE)
   }
 
   if (action.type === FETCH_WORKOUT) {
-    return _.defaults({selectedWorkout: combineExercises(action.payload.workout, action.payload.exercises)}, state)
+    return _.defaults({
+      selectedWorkout: toWorkoutModel(action.payload)
+    }, INITIAL_STATE)
   }
 
   if (action.type === FETCH_WORKOUT_TEMPLATE) {
-    return _.defaults({workoutTemplate: combineExercises(_.first(action.payload.me.workouts), action.payload.exercises)}, state)
+    return _.defaults({
+      workoutTemplate: toWorkoutModel(_.first(action.payload))
+    }, INITIAL_STATE)
   }
 
   if (action.type === FETCH_MORE_WORKOUTS) {
-    const payload = {
-      exercises: action.payload.exercises,
-      workouts: action.payload.me.workouts
-    }
-    const workouts = _.concat(state.workouts, toCombinedModel(payload))
-    const workoutCount = action.payload.me.workout_count
-    return _.defaults({workoutCount, workouts}, state)
+    const workoutCount = action.payload.workout_count
+
+    return _.defaults({
+      workoutCount,
+      workouts: _.concat(state.workouts, _.map(action.payload.workouts, toWorkoutModel))
+    }, INITIAL_STATE)
   }
 
   return state

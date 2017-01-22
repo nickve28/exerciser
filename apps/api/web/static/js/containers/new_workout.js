@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import {fetchWorkoutTemplateAndExercises, saveWorkout, fetchExercises} from '../actions/index'
+import {fetchWorkoutTemplate, saveWorkout, fetchExercises} from '../actions/index'
 import { browserHistory } from 'react-router';
 import {validateWorkoutCreate, validatePExerciseCreate} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
@@ -48,7 +48,7 @@ class NewWorkout extends Component {
   }
 
   handleLoadTemplate() {
-    this.props.fetchWorkoutTemplateAndExercises()
+    this.props.fetchWorkoutTemplate()
   }
 
   handleFormSubmit(values) {
@@ -116,4 +116,4 @@ NewWorkout = reduxForm({
   validate
 })(NewWorkout)
 
-export default connect(mapStateToProps, {fetchWorkoutTemplateAndExercises, saveWorkout, fetchExercises})(NewWorkout)
+export default connect(mapStateToProps, {fetchWorkoutTemplate, saveWorkout, fetchExercises})(NewWorkout)
