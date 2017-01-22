@@ -9,7 +9,7 @@ import _ from 'lodash'
 import Promise from 'bluebird'
 
 const EMPTY_EXERCISE = {
-  exercise_id: null,
+  exerciseId: null,
   weight: null,
   reps: null,
   sets: null
@@ -35,10 +35,10 @@ class WorkoutForm extends Component {
                     <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>
                     <span className="pull-right glyphicon glyphicon-minus" onClick={() => fields.remove(index)} />
                   </div>
-                  <Field className="form-control" name={`${fieldName}.exercise_id`} component={properties =>
+                  <Field className="form-control" name={`${fieldName}.exerciseId`} component={properties =>
                     <div>
                       <SelectField
-                        name="exercise_id"
+                        name="exerciseId"
                         value={properties.input.value.toString()}
                         onChange={(e, key, value) => properties.input.onChange(value)}
                         maxHeight={200}
@@ -97,9 +97,9 @@ class WorkoutForm extends Component {
         <form className="form" onSubmit={handleFormSubmit}>
           <Field type="textarea" name="description" label="Description" component={this.renderField} />
           <label style={{marginRight: '5px'}}>Workout Date</label><br />
-          <Field type="text" name="workout_date" component={properties =>
+          <Field type="text" name="workoutDate" component={properties =>
             <DatePicker
-              name="workout_date"
+              name="workoutDate"
               formatDate={formatDate}
               onChange={(e, val) =>  {
                 //e = empty event, 2nd arg = date

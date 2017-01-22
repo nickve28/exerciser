@@ -8,6 +8,23 @@ const INITIAL_STATE = {
   workoutTemplate: null
 }
 
+
+//Converts the model to camelcase
+const toWorkoutModel = (workoutData) => {
+  const {description, id} = workoutData
+  return {
+    description, id,
+    workoutDate: workoutData.workout_date,
+    performedExercises: _.map(workoutData.performed_exercises, pExercise => {
+      const {weight, sets, reps, name} = pExercise
+      return {
+        exerciseId: pExercise.exercise_id,
+        weight, sets, reps, name
+      }
+    })
+  }
+}
+
 const toCombinedModel = ({exercises, workouts}) => {
   return _.map(workouts, workout => {
     return combineExercises(workout, exercises)
@@ -23,7 +40,7 @@ const combineExercises = (workout, exercises) => {
   const mergedExercises = _.map(workout.performed_exercises, pExercise => {
     return _.merge({}, pExercise, exerciseMap[pExercise.exercise_id])
   })
-  return _.merge({}, workout, {performed_exercises: mergedExercises})
+  return toWorkoutModel(_.merge({}, workout, {performed_exercises: mergedExercises}))
 }
 
 export default (state = INITIAL_STATE, action = {}) => {

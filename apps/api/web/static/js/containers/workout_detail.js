@@ -29,13 +29,13 @@ class WorkoutDetail extends Component {
           </span>
         </div>
         <ul className="list-group">
-          <li className="list-group-item">Workout Date: {workout.workout_date.toString()}</li>
+          <li className="list-group-item">Workout Date: {workout.workoutDate.toString()}</li>
           <li className="list-group-item">{workout.description}</li>
           <li className="list-group-item">
             <p>Exercises performed</p>
-            {_.map(workout.performed_exercises, exercise => {
+            {_.map(workout.performedExercises, exercise => {
               return (
-                <ul key={exercise.id} className="list-group" style={{marginTop: '5px'}}>
+                <ul key={exercise.exerciseId} className="list-group" style={{marginTop: '5px'}}>
                   <li className="list-group-item">Name: {exercise.name}</li>
                   <li className="list-group-item">Sets: {exercise.sets}</li>
                   <li className="list-group-item">Reps: {exercise.reps}</li>
