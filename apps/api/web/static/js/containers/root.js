@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 
 import { Router, Route, browserHistory } from 'react-router'
 
-import LoginForm from './login_form'
+import Login from './login'
 import NavigationBar from '../components/navigation_bar'
 
 import {fetchMe} from '../actions/index'
@@ -52,7 +52,7 @@ class Root extends Component {
         <div>
           <div><NavigationBar /></div>
           <div className="container-fluid app-container app-container-size">
-            <LoginForm />
+            <Login />
           </div>
         </div>
       )

@@ -1,9 +1,7 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {loginUser} from '../actions/index'
 import _ from 'lodash'
 
-import {TextField, RaisedButton, CircularProgress, Snackbar} from 'material-ui'
+import {TextField, RaisedButton, CircularProgress} from 'material-ui'
 
 const FIELDS = {
   username: {
@@ -18,7 +16,7 @@ const FIELDS = {
   }
 }
 
-class LoginForm extends Component {
+export default class LoginForm extends Component {
   constructor(props) {
     super(props)
     this.state = {username: '', password: ''}
@@ -26,7 +24,6 @@ class LoginForm extends Component {
     this.onUsernameChange = this.onUsernameChange.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
     this.onFormSubmit = this.onFormSubmit.bind(this)
-    this.setShowDialog = this.setShowDialog.bind(this)
   }
 
   onUsernameChange(e) {
@@ -46,19 +43,6 @@ class LoginForm extends Component {
     this.props.loginUser(this.state.username, this.state.password)
   }
 
-  renderNotification(showDialog) {
-    return (
-      <Snackbar
-        open={showDialog || false}
-        message="Your login session expired. Please log in."
-      />
-    )
-  }
-
-  setShowDialog(showDialog) {
-    this.showDialog = showDialog
-  }
-
   renderField({name, type, value}, onChange) {
     return (
       <div className="form-group">
@@ -69,7 +53,7 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <div className="container container-fluid" ref={() => this.setShowDialog(this.props.notifications.showLoginExpired)}>
+      <div className="container container-fluid">
         <h3>Log in</h3>
         <div className="error-text">{this.state.error}</div>
         <form className="form">
@@ -84,7 +68,6 @@ class LoginForm extends Component {
           <div className="top-padding-20">
             <RaisedButton label="Log in" primary={true} onClick={this.onFormSubmit} style={{marginRight: '10px'}} />
             {loginText(this.props.loginState)}
-            {this.renderNotification(this.showDialog)}
           </div>
         </form>
       </div>
@@ -101,12 +84,3 @@ const loginText = (loginState) => {
   }
   return ''
 }
-
-function mapStateToProps(state) {
-  return {
-    loginState: state.authentication.loginState,
-    notifications: state.notifications
-  }
-}
-
-export default connect(mapStateToProps, {loginUser})(LoginForm)

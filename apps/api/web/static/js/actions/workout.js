@@ -154,7 +154,7 @@ export const deleteWorkout = (id) => {
     }`).then(function (data) {
       setInterval(() => {
         dispatch({type: DELETE_WORKOUT_NOTIFICATION_END})
-      }, 5000)
+      }, 2000)
 
       return dispatch({
         type: DELETE_WORKOUT,
