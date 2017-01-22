@@ -2,6 +2,8 @@ import React from 'react';
 import chai from 'chai'
 import chaiEnzyme from 'chai-enzyme'
 
+import _ from 'lodash'
+
 import LoginForm from '../../components/login_form';
 import {shallowRender} from '../helpers/theme_helper'
 
@@ -36,6 +38,22 @@ describe('<LoginForm />', () => {
       field.simulate('change', {target: {value: 'bar'}})
 
       expect(wrapper.state()).to.eql(expected)
+    })
+  })
+
+  describe('when the data is valid', function () {
+    it('should be sent to the callback', function (done) {
+      const cb = (username, password) => {
+        expect(username).to.eql('foo')
+        expect(password).to.eql('bar')
+        done()
+      }
+
+      const wrapper = shallowRender(<LoginForm loginUser={cb} />)
+
+      wrapper.find({name: 'password'}).simulate('change', {target: {value: 'bar'}})
+      wrapper.find({name: 'username'}).simulate('change', {target: {value: 'foo'}})
+      wrapper.find('RaisedButton').simulate('click', {preventDefault: _.noop})
     })
   })
 })
