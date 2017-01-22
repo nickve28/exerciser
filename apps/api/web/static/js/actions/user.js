@@ -19,7 +19,7 @@ export const fetchMe = () => {
 
       return dispatch({
         type: FETCH_ME,
-        payload: data
+        payload: data.me
       })
     }).catch(err => handleUnauthorized(err, dispatch))
   }

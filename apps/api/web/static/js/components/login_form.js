@@ -1,11 +1,22 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {loginUser} from '../actions/index'
 import _ from 'lodash'
 
-import {TextField, RaisedButton, CircularProgress, Snackbar} from 'material-ui'
+import {TextField, RaisedButton, CircularProgress} from 'material-ui'
 
-class LoginForm extends Component {
+const FIELDS = {
+  username: {
+    name: 'username',
+    type: 'text',
+    value: 'username'
+  },
+  password: {
+    name: 'password',
+    type: 'password',
+    value: 'password'
+  }
+}
+
+export default class LoginForm extends Component {
   constructor(props) {
     super(props)
     this.state = {username: '', password: ''}
@@ -13,7 +24,6 @@ class LoginForm extends Component {
     this.onUsernameChange = this.onUsernameChange.bind(this)
     this.onPasswordChange = this.onPasswordChange.bind(this)
     this.onFormSubmit = this.onFormSubmit.bind(this)
-    this.setShowDialog = this.setShowDialog.bind(this)
   }
 
   onUsernameChange(e) {
@@ -33,46 +43,31 @@ class LoginForm extends Component {
     this.props.loginUser(this.state.username, this.state.password)
   }
 
-  renderNotification(showDialog) {
+  renderField({name, type, value}, onChange) {
     return (
-      <Snackbar
-        open={showDialog || false}
-        message="Your login session expired. Please log in."
-      />
+      <div className="form-group">
+        <TextField type={type} name={name} value={this.state[value]} onChange={onChange} />
+      </div>
     )
-  }
-
-  setShowDialog(showDialog) {
-    this.showDialog = showDialog
   }
 
   render() {
     return (
-      <div className="container container-fluid" ref={() => this.setShowDialog(this.props.notifications.showLoginExpired)}>
+      <div className="container container-fluid">
         <h3>Log in</h3>
         <div className="error-text">{this.state.error}</div>
         <form className="form">
           <div className="form-group">
             <div><label>Username</label></div>
-            <TextField type="text"
-              name="username"
-              value={this.state.username}
-              onChange={this.onUsernameChange}
-            />
+            {this.renderField(FIELDS.username, this.onUsernameChange)}
           </div>
           <div className="form-group">
             <div><label>Password</label></div>
-            <TextField
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.onPasswordChange}
-            />
+            {this.renderField(FIELDS.password, this.onPasswordChange)}
           </div>
           <div className="top-padding-20">
             <RaisedButton label="Log in" primary={true} onClick={this.onFormSubmit} style={{marginRight: '10px'}} />
             {loginText(this.props.loginState)}
-            {this.renderNotification(this.showDialog)}
           </div>
         </form>
       </div>
@@ -89,12 +84,3 @@ const loginText = (loginState) => {
   }
   return ''
 }
-
-function mapStateToProps(state) {
-  return {
-    loginState: state.authentication.loginState,
-    notifications: state.notifications
-  }
-}
-
-export default connect(mapStateToProps, {loginUser})(LoginForm)

@@ -105,7 +105,6 @@ body {
   }
 
   .navbar-nav li a {
-    font-weight: bolder;
     color: white;
   }
 }
@@ -142,7 +141,6 @@ body {
 
   .navbar-nav li a {
     display: inline;
-    font-weight: bolder;
     color: white;
   }
 }

@@ -3,16 +3,17 @@ import { Field, reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
 
-import {fetchWorkoutAndExercises, fetchExercises, updateWorkout} from '../actions/index'
+import {fetchWorkoutAndExercises, updateWorkout} from '../actions/index'
 import { browserHistory } from 'react-router';
 import {validateWorkoutCreate, validatePExerciseCreate} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
 
 import moment from 'moment'
 import _ from 'lodash'
-import Promise from 'bluebird'
 
 import WorkoutForm from '../components/workout_form'
+
+const toDecimal = _.partialRight(parseInt, 10)
 
 const EMPTY_EXERCISE = {
   exercise_id: null,
@@ -29,10 +30,7 @@ class EditWorkout extends Component {
   }
 
   componentDidMount() {
-    return Promise.join(
-      this.props.fetchExercises(),
-      this.props.fetchWorkoutAndExercises(this.props.params.id)
-    )
+    return this.props.fetchWorkoutAndExercises(this.props.params.id)
   }
 
   render() {
@@ -48,24 +46,25 @@ class EditWorkout extends Component {
   }
 
   handleFormSubmit(values) {
-    let payload = _.cloneDeep(values)
+    let payload = _.omit(values, 'id')
     const errors = validate(values)
 
     if (!_.isEmpty(errors)) {
       throw new SubmissionError(errors)
     }
-    if (!payload.workout_date) payload.workout_date = moment()
-    payload.workout_date = moment(payload.workout_date).format('YYYY-MM-DD')
-    payload.performed_exercises = _.map(payload.performedExercises, ({exercise_id, reps, weight, sets}) => {
-      return {
-        exercise_id: parseInt(exercise_id, 10),
-        reps: parseInt(reps, 10),
-        weight: parseInt(weight, 10),
-        sets: parseInt(sets, 10)
-      }
-    })
-    payload = _.omit(payload, 'performedExercises')
+
+    if (!payload.workoutDate)
+      payload.workoutDate = moment()
+
+    payload.workoutDate = moment(payload.workoutDate).format('YYYY-MM-DD')
+    payload.performedExercises = _.map(payload.performedExercises, pExercise => {
+      return _.chain(pExercise)
+              .pick(['exerciseId', 'weight', 'sets', 'reps'])
+              .mapValues(toDecimal).value()
+    }) //to int for all values
+
     const id = this.props.params.id
+
     return this.props.updateWorkout(id, payload).then(() => {
       browserHistory.push('/workouts') //best way to navigate..
     })
@@ -74,7 +73,7 @@ class EditWorkout extends Component {
 }
 
 function validate(data) {
-  const topLevelErrors = validateWorkoutCreate(_.omit(data, 'performedExercises'))
+  const topLevelErrors = validateWorkoutCreate(_.omit(data, 'performedExercises', 'id'))
   const exerciseErrors = _.map(data.performedExercises, validatePExerciseCreate)
 
   const errorMessages = _.reduce(_.get(topLevelErrors, 'error.details'), (memo, {message, path}) => {
@@ -96,13 +95,9 @@ function validate(data) {
 }
 
 function mapStateToProps(state) {
-  let initialValues = state.workouts.selectedWorkout
-
+  const initialValues = state.workouts.selectedWorkout
   if (initialValues) {
-    //todo fix value of performed_exercises
-    initialValues.workout_date = moment(initialValues.workout_date).toDate()
-    initialValues.performedExercises = initialValues.performed_exercises
-    initialValues = _.omit(initialValues, ['performed_exercises', 'id'])
+    initialValues.workoutDate = moment(initialValues.workoutDate).toDate()
   }
 
   return {
@@ -113,9 +108,9 @@ function mapStateToProps(state) {
 
 EditWorkout = reduxForm({
   form: 'workout',
-  fields: ['description', 'workout_date', 'performedExercise'],
+  fields: ['description', 'workoutDate', 'performedExercise'],
   validate
 })(EditWorkout)
 
-export default connect(mapStateToProps, {fetchWorkoutAndExercises, fetchExercises, updateWorkout})(EditWorkout)
+export default connect(mapStateToProps, {fetchWorkoutAndExercises, updateWorkout})(EditWorkout)
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {fetchWorkoutsAndExercises, deleteWorkout} from '../actions/index'
+import {fetchWorkouts, deleteWorkout} from '../actions/index'
 import {Link} from 'react-router'
 
 import _ from 'lodash'
@@ -18,17 +18,17 @@ class Workouts extends Component {
   }
 
   componentWillMount() {
-    this.props.fetchWorkoutsAndExercises()
+    this.props.fetchWorkouts()
   }
 
   onDelete({id}) {
     this.props.deleteWorkout(id).then(() => {
-      this.props.fetchWorkoutsAndExercises()
+      this.props.fetchWorkouts()
     })
   }
 
   loadWorkouts(limit, offset) {
-    this.props.fetchWorkoutsAndExercises(limit, offset, {append: true})
+    this.props.fetchWorkouts(limit, offset, {append: true})
   }
 
   renderMoreButton() {
@@ -92,4 +92,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, {fetchWorkoutsAndExercises, deleteWorkout})(Workouts)
+export default connect(mapStateToProps, {fetchWorkouts, deleteWorkout})(Workouts)

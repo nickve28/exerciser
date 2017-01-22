@@ -16,10 +16,12 @@ export const DELETE_WORKOUT = 'DELETE_WORKOUT'
 export const DELETE_WORKOUT_NOTIFICATION_END = 'DELETE_WORKOUT_NOTIFICATION_END'
 export const UPDATE_WORKOUT = 'UPDATE_WORKOUT'
 
-export const updateWorkout = (id, {description, workout_date, performed_exercises}) => {
+import {FETCH_EXERCISES} from './exercise'
+
+export const updateWorkout = (id, {description, workoutDate, performedExercises}) => {
   const token = localStorage.getItem('auth_token')
-  const formatted_exercises = _.chain(performed_exercises)
-                               .map(({exercise_id, reps, sets, weight}) => `{exercise_id: ${exercise_id}, reps: ${reps}, weight: ${weight}, sets: ${sets}}`)
+  const formattedExercises = _.chain(performedExercises)
+                               .map(({exerciseId, reps, sets, weight}) => `{exercise_id: ${exerciseId}, reps: ${reps}, weight: ${weight}, sets: ${sets}}`)
                                .join(',').value()
   const headers = {
     authorization: `Bearer ${token}`
@@ -27,7 +29,7 @@ export const updateWorkout = (id, {description, workout_date, performed_exercise
   return dispatch => {
     const transport = new HttpTransport(URL, {headers})
     return transport.send(`mutation {
-      update_workout(id: ${id}, description: "${description}", workout_date: "${workout_date}", performed_exercises: [${formatted_exercises}]) {
+      update_workout(id: ${id}, description: "${description}", workout_date: "${workoutDate}", performed_exercises: [${formattedExercises}]) {
         id
       }
     }`).then(function (data) {
@@ -39,7 +41,7 @@ export const updateWorkout = (id, {description, workout_date, performed_exercise
   }
 }
 
-export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {append: false}) => {
+export const fetchWorkouts = (limit = 10, offset = 0, {append} = {append: false}) => {
   const token = localStorage.getItem('auth_token')
   return dispatch => {
     const headers = {
@@ -53,21 +55,18 @@ export const fetchWorkoutsAndExercises = (limit = 10, offset = 0, {append} = {ap
             exercise_id, reps, weight, sets
           }, description, id },
         workout_count,
-      },
-      exercises {
-        id, name, description, categories
       }
     }`).then(function (data) {
       const action = append ? FETCH_MORE_WORKOUTS : FETCH_WORKOUTS
       return dispatch({
         type: action,
-        payload: data
+        payload: data.me
       })
     }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
-export const fetchWorkoutTemplateAndExercises = () => {
+export const fetchWorkoutTemplate = () => {
   const token = localStorage.getItem('auth_token')
   return dispatch => {
     const headers = {
@@ -80,14 +79,11 @@ export const fetchWorkoutTemplateAndExercises = () => {
           workout_date, performed_exercises {
             exercise_id, reps, weight, sets
           }, description, id },
-      },
-      exercises {
-        id, name, description, categories
       }
     }`).then(function (data) {
       return dispatch({
         type: FETCH_WORKOUT_TEMPLATE,
-        payload: data
+        payload: data.me.workouts
       })
     }).catch(err => handleUnauthorized(err, dispatch))
   }
@@ -109,18 +105,24 @@ export const fetchWorkoutAndExercises = (id) => {
         id, name, description, categories
       }
     }`).then(function (data) {
-      return dispatch({
+      dispatch({
         type: FETCH_WORKOUT,
-        payload: data
+        payload: data.workout
       })
+
+      return dispatch({
+        type: FETCH_EXERCISES,
+        payload: data.exercises
+      })
+
     }).catch(err => handleUnauthorized(err, dispatch))
   }
 }
 
-export const saveWorkout = ({description, workout_date, performed_exercises}) => {
+export const saveWorkout = ({description, workoutDate, performedExercises}) => {
   const token = localStorage.getItem('auth_token')
-  const formatted_exercises = _.chain(performed_exercises)
-                               .map(({exercise_id, reps, sets, weight}) => `{exercise_id: ${exercise_id}, reps: ${reps}, weight: ${weight}, sets: ${sets}}`)
+  const formattedExercises = _.chain(performedExercises)
+                               .map(({exerciseId, reps, sets, weight}) => `{exercise_id: ${exerciseId}, reps: ${reps}, weight: ${weight}, sets: ${sets}}`)
                                .join(',').value()
   const headers = {
     authorization: `Bearer ${token}`
@@ -128,7 +130,7 @@ export const saveWorkout = ({description, workout_date, performed_exercises}) =>
   return dispatch => {
     const transport = new HttpTransport(URL, {headers})
     return transport.send(`mutation {
-      create_workout(description: "${description}", workout_date: "${workout_date}", performed_exercises: [${formatted_exercises}]) {
+      create_workout(description: "${description}", workout_date: "${workoutDate}", performed_exercises: [${formattedExercises}]) {
         id
       }
     }`).then(function (data) {
@@ -152,7 +154,7 @@ export const deleteWorkout = (id) => {
     }`).then(function (data) {
       setInterval(() => {
         dispatch({type: DELETE_WORKOUT_NOTIFICATION_END})
-      }, 5000)
+      }, 2000)
 
       return dispatch({
         type: DELETE_WORKOUT,

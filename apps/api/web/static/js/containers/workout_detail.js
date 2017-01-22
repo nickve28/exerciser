@@ -4,11 +4,13 @@ import {fetchWorkoutAndExercises} from '../actions/index'
 import _ from 'lodash'
 
 import {Link} from 'react-router'
+import workoutSelector from '../selectors/workout_selector'
 
 class WorkoutDetail extends Component {
   componentWillMount() {
     this.props.fetchWorkoutAndExercises(this.props.params.id)
   }
+
   render() {
     const workout = this.props.workout
     if (!workout) {
@@ -29,13 +31,13 @@ class WorkoutDetail extends Component {
           </span>
         </div>
         <ul className="list-group">
-          <li className="list-group-item">Workout Date: {workout.workout_date.toString()}</li>
+          <li className="list-group-item">Workout Date: {workout.workoutDate.toString()}</li>
           <li className="list-group-item">{workout.description}</li>
           <li className="list-group-item">
             <p>Exercises performed</p>
-            {_.map(workout.performed_exercises, exercise => {
+            {_.map(workout.performedExercises, exercise => {
               return (
-                <ul key={exercise.id} className="list-group" style={{marginTop: '5px'}}>
+                <ul key={exercise.exerciseId} className="list-group" style={{marginTop: '5px'}}>
                   <li className="list-group-item">Name: {exercise.name}</li>
                   <li className="list-group-item">Sets: {exercise.sets}</li>
                   <li className="list-group-item">Reps: {exercise.reps}</li>
@@ -52,7 +54,7 @@ class WorkoutDetail extends Component {
 
 function mapStateToProps(state) {
   return {
-    workout: state.workouts.selectedWorkout
+    workout: workoutSelector(state)
   }
 }
 
