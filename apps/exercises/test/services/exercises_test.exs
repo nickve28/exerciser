@@ -39,6 +39,25 @@ defmodule ExercisesTest do
     assert {:ok, [%{id: ^id_two}, %{id: ^id_three}]} = Services.Exercise.list(payload)
   end
 
+  describe "when multiple exercises exist" do
+    setup do
+      exercise2 = RepoHelper.create_exercise(%{name: "barbell Test", description: "A test",
+        categories: ["Triceps", "Chest"]})
+      exercise3 = RepoHelper.create_exercise(%{name: "a Test", description: "A test",
+        categories: ["Triceps", "Chest"]})
+      {:ok, exercise2: exercise2, exercise3: exercise3}
+    end
+
+    test "#list should order on name case independent", %{exercise: exercise, exercise2: exercise2, exercise3: exercise3} do
+      expected = [
+        Map.take(exercise3, [:id, :name, :description, :categories]),
+        Map.take(exercise, [:id, :name, :description, :categories]),
+        Map.take(exercise2, [:id, :name, :description, :categories])
+      ]
+      assert {:ok, expected} === Services.Exercise.list
+    end
+  end
+
   test "#get should return an error if no exercise is found", %{exercise: %{id: id}} do
     assert Services.Exercise.get(id + 1) === {:error, :enotfound}
   end

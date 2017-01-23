@@ -43,6 +43,7 @@ defmodule Exercises.Repositories.Exercise do
 
   defp list(query, %{}) do
     query
+    |> order_by([exercise], [asc: fragment("lower(?)", exercise.name)])
     |> Repo.all
     |> Enum.map(&to_model/1)
   end
