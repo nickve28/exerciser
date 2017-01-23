@@ -97,7 +97,7 @@ defmodule Workout.Services.Workout do
   def handle_call({:delete, id}, _from, state) do
     result = case Workout.Repositories.Workout.delete(id) do
       {count, _} when count === 1 -> {:ok, id}
-      {count, _} when count === 0 -> {:error, :enotfound}
+      {count, _} when count === 0 -> {:error, {:enotfound, "Workout not found", []}}
       _ -> {:error, :internal}
     end
     {:reply, result, state}
@@ -110,7 +110,7 @@ defmodule Workout.Services.Workout do
     do
       {:ok, workout}
     else
-      {:error, reason} -> {:error, reason}
+      {:error, {:invalid, message, details}} -> {:error, {:invalid, message, details}}
       _ -> {:error, :internal}
     end
 
@@ -137,7 +137,7 @@ defmodule Workout.Services.Workout do
 
     case Enum.sort(exercise_ids) === Enum.sort(found_exercise_ids) do
       true -> {:ok, payload}
-      false -> {:error, {:invalid, [{:exercise_id, "Not found"}]}}
+      false -> {:error, {:invalid, "The data sent was invalid", [{:exercise_id, "Not found"}]}}
     end
   end
 end

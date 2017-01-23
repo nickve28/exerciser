@@ -39,8 +39,13 @@ defmodule Api.Resolvers.WorkoutResolver do
 
   defp handle_result({:error, {:enotfound, message, _}}), do: {:error, %{message: message, code: 404, details: []}}
 
-  defp handle_result({:error, {:invalid, details}}) do
+  defp handle_result({:error, {:invalid, _, details}}) do
     detail_map = Enum.into(details, %{})
     {:error, %{message: "The request was deemed invalid. Refer to the error details", code: 400, details: detail_map}}
+  end
+
+  defp handle_result(err) do
+    IO.inspect(err)
+    {:error, %{message: "Something went wrong", code: 500, details: []}}
   end
 end

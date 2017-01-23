@@ -1,31 +1,39 @@
 defmodule Api.Resolvers.ExerciseResolver do
   @moduledoc false
   def list(args, _info) do
-    reply(Exercises.Services.Exercise.list(args))
+    handle_result(Exercises.Services.Exercise.list(args))
   end
 
   def get(%{id: id}, _info) do
     exercise = Exercises.Services.Exercise.get(id)
-    reply(exercise)
+    handle_result(exercise)
   end
 
   def get_categories(_args, _info) do
-    reply(Exercises.Services.Category.list)
+    handle_result(Exercises.Services.Category.list)
   end
 
   def get(_, _), do: {:error, "No id specified"}
 
   def create(args, _info) do
-    reply(Exercises.Services.Exercise.create(args))
+    handle_result(Exercises.Services.Exercise.create(args))
   end
 
   def delete(%{id: id}, _info) do
     payload = %{id: String.to_integer(id)}
-    reply(Exercises.Services.Exercise.delete(payload))
+    handle_result(Exercises.Services.Exercise.delete(payload))
   end
 
-  defp reply({:error, error}), do: {:error, error}
+  defp handle_result({:ok, result}), do: {:ok, result}
 
-  defp reply({:ok, exercise}), do: {:ok, exercise}
+  defp handle_result({:error, {:enotfound, message, _}}), do: {:error, %{message: message, code: 404, details: []}}
+
+  defp handle_result({:error, {:invalid, _, details}}) do
+    detail_map = Enum.into(details, %{})
+    {:error, %{message: "The request was deemed invalid. Refer to the error details", code: 400, details: detail_map}}
+  end
+
+  defp handle_result(_) do
+    {:error, %{message: "Something went wrong", code: 500, details: []}}
+  end
 end
-

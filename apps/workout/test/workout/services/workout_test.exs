@@ -105,7 +105,7 @@ defmodule Workout.Services.WorkoutTest do
         ]
       }
 
-      assert {:error, {:invalid, [{:workout_date, _} | _]}} =
+      assert {:error, {:invalid, "The data sent was invalid", [{:workout_date, _} | _]}} =
              Workout.Services.Workout.create(payload)
     end
 
@@ -125,7 +125,7 @@ defmodule Workout.Services.WorkoutTest do
         ]
       }
 
-      assert {:error, {:invalid, [{:exercise_id, _} | _]}} =
+      assert {:error, {:invalid, "The data sent was invalid", [{:exercise_id, _} | _]}} =
              Workout.Services.Workout.create(payload)
     end
 
@@ -151,7 +151,7 @@ defmodule Workout.Services.WorkoutTest do
 
   @tag :delete
   test "#delete should return :enotfound if workout is not found" do
-    assert {:error, :enotfound} === Workout.Services.Workout.delete(%{id: 1})
+    assert {:error, {:enotfound, "Workout not found", []}} === Workout.Services.Workout.delete(%{id: 1})
   end
 
   @tag :delete
@@ -196,7 +196,7 @@ defmodule Workout.Services.WorkoutTest do
       |> Map.take([:id, :description, :workout_date, :performed_exercises])
       |> Map.merge(%{workout_date: "foo"})
 
-      assert {:error, {:invalid, [{:workout_date, _} | _]}} =
+      assert {:error, {:invalid, "The data sent was invalid", [{:workout_date, _} | _]}} =
              Workout.Services.Workout.update(payload)
     end
 
@@ -238,7 +238,7 @@ defmodule Workout.Services.WorkoutTest do
       |> Map.take([:id, :description, :workout_date, :performed_exercises])
       |> Map.merge(%{workout_date: "2017-01-01", performed_exercises: [%{exercise_id: 0, weight: 1.0, reps: 1, sets: 1}]})
 
-      assert {:error, {:invalid, [exercise_id: "Not found"]}} === Workout.Services.Workout.update(payload)
+      assert {:error, {:invalid, "The data sent was invalid", [exercise_id: "Not found"]}} === Workout.Services.Workout.update(payload)
     end
   end
 
