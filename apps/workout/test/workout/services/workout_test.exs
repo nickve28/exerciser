@@ -244,7 +244,7 @@ defmodule Workout.Services.WorkoutTest do
 
   @tag :count
   test "#count should return 400 when no user_id is given" do
-    assert {:error, {:invalid, [{:user_id, :required}]}} === Workout.Services.Workout.count(%{})
+    assert {:error, {:invalid, "The data sent was invalid", [{:user_id, :required}]}} === Workout.Services.Workout.count(%{})
   end
 
   describe "when no workouts exist for the user" do

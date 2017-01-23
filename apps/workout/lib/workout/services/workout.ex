@@ -5,6 +5,9 @@ defmodule Workout.Services.Workout do
   @type workout :: %{id: integer, description: String.t, workout_date: String.t, performed_exercises: [performed_exercise]}
 
   @type create_workout_payload :: %{description: String.t, workout_date: String.t, performed_exercises: [performed_exercise]}
+  @type bad_request :: {:invalid, String.t, [{atom(), String.t}]}
+  @type not_found :: {:enotfound, String.t, [any()]}
+  @type internal :: {:internal, String.t, [any()]}
 
   @exercise_repo Application.get_env(:workout, :exercise_repo)
 
@@ -26,21 +29,21 @@ defmodule Workout.Services.Workout do
     end)
   end
 
-  @spec get(%{id: integer}) :: {:ok, workout} | {:error, :enotfound}
+  @spec get(%{id: integer}) :: {:ok, workout} | {:error, not_found}
   def get(%{id: id}) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:get, id})
     end)
   end
 
-  @spec create(create_workout_payload) :: {:ok, workout} | {:error, any}
+  @spec create(create_workout_payload) :: {:ok, workout} | {:error, bad_request} | {:error, internal}
   def create(payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:create, payload})
     end)
   end
 
-  @spec update(workout) :: {:ok, workout} | {:error, any}
+  @spec update(workout) :: {:ok, workout} | {:error, not_found} | {:error, internal}
   def update(%{id: _} = payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:update, payload})
@@ -48,7 +51,7 @@ defmodule Workout.Services.Workout do
   end
 
 
-  @spec delete(%{id: integer}) :: {:ok, integer} | {:error, :enotfound}
+  @spec delete(%{id: integer}) :: {:ok, integer} | {:error, not_found} | {:error, internal}
   def delete(%{id: id}) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:delete, id})
@@ -62,8 +65,9 @@ defmodule Workout.Services.Workout do
     end)
   end
 
-  @spec count(%{}) :: {:error, {:invalid, [{:user_id, :required}]}}
-  def count(%{}), do: {:error, {:invalid, [{:user_id, :required}]}}
+  #todo
+  @spec count(%{}) :: {:error, bad_request}
+  def count(%{}), do: {:error, {:invalid, "The data sent was invalid", [{:user_id, :required}]}}
 
   def handle_call({:get, id}, _from, state) do
     workout = case Workout.Repositories.Workout.get(id) do
