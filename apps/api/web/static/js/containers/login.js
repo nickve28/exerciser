@@ -6,7 +6,6 @@ import _ from 'lodash'
 import {loginUser} from '../actions/index'
 import LoginForm from '../components/login_form'
 
-
 class Login extends Component {
   renderNotification(showDialog) {
     return (

@@ -1,3 +1,5 @@
+import domHelper from '../helpers/dom_helper'
+
 import React from 'react';
 import chai from 'chai'
 import chaiEnzyme from 'chai-enzyme'
