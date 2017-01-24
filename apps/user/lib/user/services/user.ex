@@ -64,6 +64,7 @@ defmodule User.Services.User do
     result = case User.Repositories.User.create(new_user_payload) do
       {:error, reason} -> {:error, reason}
       {:ok, user} -> {:ok, Map.merge(user, @empty_pass)}
+      _ -> {:error, {:internal, "Internal error", []}}
     end
 
     {:reply, result, state}
