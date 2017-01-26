@@ -1,12 +1,14 @@
 import domHelper from '../helpers/dom_helper'
 
-import React from 'react';
+import React from 'react'
 import chai from 'chai'
+import sinon from 'sinon'
 import chaiEnzyme from 'chai-enzyme'
 
 import _ from 'lodash'
 
-import Login from '../../containers/login';
+import Login from '../../containers/login'
+import {Snackbar} from 'material-ui'
 
 import {shallowRender, mountRender} from '../helpers/theme_helper'
 import createStore from '../helpers/store_helper'
@@ -35,6 +37,26 @@ describe('<Login />', () => {
 
       const snackbar = wrapper.find('Snackbar')
       expect(snackbar.prop('open')).to.eql(true)
+    })
+
+    it('should not re-render the snackbar when state changes', () => {
+      const store = createStore(
+        {
+          notifications: {
+            showLoginExpired: true
+          },
+          authentication: {
+            loginState: 'logged_out'
+          }
+        })
+
+      const spy = sinon.spy(Snackbar.prototype, 'componentWillReceiveProps')
+      const wrapper = mountRender(<Login />, {store})
+
+      const nameField = wrapper.find('[name="username"]')
+      nameField.simulate('change', {target: {value: 'foo'}})
+
+      expect(spy.callCount).to.eql(0)
     })
   })
 
