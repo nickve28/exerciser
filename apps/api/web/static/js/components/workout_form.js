@@ -61,7 +61,7 @@ class WorkoutForm extends Component {
             )
           })}
         </ul>
-        <a href="javascript:void(0);" style={{marginBottom: '5px'}} onClick={() => fields.push(EMPTY_EXERCISE)}>+ Add Exercise</a><br />
+        <a className="add-exercise" href="javascript:void(0);" style={{marginBottom: '5px'}} onClick={() => fields.push(EMPTY_EXERCISE)}>+ Add Exercise</a><br />
       </span>
     )
   }
