@@ -45,7 +45,6 @@ defmodule Api.Resolvers.WorkoutResolver do
   end
 
   defp handle_result(err) do
-    IO.inspect(err)
     {:error, %{message: "Something went wrong", code: 500, details: []}}
   end
 end
