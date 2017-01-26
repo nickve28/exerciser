@@ -6,6 +6,11 @@ defmodule User.Services.User do
   @type user_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t}
   @type user_auth_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t, id: integer}
 
+  @type bad_request :: {:invalid, String.t, [{atom(), String.t}]}
+  @type not_found :: {:enotfound, String.t, [any()]}
+  @type internal :: {:internal, String.t, [any()]}
+  @type unauthorized :: {:unauthorized, String.t, [{atom(), String.t}]}
+
   @salt Application.get_env(:user, :salt)
   @token_secret Application.get_env(:user, :token_secret)
   @empty_pass %{password: nil}
@@ -19,14 +24,14 @@ defmodule User.Services.User do
   @spec init(any()) :: {:ok, any()}
   def init(state), do: {:ok, state}
 
-  @spec authenticate(%{name: String.t, password: String.t}) :: {:ok, user_info}
+  @spec authenticate(%{name: String.t, password: String.t}) :: {:ok, user_info} | {:error, unauthorized} | {:error, internal}
   def authenticate(%{name: username, password: password}) do
     :poolboy.transaction(:user_pool, fn pid ->
       GenServer.call(pid, {:authenticate, %{name: username, password: password}})
     end)
   end
 
-  @spec get(integer) :: {:ok, user_auth_info}
+  @spec get(integer) :: {:ok, user_auth_info} | {:error, not_found}
   def get(id) do
     :poolboy.transaction(:user_pool, fn pid ->
       GenServer.call(pid, {:get, id})
@@ -42,7 +47,7 @@ defmodule User.Services.User do
 
   def handle_call({:get, id}, _from, state) do
     user = case User.Repositories.User.get(id) do
-      {:ok, nil} -> {:error, :enotfound}
+      {:ok, nil} -> {:error, {:enotfound, "The user could not be found", []}}
       {:ok, user} -> {:ok, Map.merge(user, @empty_pass)}
     end
     {:reply, user, state}
@@ -59,6 +64,7 @@ defmodule User.Services.User do
     result = case User.Repositories.User.create(new_user_payload) do
       {:error, reason} -> {:error, reason}
       {:ok, user} -> {:ok, Map.merge(user, @empty_pass)}
+      _ -> {:error, {:internal, "Internal error", []}}
     end
 
     {:reply, result, state}
@@ -80,14 +86,14 @@ defmodule User.Services.User do
 
   defp find_user(payload) do
     case User.Repositories.User.get_by(payload) do
-      {:ok, nil} -> {:error, :enotfound}
+      {:ok, nil} -> {:error, {:unauthorized, "The request is not authorized", [{:username, "not found"}]}}
       {:ok, user} -> {:ok, user}
     end
   end
 
   defp verify_user(%{password: password} = user, password), do: {:ok, user}
 
-  defp verify_user(_, _), do: {:error, :password_no_match}
+  defp verify_user(_, _), do: {:error, {:unauthorized, "The request is not authorized", [{:password, "no match"}]}}
 
   defp sign_token_for_user(user) do
     token = %{id: user[:id]}

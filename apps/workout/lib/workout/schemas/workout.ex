@@ -49,7 +49,9 @@ defmodule Workout.Schemas.Workout do
   defp to_output(changeset) do
     case changeset.errors do
       [] -> {:ok, changeset}
-      errors -> {:error, {:invalid, errors}}
+      errors ->
+        mapped_errors = for {key, {value, _}} <- errors, do: {key, value}
+        {:error, {:invalid, "The data sent was invalid", mapped_errors}}
     end
   end
 end

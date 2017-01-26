@@ -1,4 +1,4 @@
-%{"absinthe": {:hex, :absinthe, "1.2.1", "67099c701aca32c8f5cc8a0147d578eaecccf1bcb460edc746d467ccc7881ed8", [:mix], []},
+%{"absinthe": {:hex, :absinthe, "1.2.3", "634da49aacc4c9568760cdf3fe8c400ce9368815985e366e893ea8fcbe58f405", [:mix], []},
   "absinthe_plug": {:hex, :absinthe_plug, "1.2.0", "5cccb5ee6bb26ab7e0e9285731db1d1ac30864a7217fb1a76b6a3edb3070af4a", [:mix], [{:absinthe, "~> 1.2.0", [hex: :absinthe, optional: false]}, {:plug, "~> 1.0", [hex: :plug, optional: false]}]},
   "base64url": {:hex, :base64url, "0.0.1", "36a90125f5948e3afd7be97662a1504b934dd5dac78451ca6e9abf85a10286be", [:rebar], []},
   "bcrypt": {:hex, :bcrypt, "0.5.0-p3a", "a9d4d17749f5ff565f277960a068388edb563b8fba3be901b9b4e0de19848735", [:rebar3], []},
