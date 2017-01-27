@@ -106,11 +106,28 @@ defmodule ExercisesTest do
     assert {:ok, %{name: ^expected}} = Services.Exercise.create(payload)
   end
 
+  @tag :delete
   test "#delete should return :enotfound when no exercise is found", %{exercise: %{id: id}} do
-    assert {:error, :enotfound} === Services.Exercise.delete(%{id: id + 1})
+    assert {:error, {:enotfound, _, []}} = Services.Exercise.delete(%{id: id + 1})
   end
 
+  @tag :delete
   test "#delete should return the exercise that is deleted", %{exercise: %{id: id}} do
     assert {:ok, id} === Services.Exercise.delete(%{id: id})
+  end
+
+  @tag :delete
+  describe "when the exercise exists in a workout" do
+    setup do
+      Exercises.Repositories.MockWorkout.set_count_response({:ok, 1})
+      on_exit(fn -> Exercises.Repositories.MockWorkout.stop end)
+    end
+
+    test "#delete should return unprocessable", %{exercise: %{id: id}} do
+      expected = {:unprocessable, "The request could not be processed.", [
+        {:id, "is used in a workout"}
+      ]}
+      assert {:error, expected} === Services.Exercise.delete(%{id: id})
+    end
   end
 end

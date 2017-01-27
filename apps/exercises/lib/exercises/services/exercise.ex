@@ -5,6 +5,8 @@ defmodule Exercises.Services.Exercise do
   @type exercise :: %{id: integer, name: String.t, description: String.t, categories: [String.t]}
   @type create_payload :: %{name: String.t, description: String.t, categories: [String.t]}
 
+  @workout_repo Application.get_env(:exercises, :workout_repo)
+
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
   end
@@ -54,10 +56,16 @@ defmodule Exercises.Services.Exercise do
   end
 
   def handle_call({:delete, id}, _from, state) do
-    result = case Exercises.Repositories.Exercise.delete(id) do
-      {count, _} when count === 1 -> {:ok, id}
-      {count, _} when count === 0 -> {:error, :enotfound}
-      _ -> {:error, :internal}
+    result = with {:ok, 0} <- @workout_repo.count(%{exercise_id: [id]}),
+                  {1, _} <- Exercises.Repositories.Exercise.delete(id)
+    do
+      {:ok, id}
+    else
+      error -> case error do
+        {0, _} -> {:error, {:enotfound, "Exercise not found", []}}
+        {:ok, count} when count > 0 -> {:error, {:unprocessable, "The request could not be processed.", [{:id, "is used in a workout"}]}}
+        _ -> error
+      end
     end
     {:reply, result, state}
   end
