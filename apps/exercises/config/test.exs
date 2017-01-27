@@ -6,3 +6,5 @@ config :exercises, Exercises.Repo,
   username: "postgres",
   password: "",
   hostname: "localhost"
+
+config :exercises, workout_repo: Exercises.Repositories.MockWorkout
