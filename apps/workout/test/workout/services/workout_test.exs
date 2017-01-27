@@ -1,5 +1,6 @@
 defmodule Workout.Services.WorkoutTest do
   use ExUnit.Case, async: false
+  doctest Workout.Services.Workout
 
   alias Workout.Schemas
   alias Workout.Services
@@ -276,12 +277,30 @@ defmodule Workout.Services.WorkoutTest do
           %{exercise_id: 1, reps: 2, weight: 60.0}
         ]}
       |> RepoHelper.create
+
+      %Schemas.Workout{description: "Saturday workout",
+        workout_date: datetime, user_id: 1, performed_exercises: [
+          %{exercise_id: 1, reps: 2, weight: 60.0},
+          %{exercise_id: 2, reps: 2, weight: 60.0}
+        ]}
+      |> RepoHelper.create
       {:ok, workout: workout}
     end
 
     @tag :count
     test "#count should return the amount of workouts of the user" do
-      assert {:ok, 1} === Workout.Services.Workout.count(%{user_id: 1})
+      assert {:ok, 2} === Workout.Services.Workout.count(%{user_id: 1})
+    end
+
+    @tag :count
+    test "#count should return 0 if the exercise id it not present in any workout" do
+      assert {:ok, 0} === Workout.Services.Workout.count(%{user_id: 1, exercise_id: [3]})
+    end
+
+    @tag :count
+    test "#count should return the amount of workouts that match the exercise_id filter" do
+      assert {:ok, 2} === Workout.Services.Workout.count(%{user_id: 1, exercise_id: [1]})
     end
   end
+
 end

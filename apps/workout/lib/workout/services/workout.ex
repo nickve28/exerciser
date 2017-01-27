@@ -8,8 +8,10 @@ defmodule Workout.Services.Workout do
   @type bad_request :: {:invalid, String.t, [{atom(), String.t}]}
   @type not_found :: {:enotfound, String.t, [any()]}
   @type internal :: {:internal, String.t, [any()]}
+  @type filter :: %{exercise_id: [integer]}
 
   @exercise_repo Application.get_env(:workout, :exercise_repo)
+  @count_filters [:exercise_id]
 
   alias Workout.Schemas
 
@@ -58,14 +60,28 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+  @doc """
+   This endpoint counts the amount of workouts for the user
+
+   Available parameters are:
+
+   user_id: integer - Filters only workouts for this user (required)\n
+   exercise_id: [integer] - Filters workouts that have this exercise included in it\n
+
+   Returns: {:ok, count}
+
+   ## Examples
+
+     iex> Workout.Services.Workout.count(%{user_id: 1337})
+     {:ok, 0}
+  """
   @spec count(%{user_id: integer}) :: {:ok, integer}
-  def count(%{user_id: user_id}) when is_integer(user_id) do
+  def count(%{user_id: user_id} = payload) when is_integer(user_id) do
     :poolboy.transaction(:workout_pool, fn pid ->
-      GenServer.call(pid, {:count, %{user_id: user_id}})
+      GenServer.call(pid, {:count, payload})
     end)
   end
 
-  #todo
   @spec count(%{}) :: {:error, bad_request}
   def count(%{}), do: {:error, {:invalid, "The data sent was invalid", [{:user_id, :required}]}}
 
@@ -121,8 +137,11 @@ defmodule Workout.Services.Workout do
     {:reply, result, state}
   end
 
-  def handle_call({:count, %{user_id: user_id}}, _from, state) do
-    result = Workout.Repositories.Workout.count(%{user_id: user_id})
+  def handle_call({:count, %{user_id: user_id} = payload}, _from, state) do
+    count_payload = Map.take(payload, @count_filters)
+    |> Map.merge(%{user_id: user_id})
+
+    result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
   end
 

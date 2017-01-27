@@ -2,7 +2,7 @@ defmodule Workout.Repositories.Workout do
   @moduledoc false
   alias Workout.Repo
   alias Workout.Schemas.{Workout, PerformedExercise}
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2, where: 3, join: 5]
 
   @date_format "{YYYY}-{0M}-{0D}"
 
@@ -31,13 +31,13 @@ defmodule Workout.Repositories.Workout do
     {:ok, result}
   end
 
-  defp preload(nil, _), do: nil
+  defp preload_data(nil, _), do: nil
 
-  defp preload(model, preload), do: Repo.preload(model, preload)
+  defp preload_data(model, preload), do: Repo.preload(model, preload)
 
   def get(id) do
     result = Repo.get(Workout, id)
-    |> preload(:performed_exercises)
+    |> preload_data(:performed_exercises)
     |> to_model
 
     {:ok, result}
@@ -66,8 +66,25 @@ defmodule Workout.Repositories.Workout do
                     where: ^id == workout.id)
   end
 
-  def count(%{user_id: user_id}) do
-    query = from(w in Workout, where: w.user_id == ^user_id)
+  def count(payload) do
+    Workout
+    |> count(payload)
+  end
+
+  defp count(query, %{user_id: user_id} = payload) do
+    query
+    |> where([w], w.user_id == ^user_id)
+    |> count(Map.drop(payload, [:user_id]))
+  end
+
+  defp count(query, %{exercise_id: ids} = payload) do
+    query
+    |> join(:inner, [w], p in PerformedExercise, p.workout_id == w.id)
+    |> where([w, p], p.exercise_id in ^ids)
+    |> count(Map.drop(payload, [:exercise_id]))
+  end
+
+  defp count(query, %{}) do
     {:ok, Repo.aggregate(query, :count, :id)}
   end
 end
