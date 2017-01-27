@@ -1,4 +1,7 @@
 defmodule Workout.Services.Workout do
+  @moduledoc """
+    This module is a layer to communicate with the workout data
+  """
   use GenServer
 
   @type performed_exercise :: %{exercise_id: integer, weight: float, reps: integer, sets: integer}
@@ -11,7 +14,7 @@ defmodule Workout.Services.Workout do
   @type filter :: %{exercise_id: [integer]}
 
   @exercise_repo Application.get_env(:workout, :exercise_repo)
-  @count_filters [:exercise_id]
+  @count_filters [:exercise_id, :user_id]
 
   alias Workout.Schemas
 
@@ -65,7 +68,7 @@ defmodule Workout.Services.Workout do
 
    Available parameters are:
 
-   user_id: integer - Filters only workouts for this user (required)\n
+   user_id: integer - Filters only workouts for this user\n
    exercise_id: [integer] - Filters workouts that have this exercise included in it\n
 
    Returns: {:ok, count}
@@ -75,15 +78,12 @@ defmodule Workout.Services.Workout do
      iex> Workout.Services.Workout.count(%{user_id: 1337})
      {:ok, 0}
   """
-  @spec count(%{user_id: integer}) :: {:ok, integer}
-  def count(%{user_id: user_id} = payload) when is_integer(user_id) do
+  @spec count(%{user_id: integer, exercise_id: [integer]}) :: {:ok, integer}
+  def count(payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
       GenServer.call(pid, {:count, payload})
     end)
   end
-
-  @spec count(%{}) :: {:error, bad_request}
-  def count(%{}), do: {:error, {:invalid, "The data sent was invalid", [{:user_id, :required}]}}
 
   def handle_call({:get, id}, _from, state) do
     workout = case Workout.Repositories.Workout.get(id) do
@@ -137,9 +137,8 @@ defmodule Workout.Services.Workout do
     {:reply, result, state}
   end
 
-  def handle_call({:count, %{user_id: user_id} = payload}, _from, state) do
+  def handle_call({:count, payload}, _from, state) do
     count_payload = Map.take(payload, @count_filters)
-    |> Map.merge(%{user_id: user_id})
 
     result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
