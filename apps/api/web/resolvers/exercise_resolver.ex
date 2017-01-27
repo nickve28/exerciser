@@ -33,6 +33,11 @@ defmodule Api.Resolvers.ExerciseResolver do
     {:error, %{message: "The request was deemed invalid. Refer to the error details", code: 400, details: detail_map}}
   end
 
+  defp handle_result({:error, {:unprocessable, message, details}}) do
+    detail_map = Enum.into(details, %{})
+    {:error, %{message: message, code: 422, details: detail_map}}
+  end
+
   defp handle_result(_) do
     {:error, %{message: "Something went wrong", code: 500, details: []}}
   end
