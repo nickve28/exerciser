@@ -9,6 +9,7 @@ import ExerciseForm from '../components/exercise_form'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
 import {Snackbar} from 'material-ui'
 
+
 import Promise from 'bluebird'
 
 class Exercises extends Component {

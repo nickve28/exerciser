@@ -37,7 +37,7 @@ export default class ExerciseForm extends Component {
   render() {
     if (this.state.pageData.showForm) {
       return (
-        <div>
+        <div className="fadein">
           <form className="form">
             <div className="form-group">
               <div><label>Name</label></div>

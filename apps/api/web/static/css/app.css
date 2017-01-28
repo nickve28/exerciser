@@ -171,3 +171,13 @@ body {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
 }
+
+.fadein {
+  opacity: 1;
+  animation: fade 500ms linear;
+}
+
+@keyframes fade {
+  0% { opacity: 0 }
+  100% { opacity: 1 }
+}
