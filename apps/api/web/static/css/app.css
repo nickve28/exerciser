@@ -153,3 +153,21 @@ body {
   margin-top: 10px;
   margin-bottom: 20px;
 }
+
+.listitem-enter {
+  opacity: 0.01;
+}
+
+.listitem-enter.listitem-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.listitem-leave {
+  opacity: 1;
+}
+
+.listitem-leave.listitem-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
