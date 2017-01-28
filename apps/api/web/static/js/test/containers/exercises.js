@@ -21,12 +21,33 @@ describe('<Exercises />', () => {
     domHelper()
   })
 
+  it('should show the exercise count on the title', () => {
+    const store = createStore(
+      {
+        exercises:  {
+          exercises: [],
+          count: 0
+        },
+        notifications: {
+          showNoExerciseDeleted: false
+        }
+      })
+    const wrapper = mountRender(<Exercises />, {store})
+
+    const title = wrapper.find('h3')
+    expect(title.text()).to.eql('Exercises (0)');
+  })
+
   describe('when the noExerciseDeleted dialog should be shown', () => {
     it('should render the snackbar notification with the text why it cannot be deleted', () => {
       const store = createStore(
         {
           notifications: {
             showNoExerciseDeleted: true
+          },
+          exercises: {
+            exercises: [],
+            count: 0
           }
         })
       const wrapper = mountRender(<Exercises />, {store})
@@ -43,6 +64,10 @@ describe('<Exercises />', () => {
         {
           notifications: {
             showNoExerciseDeleted: false
+          },
+          exercises: {
+            exercises: [],
+            count: 0
           }
         })
       const wrapper = mountRender(<Exercises />, {store})

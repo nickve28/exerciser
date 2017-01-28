@@ -49,7 +49,7 @@ class Exercises extends Component {
     return (
       <div>
         <div style={{marginBottom: '10px'}} />
-        <h3 style={{display: 'inline'}} >Exercise Overview</h3>
+        <h3 style={{display: 'inline'}} >Exercises ({this.props.exerciseCount})</h3>
         <Table>
           <TableBody displayRowCheckbox={false}>
             {
@@ -83,7 +83,8 @@ class Exercises extends Component {
 
 function mapStateToProps(state) {
   return {
-    exercises: state.exercises,
+    exercises: state.exercises.exercises,
+    exerciseCount: state.exercises.count,
     categories: state.categories,
     showNoExerciseDeleted: state.notifications.showNoExerciseDeleted
   }

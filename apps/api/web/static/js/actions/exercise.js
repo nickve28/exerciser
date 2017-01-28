@@ -20,10 +20,10 @@ export const fetchExercises = () => {
     const headers = {
       authorization: `Bearer ${token}`
     }
-    return post(`{exercises { name, id, categories, description } }`, {headers, url}).then(function (data) {
+    return post(`{exercises { name, id, categories, description }, exerciseCount }`, {headers, url}).then(function (data) {
       return dispatch({
         type: FETCH_EXERCISES,
-        payload: data.exercises
+        payload: data
       })
     }).catch(err => handleErrors(err, dispatch))
   }

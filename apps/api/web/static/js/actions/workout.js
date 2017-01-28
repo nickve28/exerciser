@@ -110,9 +110,10 @@ export const fetchWorkoutAndExercises = (id) => {
         payload: data.workout
       })
 
+      const {exercises, exerciseCount} = data
       return dispatch({
         type: FETCH_EXERCISES,
-        payload: data.exercises
+        payload: {exercises, exerciseCount}
       })
 
     }).catch(err => handleUnauthorized(err, dispatch))

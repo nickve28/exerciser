@@ -55,7 +55,7 @@ class Workouts extends Component {
         <div style={{marginBottom: '10px'}} />
 
         <div style={{marginBottom: '50px'}}>
-          <h3 style={{display: 'inline'}}>List of recent workouts ({count})</h3>
+          <h3 style={{display: 'inline'}}>Workouts ({count})</h3>
           <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
         </div>
 

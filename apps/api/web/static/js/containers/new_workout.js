@@ -105,7 +105,7 @@ function mapStateToProps(state) {
   }
 
   return {
-    exercises: state.exercises,
+    exercises: state.exercises.exercises,
     initialValues: initialValues
   }
 }
