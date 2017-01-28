@@ -32,7 +32,9 @@ class Exercises extends Component {
 
   _handleSubmit(e, exercise) {
     e.preventDefault()
-    return this.props.saveExercise(exercise)
+    return this.props.saveExercise(exercise).then(() => {
+      this.loadData()
+    })
   }
 
   _handleDelete(exercise) {
