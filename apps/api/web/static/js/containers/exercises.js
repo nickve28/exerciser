@@ -7,6 +7,7 @@ import ExerciseEntry from '../components/exercise_entry'
 import ExerciseForm from '../components/exercise_form'
 
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
+import {Snackbar} from 'material-ui'
 
 import Promise from 'bluebird'
 
@@ -31,9 +32,7 @@ class Exercises extends Component {
 
   _handleSubmit(e, exercise) {
     e.preventDefault()
-    return this.props.saveExercise(exercise).then(() => {
-      return this.loadData()
-    })
+    return this.props.saveExercise(exercise)
   }
 
   _handleDelete(exercise) {
@@ -69,6 +68,11 @@ class Exercises extends Component {
         </Table>
         <div className="margin-vertical">
           <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
+          <Snackbar
+            open={this.props.showNoExerciseDeleted || false}
+            message='The exercise is used in workouts and can not be deleted'
+            onRequestClose={_.noop}
+          />
         </div>
       </div>
     )
@@ -78,7 +82,8 @@ class Exercises extends Component {
 function mapStateToProps(state) {
   return {
     exercises: state.exercises,
-    categories: state.categories
+    categories: state.categories,
+    showNoExerciseDeleted: state.notifications.showNoExerciseDeleted
   }
 }
 
