@@ -24,6 +24,10 @@ defmodule Api.Resolvers.ExerciseResolver do
     handle_result(Exercises.Services.Exercise.delete(payload))
   end
 
+  def count(_, _) do
+    handle_result(Exercises.Services.Exercise.count)
+  end
+
   defp handle_result({:ok, result}), do: {:ok, result}
 
   defp handle_result({:error, {:enotfound, message, _}}), do: {:error, %{message: message, code: 404, details: []}}

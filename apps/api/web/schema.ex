@@ -14,6 +14,10 @@ defmodule Api.Schema do
       resolve &Api.Resolvers.ExerciseResolver.get/2
     end
 
+    field :exercise_count, :integer do
+      resolve &Api.Resolvers.ExerciseResolver.count/2
+    end
+
     field :me, :user do
       resolve &Api.Resolvers.UserResolver.get/2
     end
