@@ -8,7 +8,8 @@ config :exercises, Exercises.Repo,
   hostname: System.get_env("DB_HOST")
 
 config :exercises,
-  ecto_repos: [Exercises.Repo]
+  ecto_repos: [Exercises.Repo],
+  workout_repo: Exercises.Repositories.Workout
 
 config :exercises, api_token: "55476a0d8ff88f1f28e9e7724cbdc825db1d729b"
 

@@ -1,4 +1,7 @@
 defmodule Workout.Services.Workout do
+  @moduledoc """
+    This module is a layer to communicate with the workout data
+  """
   use GenServer
 
   @type performed_exercise :: %{exercise_id: integer, weight: float, reps: integer, sets: integer}
@@ -8,8 +11,10 @@ defmodule Workout.Services.Workout do
   @type bad_request :: {:invalid, String.t, [{atom(), String.t}]}
   @type not_found :: {:enotfound, String.t, [any()]}
   @type internal :: {:internal, String.t, [any()]}
+  @type filter :: %{exercise_id: [integer]}
 
   @exercise_repo Application.get_env(:workout, :exercise_repo)
+  @count_filters [:exercise_id, :user_id]
 
   alias Workout.Schemas
 
@@ -58,16 +63,27 @@ defmodule Workout.Services.Workout do
     end)
   end
 
-  @spec count(%{user_id: integer}) :: {:ok, integer}
-  def count(%{user_id: user_id}) when is_integer(user_id) do
+  @doc """
+   This endpoint counts the amount of workouts for the user
+
+   Available parameters are:
+
+   user_id: integer - Filters only workouts for this user\n
+   exercise_id: [integer] - Filters workouts that have this exercise included in it\n
+
+   Returns: {:ok, count}
+
+   ## Examples
+
+     iex> Workout.Services.Workout.count(%{user_id: 1337})
+     {:ok, 0}
+  """
+  @spec count(%{user_id: integer, exercise_id: [integer]}) :: {:ok, integer}
+  def count(payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
-      GenServer.call(pid, {:count, %{user_id: user_id}})
+      GenServer.call(pid, {:count, payload})
     end)
   end
-
-  #todo
-  @spec count(%{}) :: {:error, bad_request}
-  def count(%{}), do: {:error, {:invalid, "The data sent was invalid", [{:user_id, :required}]}}
 
   def handle_call({:get, id}, _from, state) do
     workout = case Workout.Repositories.Workout.get(id) do
@@ -121,8 +137,10 @@ defmodule Workout.Services.Workout do
     {:reply, result, state}
   end
 
-  def handle_call({:count, %{user_id: user_id}}, _from, state) do
-    result = Workout.Repositories.Workout.count(%{user_id: user_id})
+  def handle_call({:count, payload}, _from, state) do
+    count_payload = Map.take(payload, @count_filters)
+
+    result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
   end
 
