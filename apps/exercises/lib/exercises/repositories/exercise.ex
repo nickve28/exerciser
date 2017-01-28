@@ -52,6 +52,10 @@ defmodule Exercises.Repositories.Exercise do
     Exercises.Repo.insert(changeset)
   end
 
+  def count do
+    {:ok, Exercises.Repo.aggregate(Exercise, :count, :id)}
+  end
+
   def delete(id) when is_integer(id) do
     Exercises.Repo.delete_all(from e in Exercise,
                               where: ^id == e.id)
