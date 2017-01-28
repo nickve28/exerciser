@@ -130,4 +130,20 @@ defmodule ExercisesTest do
       assert {:error, expected} === Services.Exercise.delete(%{id: id})
     end
   end
+
+
+  describe "#count" do
+    setup do
+      exercise2 = RepoHelper.create_exercise(%{name: "barbell Test", description: "A test",
+        categories: ["Triceps", "Chest"]})
+      exercise3 = RepoHelper.create_exercise(%{name: "a Test", description: "A test",
+        categories: ["Triceps", "Chest"]})
+      {:ok, exercise2: exercise2, exercise3: exercise3}
+    end
+
+    @tag :count
+    test "should return the amount of exercises" do
+      assert {:ok, 3} === Exercises.Services.Exercise.count
+    end
+  end
 end

@@ -41,6 +41,21 @@ defmodule Exercises.Services.Exercise do
     end)
   end
 
+  @doc """
+    This endpoint returns the amount of exercises known in the system
+
+    ## Example
+
+      iex> Exercises.Services.Exercise.count
+      {:ok, 0}
+  """
+  @spec count() :: {:ok, integer}
+  def count do
+    :poolboy.transaction(:exercise_pool, fn pid ->
+      GenServer.call(pid, :count)
+    end)
+  end
+
   def handle_call({:get, id}, _from, state) do
     result = case Exercises.Repositories.Exercise.get(id) do
       nil -> {:error, :enotfound}
@@ -77,5 +92,9 @@ defmodule Exercises.Services.Exercise do
     end
 
     {:reply, result, state}
+  end
+
+  def handle_call(:count, _from, state) do
+    {:reply, Exercises.Repositories.Exercise.count, state}
   end
 end
