@@ -14,15 +14,14 @@ export const loginUser = (user, password) => {
     dispatch({type: USER_LOGIN_PENDING})
 
     const payload = {name: user, password: password}
-    return axios.post(LOGIN_ENDPOINT, payload).then(function (loginData) {
-      if (loginData.data.error) {
-        return dispatch({
-          type: USER_LOGIN_FAILED
-        })
-      }
+    return axios.post(LOGIN_ENDPOINT, payload).then(loginData => {
       return dispatch({
         type: USER_LOGIN,
         payload: loginData.data
+      })
+    }).catch(httpError => {
+      return dispatch({
+        type: USER_LOGIN_FAILED
       })
     })
   }
