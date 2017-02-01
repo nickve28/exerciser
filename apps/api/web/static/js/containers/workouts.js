@@ -6,6 +6,7 @@ import {Link} from 'react-router'
 import _ from 'lodash'
 
 import {RaisedButton, Snackbar} from 'material-ui'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import WorkoutEntry from '../components/workout_entry'
 
@@ -59,17 +60,21 @@ class Workouts extends Component {
           <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
         </div>
 
-
-        <ul className="list-group">
+        <ReactCSSTransitionGroup
+          component="ul"
+          className="list-group"
+          transitionName="listitem"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}
+        >
           {
             _.map(workouts, workout => {
               return <WorkoutEntry key={workout.id} workout={workout} onDelete={_.partial(this.onDelete, workout)} />
             })
           }
         {this.renderMoreButton()}
-        </ul>
+        </ReactCSSTransitionGroup>
         {renderNotification(this.props.notifications)}
-
       </div>
     )
   }

@@ -4,6 +4,8 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {DatePicker, TextField, SelectField, MenuItem, RaisedButton} from 'material-ui'
 
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+
 import moment from 'moment'
 import _ from 'lodash'
 import Promise from 'bluebird'
@@ -26,7 +28,14 @@ class WorkoutForm extends Component {
   renderPerformedExercises({fields}) {
     return (
       <span>
-        <ul style={{marginBottom: '5px'}} className="list-group">
+        <ReactCSSTransitionGroup
+          component="ul"
+          className="list-group"
+          style={{marginBottom: '5px'}}
+          transitionName="listitem"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}
+        >
           {fields.map((fieldName, index) => {
             return (
               <li className='list-group-item list-group-item-gray' key={index}>
@@ -60,7 +69,7 @@ class WorkoutForm extends Component {
               </li>
             )
           })}
-        </ul>
+        </ReactCSSTransitionGroup>
         <a className="add-exercise" href="javascript:void(0);" style={{marginBottom: '5px'}} onClick={() => fields.push(EMPTY_EXERCISE)}>+ Add Exercise</a><br />
       </span>
     )
@@ -110,6 +119,7 @@ class WorkoutForm extends Component {
               defaultDate={properties.input.value || moment().toDate()}
             />
           } />
+
           <FieldArray name="performedExercises" component={this.renderPerformedExercises} />
           <RaisedButton style={{marginTop: '10px'}} label={this.props.action} primary={true} type="submit" />
       </form>
