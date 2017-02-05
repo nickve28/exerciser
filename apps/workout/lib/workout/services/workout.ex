@@ -12,9 +12,11 @@ defmodule Workout.Services.Workout do
   @type not_found :: {:enotfound, String.t, [any()]}
   @type internal :: {:internal, String.t, [any()]}
   @type filter :: %{exercise_id: [integer]}
+  @type list_payload :: %{user_id: integer}
 
   @exercise_repo Application.get_env(:workout, :exercise_repo)
   @count_filters [:exercise_id, :user_id]
+  @list_filters [:user_id]
 
   alias Workout.Schemas
 
@@ -24,13 +26,23 @@ defmodule Workout.Services.Workout do
 
   def init(state), do: {:ok, state}
 
-  @spec list(%{user_id: integer}) :: {:ok, [workout]} | {:ok, []}
-  def list(%{user_id: _id} = payload) when is_integer(_id) do
-    filtered_payload = Map.take(payload, [:user_id, :limit, :offset])
-    filtered_payload = Map.merge(%{limit: 10, offset: 0}, filtered_payload)
+  @doc """
+    Lists the workouts for the given user, allowing the optional filters:
 
+    - exercise_id: Only include workouts that contain this exercise\n
+    - from: Exclude workouts earlier than this date\n
+    - until: Exclude workouts later than this date\n
+    - limit: Limit the amount of results (default: 10)\n
+    - offset: Skip the amount of results (default: 0)\n
+
+
+    iex> Workout.Services.Workout.list(%{user_id: 1})
+    {:ok, []}
+  """
+  @spec list(list_payload) :: {:ok, [workout]} | {:ok, []}
+  def list(%{user_id: id} = payload) when is_integer(id) do
     :poolboy.transaction(:workout_pool, fn pid ->
-      GenServer.call(pid, {:list, filtered_payload})
+      GenServer.call(pid, {:list, payload})
     end)
   end
 
@@ -94,7 +106,11 @@ defmodule Workout.Services.Workout do
   end
 
   def handle_call({:list, payload}, _from, state) do
-    workouts = Workout.Repositories.Workout.list(payload)
+    filtered_payload = Map.take(payload, @list_filters)
+    pagination = set_pagination(payload)
+    filtered_payload = Map.merge(filtered_payload, pagination)
+
+    workouts = Workout.Repositories.Workout.list(filtered_payload)
     {:reply, workouts, state}
   end
 
@@ -142,6 +158,17 @@ defmodule Workout.Services.Workout do
 
     result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
+  end
+
+  defp set_pagination(payload) do
+    limit = case payload[:limit] do
+      limit when limit > 10 or limit < 0 -> 10
+      nil -> 10
+      limit -> limit
+    end
+
+    offset = payload[:offset] || 0
+    %{limit: limit, offset: offset}
   end
 
   defp find_workout(id) do
