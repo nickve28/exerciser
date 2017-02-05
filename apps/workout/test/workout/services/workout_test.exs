@@ -47,10 +47,46 @@ defmodule Workout.Services.WorkoutTest do
     end
 
     @tag :list
+    test "#list should break invalid limits to the default 10" do
+      assert {:ok, exercises} = Services.Workout.list(%{user_id: 1, limit: 99})
+
+      assert Enum.count(exercises) === 10
+    end
+
+    @tag :list
     test "#list should sort by date descending" do
       assert {:ok, exercises} = Services.Workout.list(%{user_id: 1})
       dates = Enum.map(exercises, fn %{workout_date: date} -> Timex.parse!(date, @date_format) end)
       assert Enum.reverse(Enum.sort_by(dates, fn x -> x end)) === dates
+    end
+  end
+
+  describe "when filtering the #list action" do
+    setup do
+      datetime = Timex.to_datetime({{2017, 1, 1}, {0, 0, 0}})
+      |> Timex.Ecto.DateTime.cast!
+
+      %Schemas.Workout{description: "Saturday workout",
+        workout_date: datetime, user_id: 1, performed_exercises: [
+          %{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}
+        ]}
+      |> RepoHelper.create
+
+      datetime = Timex.to_datetime({{2017, 1, 3}, {0, 0, 0}})
+      |> Timex.Ecto.DateTime.cast!
+
+      %Schemas.Workout{description: "Monday workout",
+        workout_date: datetime, user_id: 1, performed_exercises: [
+          %{exercise_id: 2, reps: 2, weight: 50.0, sets: 2}
+        ]}
+      |> RepoHelper.create
+
+      :ok
+    end
+
+    @tag :list
+    test "should filter on the exercise id" do
+      assert {:ok, [%{description: "Monday workout"}]} = Workout.Services.Workout.list(%{user_id: 1, exercise_id: 2})
     end
   end
 

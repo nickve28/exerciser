@@ -16,7 +16,7 @@ defmodule Workout.Services.Workout do
 
   @exercise_repo Application.get_env(:workout, :exercise_repo)
   @count_filters [:exercise_id, :user_id]
-  @list_filters [:user_id]
+  @list_filters [:user_id, :exercise_id] #, :until, :from]
 
   alias Workout.Schemas
 
