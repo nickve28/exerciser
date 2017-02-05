@@ -16,9 +16,12 @@ defmodule Workout.Services.Workout do
 
   @exercise_repo Application.get_env(:workout, :exercise_repo)
   @count_filters [:exercise_id, :user_id]
-  @list_filters [:user_id, :exercise_id] #, :until, :from]
+  @list_filters [:user_id, :exercise_id, :from, :until]
+
+  @date_format "{YYYY}-{0M}-{0D}"
 
   alias Workout.Schemas
+  alias Workout.Helpers.Validator
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
@@ -110,8 +113,21 @@ defmodule Workout.Services.Workout do
     pagination = set_pagination(payload)
     filtered_payload = Map.merge(filtered_payload, pagination)
 
-    workouts = Workout.Repositories.Workout.list(filtered_payload)
-    {:reply, workouts, state}
+    with :ok                 <- Validator.validate_list(filtered_payload),
+         transformed_payload <- to_date(filtered_payload, :from) |> to_date(:until)
+    do
+      workouts = Workout.Repositories.Workout.list(transformed_payload)
+      {:reply, workouts, state}
+    else
+      errors ->
+        error_result = case errors do
+          {:error, errors} when is_list(errors) ->
+            {:invalid, "The request did not meet the minimal required parameters", errors}
+          _ ->
+            {:internal, "Internal Server error", []}
+        end
+        {:reply, {:error, error_result}, state}
+    end
   end
 
   def handle_call({:update, payload}, _from, state) do
@@ -158,6 +174,14 @@ defmodule Workout.Services.Workout do
 
     result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
+  end
+
+  defp to_date(payload, key) do
+    if payload[key] do
+      Map.put(payload, key, Timex.parse!(payload[key], @date_format))
+    else
+      payload
+    end
   end
 
   defp set_pagination(payload) do

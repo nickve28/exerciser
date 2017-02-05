@@ -42,6 +42,7 @@ defmodule Workout.Mixfile do
       {:poolboy, "~> 1.5"},
       {:timex, "~> 3.0"},
       {:timex_ecto, "~> 3.0"},
+      {:vex, "~> 0.6.0"},
       {:exercises, in_umbrella: true}
     ]
   end

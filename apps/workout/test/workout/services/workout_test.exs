@@ -15,6 +15,10 @@ defmodule Workout.Services.WorkoutTest do
     :ok
   end
 
+  test "#list should fail if a wrong date is specified in a parameter" do
+    assert {:error, {:invalid, _, details}} = Services.Workout.list(%{user_id: 1, from: "2017-2017-2017"})
+    assert {:from, "Invalid date, expected YYYY-MM-DD format"} === List.first(details)
+  end
 
   describe "#list pagination" do
     setup do
@@ -87,6 +91,16 @@ defmodule Workout.Services.WorkoutTest do
     @tag :list
     test "should filter on the exercise id" do
       assert {:ok, [%{description: "Monday workout"}]} = Workout.Services.Workout.list(%{user_id: 1, exercise_id: 2})
+    end
+
+    @tag :list
+    test "should filter on the from date" do
+      assert {:ok, [%{description: "Monday workout"}]} = Workout.Services.Workout.list(%{user_id: 1, from: "2017-01-03"})
+    end
+
+    @tag :list
+    test "should filter on the until date" do
+      assert {:ok, [%{description: "Saturday workout"}]} = Workout.Services.Workout.list(%{user_id: 1, until: "2017-01-01"})
     end
   end
 
