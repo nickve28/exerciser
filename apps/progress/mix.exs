@@ -37,6 +37,7 @@ defmodule Progress.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
+      {:vex, "~> 0.6.0"},
       {:exercises, in_umbrella: true},
       {:workout, in_umbrella: true},
       {:user, in_umbrella: true}

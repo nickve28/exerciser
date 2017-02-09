@@ -157,8 +157,8 @@ defmodule Workout.Services.Workout do
 
   def handle_call({:create, payload}, _from, state) do
     result = with {:ok, changeset} <- Schemas.Workout.create_changeset(payload),
-         {:ok, _}         <- validate_exercise_existence(payload),
-         {:ok, workout}   <- Workout.Repositories.Workout.create(changeset)
+         {:ok, _}                  <- validate_exercise_existence(payload),
+         {:ok, workout}            <- Workout.Repositories.Workout.create(changeset)
     do
       {:ok, workout}
     else
