@@ -12,23 +12,33 @@ defmodule Progress.Services.Progress do
 
   def init(state), do: {:ok, state}
 
-  def list(payload) do
+  def get(payload) do
     :poolboy.transaction(:progress_pool, fn pid ->
-      GenServer.call(pid, {:list, payload})
+      GenServer.call(pid, {:get, payload})
     end)
   end
 
-  def handle_call({:list, payload}, _from, state) do
-    with :ok                   <- Validator.validate(:list, payload),
+  def handle_call({:get, payload}, _from, state) do
+    with :ok                   <- Validator.validate(:get, payload),
          {:ok, %{id: user_id}} <- @user_repo.get(payload[:user_id]),
          workout_payload       <- %{user_id: user_id, exercise_id: payload[:exercise_id]},
-         {:ok, workouts}       <- @workout_repo.list(workout_payload)
+         {:ok, workouts}       <- @workout_repo.list(workout_payload),
+         progression           <- to_progression(workouts, payload[:exercise_id]),
+         result                <- %{exercise_id: payload[:exercise_id], progress: progression}
     do
-      {:reply, {:ok, workouts}, state}
+      {:reply, {:ok, result}, state}
     else
       error ->
         response = handle_error(error)
         {:reply, response, state}
+    end
+  end
+
+  defp to_progression([], _), do: []
+
+  defp to_progression(workouts, exercise_id) do
+    for %{performed_exercises: [%{exercise_id: ^exercise_id} = exercise], workout_date: date} <- workouts do
+      %{Map.take(exercise, [:weight, :sets, :reps])) | date: date}
     end
   end
 

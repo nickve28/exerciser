@@ -4,7 +4,7 @@ defmodule Progress.Validator do
     exercise_id: [presence: true]
   ]
 
-  def validate(:list, payload) do
+  def validate(:get, payload) do
     case Vex.errors(payload, @list_validations) do
       [] -> :ok
       err -> {:error, to_external_error(err)}
