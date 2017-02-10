@@ -12,6 +12,16 @@ defmodule Progress.Services.Progress do
 
   def init(state), do: {:ok, state}
 
+  @doc """
+    Gets the progression on an exercise for the given user. The following
+    parameters are available
+
+    - exercise_id: Only include workouts that contain this exercise (required)\n
+    - user_id: Only include workouts from this user (required)\n
+
+    iex> Progress.get(%{exercise_id: 3, user_id: 1})
+    {:ok, %{exercise_id: 3, progress: [%{date: "2017-01-01", weight: 1.0, sets: 2, reps: 3}]}}
+  """
   def get(payload) do
     :poolboy.transaction(:progress_pool, fn pid ->
       GenServer.call(pid, {:get, payload})
@@ -38,7 +48,8 @@ defmodule Progress.Services.Progress do
 
   defp to_progression(workouts, exercise_id) do
     for %{performed_exercises: [%{exercise_id: ^exercise_id} = exercise], workout_date: date} <- workouts do
-      %{Map.take(exercise, [:weight, :sets, :reps])) | date: date}
+      Map.take(exercise, [:weight, :sets, :reps])
+      |> Map.put(:date, date)
     end
   end
 
