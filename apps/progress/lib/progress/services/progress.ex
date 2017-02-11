@@ -47,7 +47,10 @@ defmodule Progress.Services.Progress do
   defp to_progression([], _), do: []
 
   defp to_progression(workouts, exercise_id) do
-    for %{performed_exercises: [%{exercise_id: ^exercise_id} = exercise], workout_date: date} <- workouts do
+    for %{performed_exercises: exercises, workout_date: date} <- workouts do
+      #Todo make test to show that ordering of exercises does not matter
+      exercise = Enum.find(exercises, &(&1[:exercise_id] === exercise_id))
+
       Map.take(exercise, [:weight, :sets, :reps])
       |> Map.put(:date, date)
     end
