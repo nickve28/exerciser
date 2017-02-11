@@ -1,5 +1,3 @@
-import HttpTransport from 'lokka-transport-http'
-import axios from 'axios'
 import _ from 'lodash'
 
 import configuration from '../configs/index'
@@ -27,5 +25,10 @@ export {
   loginUser
 
 } from './authentication'
+
+export {
+  FETCH_PROGRESS,
+  fetchProgress
+} from './progress'
 
 

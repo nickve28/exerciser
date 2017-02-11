@@ -40,6 +40,7 @@ export default class NavigationBar extends Component {
             <ul className="nav navbar-nav">
               <li><Link to={'/'}>Exercises</Link></li>
               <li><Link to={'/workouts'}>Workouts</Link></li>
+              <li><Link to={'/progress'}>Progress</Link></li>
               <li className="float-right">
                 {!_.isEmpty(user) ? (<div className="user-nav">
                   <i className="user-nav-icon zmdi zmdi-account zmdi-hc-4x" onClick={this.handleUserClick} />
