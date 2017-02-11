@@ -4,6 +4,8 @@ defmodule Progress.Services.Progress do
   @user_repo Application.get_env(:progress, :user_repo)
   @workout_repo Application.get_env(:progress, :workout_repo)
 
+  @list_workout_filters [:user_id, :exercise_id, :from, :until]
+
   use GenServer
 
   def start_link(_args) do
@@ -18,6 +20,8 @@ defmodule Progress.Services.Progress do
 
     - exercise_id: Only include workouts that contain this exercise (required)\n
     - user_id: Only include workouts from this user (required)\n
+    - from: Only fetch workout progression starting from and including this date (YYYY-MM-DD formatted string)\n
+    - until: Only fetch workout progression until and including this date (YYYY-MM-DD formatted string)\n
 
     iex> Progress.get(%{exercise_id: 3, user_id: 1})
     {:ok, %{exercise_id: 3, progress: [%{date: "2017-01-01", weight: 1.0, sets: 2, reps: 3}]}}
@@ -30,8 +34,8 @@ defmodule Progress.Services.Progress do
 
   def handle_call({:get, payload}, _from, state) do
     with :ok                   <- Validator.validate(:get, payload),
-         {:ok, %{id: user_id}} <- @user_repo.get(payload[:user_id]),
-         workout_payload       <- %{user_id: user_id, exercise_id: payload[:exercise_id]},
+         {:ok, _}              <- @user_repo.get(payload[:user_id]),
+         workout_payload       <- Map.take(payload, @list_workout_filters),
          {:ok, workouts}       <- @workout_repo.list(workout_payload),
          progression           <- to_progression(workouts, payload[:exercise_id]),
          result                <- %{exercise_id: payload[:exercise_id], progress: progression}
@@ -48,10 +52,8 @@ defmodule Progress.Services.Progress do
 
   defp to_progression(workouts, exercise_id) do
     for %{performed_exercises: exercises, workout_date: date} <- workouts do
-      #Todo make test to show that ordering of exercises does not matter
-      exercise = Enum.find(exercises, &(&1[:exercise_id] === exercise_id))
-
-      Map.take(exercise, [:weight, :sets, :reps])
+      Enum.find(exercises, &(&1[:exercise_id] === exercise_id))
+      |> Map.take([:weight, :sets, :reps])
       |> Map.put(:date, date)
     end
   end
