@@ -35,7 +35,6 @@ export const fetchProgress = ({exerciseId, fromDate, untilDate}) => {
 
   return dispatch => {
     return post(query, {url, headers}).then(result => {
-      console.log('result %j', result)
       dispatch({
         type: FETCH_PROGRESS,
         payload: result.me.progress

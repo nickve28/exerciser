@@ -20,7 +20,8 @@ export default ({exercises, selectedExercise, onSelect}) => {
 
   return (
     <SelectField
-      floatingLabelText="Select an exercise"
+      floatingLabelText="Exercise"
+      floatingLabelFixed={true}
       value={selectedExercise}
       onChange={(event, index, value) => onSelect(value)}
     >

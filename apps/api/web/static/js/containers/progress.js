@@ -5,6 +5,7 @@ import {fetchProgress, fetchExercises} from '../actions/index'
 import _ from 'lodash'
 
 import SelectExercise from '../components/exercises/select'
+import ProgressData from '../components/progress/progress'
 
 class Progress extends Component {
   constructor(props) {
@@ -36,13 +37,14 @@ class Progress extends Component {
         <div style={{marginBottom: '50px'}}>
           <h3 style={{display: 'inline'}}>Progress</h3>
         </div>
+
         <SelectExercise exercises={exerciseOverview}
           selectedExercise={this.state.selectedExercise}
           onSelect={selectedExercise => this.onSelect(selectedExercise)}
         />
-        <p>
-          {JSON.stringify(this.props.progress || {})}
-        </p>
+
+        <div style={{marginTop: '50px'}} />
+        <ProgressData progress={progress} />
       </div>
     )
   }
