@@ -5,31 +5,47 @@ import {fetchProgress, fetchExercises} from '../actions/index'
 import _ from 'lodash'
 
 import SelectExercise from '../components/exercises/select'
+import SelectDateRange from '../components/select_date_range'
 import ProgressData from '../components/progress/progress'
 
 class Progress extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {selectedExercise: null}
+    this.state = {exerciseId: null, from: null, until: null}
+
+    this.onSelect = this.onSelect.bind(this)
   }
 
   componentDidMount() {
     this.props.fetchExercises()
   }
 
-  onSelect(selectedExercise) {
-    this.setState({selectedExercise})
-    this.props.fetchProgress({exerciseId: selectedExercise})
+  onSelect(payload) {
+    this.setState(payload)
+    const requestPayload = _.chain(payload)
+      .defaults(payload, this.state)
+      .mapKeys((value, key) => {
+        if (key === 'from') return 'fromDate'
+        if (key === 'until') return 'untilDate'
+        return key
+      }).value()
+
+    this.props.fetchProgress(requestPayload)
   }
 
   render() {
     const {progress, exercises} = this.props
-    const exerciseOverview = exercises.exercises;
+    const exerciseOverview = exercises.exercises
+
+    const progressData = _.get(progress, 'progress', [])
+    const startDate = _.get(_.last(progressData), 'date')
+    const endDate = _.get(_.first(progressData), 'date')
 
     if (_.isEmpty(exerciseOverview)) {
       return <div>Loading...</div>
     }
+
     return (
       <div>
         <div style={{marginBottom: '10px'}} />
@@ -39,9 +55,12 @@ class Progress extends Component {
         </div>
 
         <SelectExercise exercises={exerciseOverview}
-          selectedExercise={this.state.selectedExercise}
-          onSelect={selectedExercise => this.onSelect(selectedExercise)}
+          selectedExercise={this.state.exerciseId}
+          onSelect={exerciseId => this.onSelect({exerciseId})}
         />
+        <div style={{marginBottom: '20px'}} />
+
+        <SelectDateRange startDate={startDate} endDate={endDate} onSelect={this.onSelect} />
 
         <div style={{marginTop: '50px'}} />
         <ProgressData progress={progress} />

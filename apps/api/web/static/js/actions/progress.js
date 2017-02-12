@@ -12,8 +12,8 @@ const url = `${configuration.apiHost}:${configuration.apiPort}/api/graphql`
 export const fetchProgress = ({exerciseId, fromDate, untilDate}) => {
   const token = localStorage.getItem('auth_token')
   const filters = _.chain([
-    fromDate ? `from: ${fromDate}` : null,
-    untilDate ? `until: ${until}` : null,
+    fromDate ? `from: "${fromDate}"` : null,
+    untilDate ? `until: "${untilDate}"` : null,
     `exerciseId: ${exerciseId}`
   ]).compact()
     .join(', ')
