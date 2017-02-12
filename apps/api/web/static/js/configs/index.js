@@ -9,8 +9,8 @@ let configuration = {
 
 if (process.env.NODE_ENV === 'production') {
   configuration = {
-    apiHost: 'https://192.168.0.11',
-    apiPort: 443
+    apiHost: 'https://devnix.nl',
+    apiPort: 25570
   }
 }
 export default configuration
