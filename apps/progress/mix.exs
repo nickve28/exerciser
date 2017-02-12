@@ -18,7 +18,7 @@ defmodule Progress.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :workout, :user],
+    [applications: [:logger, :workout, :user, :vex],
      mod: {Progress, []}]
   end
 

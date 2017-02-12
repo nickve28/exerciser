@@ -18,7 +18,7 @@ defmodule Workout.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :postgrex, :ecto, :poolboy, :timex, :timex_ecto],
+    [applications: [:logger, :postgrex, :ecto, :poolboy, :timex, :timex_ecto, :vex],
      mod: {Workout, []}]
   end
 
