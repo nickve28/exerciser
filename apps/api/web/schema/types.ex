@@ -13,6 +13,12 @@ defmodule Api.Schema.Types do
     field :workout_count, :integer do
       resolve &Api.Resolvers.WorkoutResolver.count/2
     end
+    field :progress, :progress do
+      arg :exercise_id, non_null(:integer)
+      arg :from, :string
+      arg :until, :string
+      resolve &Api.Resolvers.ProgressResolver.get/2
+    end
   end
 
   object :exercise do
@@ -34,5 +40,17 @@ defmodule Api.Schema.Types do
     field :reps, :integer
     field :sets, :integer
     field :weight, :float
+  end
+
+  object :progression do
+    field :date, :string
+    field :reps, :integer
+    field :sets, :integer
+    field :weight, :float
+  end
+
+  object :progress do
+    field :exercise_id, :integer
+    field :progress, list_of(:progression)
   end
 end

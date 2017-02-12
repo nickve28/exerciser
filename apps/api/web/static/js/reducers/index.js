@@ -5,6 +5,7 @@ import ExerciseReducer from './exercise'
 import {MeReducer, AuthenticationReducer} from './user'
 import WorkoutReducer from './workout'
 import NotificationReducer from './notification'
+import ProgressReducer from './progress'
 
 import { reducer as FormReducer } from 'redux-form'
 
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   categories: CategoryReducer,
   workouts: WorkoutReducer,
   notifications: NotificationReducer,
+  progress: ProgressReducer,
   form: FormReducer
 })
 

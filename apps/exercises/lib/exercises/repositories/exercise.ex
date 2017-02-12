@@ -21,7 +21,7 @@ defmodule Exercises.Repositories.Exercise do
 
   def get(id) do
     Repo.get(Exercise, id)
-      |> to_model
+    |> to_model
   end
 
   def list(payload) do

@@ -1,8 +1,8 @@
-defmodule Workout.Mixfile do
+defmodule Progress.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :workout,
+    [app: :progress,
      version: "0.1.0",
      build_path: "../../_build",
      config_path: "../../config/config.exs",
@@ -18,8 +18,8 @@ defmodule Workout.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :postgrex, :ecto, :poolboy, :timex, :timex_ecto],
-     mod: {Workout, []}]
+    [applications: [:logger, :workout, :user],
+     mod: {Progress, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -37,13 +37,9 @@ defmodule Workout.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 2.0.0"},
-      {:poolboy, "~> 1.5"},
-      {:timex, "~> 3.0"},
-      {:timex_ecto, "~> 3.0"},
       {:vex, "~> 0.6.0"},
-      {:exercises, in_umbrella: true}
+      {:workout, in_umbrella: true},
+      {:user, in_umbrella: true}
     ]
   end
 end

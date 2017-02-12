@@ -12,11 +12,16 @@ defmodule Workout.Services.Workout do
   @type not_found :: {:enotfound, String.t, [any()]}
   @type internal :: {:internal, String.t, [any()]}
   @type filter :: %{exercise_id: [integer]}
+  @type list_payload :: %{user_id: integer}
 
   @exercise_repo Application.get_env(:workout, :exercise_repo)
   @count_filters [:exercise_id, :user_id]
+  @list_filters [:user_id, :exercise_id, :from, :until]
+
+  @date_format "{YYYY}-{0M}-{0D}"
 
   alias Workout.Schemas
+  alias Workout.Helpers.Validator
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
@@ -24,13 +29,23 @@ defmodule Workout.Services.Workout do
 
   def init(state), do: {:ok, state}
 
-  @spec list(%{user_id: integer}) :: {:ok, [workout]} | {:ok, []}
-  def list(%{user_id: _id} = payload) when is_integer(_id) do
-    filtered_payload = Map.take(payload, [:user_id, :limit, :offset])
-    filtered_payload = Map.merge(%{limit: 10, offset: 0}, filtered_payload)
+  @doc """
+    Lists the workouts for the given user, allowing the optional filters:
 
+    - exercise_id: Only include workouts that contain this exercise\n
+    - from: Exclude workouts earlier than this date\n
+    - until: Exclude workouts later than this date\n
+    - limit: Limit the amount of results (default: 10)\n
+    - offset: Skip the amount of results (default: 0)\n
+
+
+    iex> Workout.Services.Workout.list(%{user_id: 1})
+    {:ok, []}
+  """
+  @spec list(list_payload) :: {:ok, [workout]} | {:ok, []}
+  def list(%{user_id: id} = payload) when is_integer(id) do
     :poolboy.transaction(:workout_pool, fn pid ->
-      GenServer.call(pid, {:list, filtered_payload})
+      GenServer.call(pid, {:list, payload})
     end)
   end
 
@@ -94,8 +109,25 @@ defmodule Workout.Services.Workout do
   end
 
   def handle_call({:list, payload}, _from, state) do
-    workouts = Workout.Repositories.Workout.list(payload)
-    {:reply, workouts, state}
+    filtered_payload = Map.take(payload, @list_filters)
+    pagination = set_pagination(payload)
+    filtered_payload = Map.merge(filtered_payload, pagination)
+
+    with :ok                 <- Validator.validate_list(filtered_payload),
+         transformed_payload <- to_date(filtered_payload, :from) |> to_date(:until)
+    do
+      workouts = Workout.Repositories.Workout.list(transformed_payload)
+      {:reply, workouts, state}
+    else
+      errors ->
+        error_result = case errors do
+          {:error, errors} when is_list(errors) ->
+            {:invalid, "The request did not meet the minimal required parameters", errors}
+          _ ->
+            {:internal, "Internal Server error", []}
+        end
+        {:reply, {:error, error_result}, state}
+    end
   end
 
   def handle_call({:update, payload}, _from, state) do
@@ -125,8 +157,8 @@ defmodule Workout.Services.Workout do
 
   def handle_call({:create, payload}, _from, state) do
     result = with {:ok, changeset} <- Schemas.Workout.create_changeset(payload),
-         {:ok, _}         <- validate_exercise_existence(payload),
-         {:ok, workout}   <- Workout.Repositories.Workout.create(changeset)
+         {:ok, _}                  <- validate_exercise_existence(payload),
+         {:ok, workout}            <- Workout.Repositories.Workout.create(changeset)
     do
       {:ok, workout}
     else
@@ -142,6 +174,25 @@ defmodule Workout.Services.Workout do
 
     result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
+  end
+
+  defp to_date(payload, key) do
+    if payload[key] do
+      Map.put(payload, key, Timex.parse!(payload[key], @date_format))
+    else
+      payload
+    end
+  end
+
+  defp set_pagination(payload) do
+    limit = case payload[:limit] do
+      limit when limit > 10 or limit < 0 -> 10
+      nil -> 10
+      limit -> limit
+    end
+
+    offset = payload[:offset] || 0
+    %{limit: limit, offset: offset}
   end
 
   defp find_workout(id) do

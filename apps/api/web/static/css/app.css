@@ -100,8 +100,11 @@ body {
   }
 
   .navbar-nav li {
-    padding-left: 10px;
     float: left;
+  }
+
+  .navbar-nav li:first-of-type {
+    margin-left: 10px;
   }
 
   .navbar-nav li a {
@@ -131,7 +134,7 @@ body {
 
   .navbar-nav li {
     display: inline;
-    margin-left: 10px;
+    padding-left: 10px;
   }
 
 
