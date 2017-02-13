@@ -66,8 +66,7 @@ export default class LoginForm extends Component {
             {this.renderField(FIELDS.password, this.onPasswordChange)}
           </div>
           <div className="top-padding-20">
-            <RaisedButton label="Log in" primary={true} onClick={this.onFormSubmit} style={{marginRight: '10px'}} />
-            {loginText(this.props.loginState)}
+            {loginRender(this.props.loginState, this.onFormSubmit)}
           </div>
         </form>
       </div>
@@ -75,12 +74,17 @@ export default class LoginForm extends Component {
   }
 }
 
-const loginText = (loginState) => {
+const loginRender = (loginState, onSubmit) => {
   if (loginState === 'login_failure') {
-    return <div className="error-text">Login failed</div>
+    return (
+      <div>
+        <RaisedButton label="Log in" primary={true} onClick={onSubmit} style={{marginRight: '10px'}} />
+        <div className="error-text">Login failed</div>
+      </div>
+    )
   }
   if (loginState === 'logging_in') {
     return <CircularProgress size={23} />
   }
-  return ''
+  return <RaisedButton label="Log in" primary={true} onClick={onSubmit} style={{marginRight: '10px'}} />
 }
