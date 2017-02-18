@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
-import { Field, reduxForm } from 'redux-form'
+import { reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
-import {Link} from 'react-router'
 
 import {fetchWorkoutTemplate, saveWorkout, fetchExercises} from '../actions/index'
 import { browserHistory } from 'react-router';
@@ -10,18 +9,10 @@ import { SubmissionError } from 'redux-form'
 
 import moment from 'moment'
 import _ from 'lodash'
-import Promise from 'bluebird'
 
 import WorkoutForm from '../components/workout_form'
 
 const toDecimal = _.partialRight(parseInt, 10)
-
-const EMPTY_EXERCISE = {
-  exercise_id: null,
-  weight: null,
-  reps: null,
-  sets: null
-}
 
 class NewWorkout extends Component {
   constructor(props) {
@@ -110,7 +101,7 @@ function validate(data) {
       }, {})
     })
   }
-  return errorMessages;
+  return errorMessages
 }
 
 function mapStateToProps(state) {
@@ -125,7 +116,7 @@ function mapStateToProps(state) {
   }
 }
 
-NewWorkout = reduxForm({
+NewWorkout = reduxForm({ //eslint-disable-line
   form: 'workout',
   fields: ['description', 'workoutDate', 'performedExercise'],
   validate

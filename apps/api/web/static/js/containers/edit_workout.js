@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
-import { Field, reduxForm } from 'redux-form'
+import { reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
-import {Link} from 'react-router'
 
 import {fetchWorkoutAndExercises, updateWorkout} from '../actions/index'
-import { browserHistory } from 'react-router';
-import {validateWorkoutCreate, validatePExerciseCreate} from '../helpers/validator'
+import { browserHistory } from 'react-router'
+import {validateWorkoutCreate, validatePExerciseCreate, validatePExerciseUnique} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
 
 import moment from 'moment'
@@ -14,13 +13,6 @@ import _ from 'lodash'
 import WorkoutForm from '../components/workout_form'
 
 const toDecimal = _.partialRight(parseInt, 10)
-
-const EMPTY_EXERCISE = {
-  exercise_id: null,
-  weight: null,
-  reps: null,
-  sets: null
-}
 
 class EditWorkout extends Component {
   constructor(props) {
@@ -106,7 +98,7 @@ function validate(data) {
       }, {})
     })
   }
-  return errorMessages;
+  return errorMessages
 }
 
 function mapStateToProps(state) {
@@ -121,7 +113,7 @@ function mapStateToProps(state) {
   }
 }
 
-EditWorkout = reduxForm({
+EditWorkout = reduxForm({ //eslint-disable-line
   form: 'workout',
   fields: ['description', 'workoutDate', 'performedExercise'],
   validate

@@ -4,7 +4,8 @@
   "scripts": {
     "deploy": "brunch build --production",
     "watch": "brunch watch --stdin",
-    "test": "mocha --compilers js:babel-core/register --recursive web/static/js/test"
+    "test": "mocha --compilers js:babel-core/register --recursive web/static/js/test",
+    "lint": "eslint web/static/js/*"
   },
   "dependencies": {
     "axios": "^0.15.3",
@@ -43,6 +44,8 @@
     "clean-css-brunch": "~2.0.0",
     "css-brunch": "~2.0.0",
     "enzyme": "^2.7.0",
+    "eslint": "^3.15.0",
+    "eslint-plugin-react": "^6.10.0",
     "javascript-brunch": "~2.0.0",
     "jsdom": "^9.9.1",
     "mocha": "^3.2.0",

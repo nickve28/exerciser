@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import { Field, FieldArray } from 'redux-form'
-import {connect} from 'react-redux'
 import {Link} from 'react-router'
 import {DatePicker, TextField, SelectField, MenuItem, RaisedButton} from 'material-ui'
 
@@ -8,7 +7,6 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import moment from 'moment'
 import _ from 'lodash'
-import Promise from 'bluebird'
 
 const EMPTY_EXERCISE = {
   exerciseId: null,
@@ -76,7 +74,7 @@ class WorkoutForm extends Component {
   }
 
   renderField(fieldProps) {
-    const { input, name, label, type, meta: { touched, error } } = fieldProps
+    const { input, label, type, meta: { touched, error } } = fieldProps
     return (
       <div>
         <p><label style={{marginRight: '5px'}}>{label}</label></p>
@@ -87,13 +85,12 @@ class WorkoutForm extends Component {
   }
 
   renderError(error, key) {
-    console.log(error)
     if (!error[key]) { return '' }
     return <div className="error-text">{error[key]}</div>
   }
 
   render() {
-    const {handleFormSubmit, handleLoadTemplate, exercises, action, errors} = this.props
+    const {handleFormSubmit, handleLoadTemplate, action, errors} = this.props
     const loadTemplateTxt = action === "Create" ? <a href="javascript:void(0);" onClick={handleLoadTemplate}>Load most recent workout template</a> : ''
 
     return (
