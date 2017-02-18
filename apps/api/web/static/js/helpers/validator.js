@@ -15,6 +15,8 @@ const CREATE_PERFORMED_EXERCISE_SCHEMA = Joi.object().keys({
   sets: Joi.number().integer().required()
 })
 
+const UNIQUE_ID_SCHEMA = Joi.array().items(Joi.number().integer()).unique()
+
 export const validateWorkoutCreate = (payload) => {
   return Joi.validate(payload, CREATE_WORKOUT_SCHEMA, JOI_OPTIONS)
 }
@@ -23,3 +25,6 @@ export const validatePExerciseCreate = (payload) => {
   return Joi.validate(payload, CREATE_PERFORMED_EXERCISE_SCHEMA, _.defaults({allowUnknown: true}, JOI_OPTIONS))
 }
 
+export const validatePExerciseUnique = (ids) => {
+  return Joi.validate(ids, UNIQUE_ID_SCHEMA, JOI_OPTIONS)
+}

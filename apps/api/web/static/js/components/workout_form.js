@@ -86,8 +86,14 @@ class WorkoutForm extends Component {
     )
   }
 
+  renderError(error, key) {
+    console.log(error)
+    if (!error[key]) { return '' }
+    return <div className="error-text">{error[key]}</div>
+  }
+
   render() {
-    const {handleFormSubmit, handleLoadTemplate, exercises, action} = this.props
+    const {handleFormSubmit, handleLoadTemplate, exercises, action, errors} = this.props
     const loadTemplateTxt = action === "Create" ? <a href="javascript:void(0);" onClick={handleLoadTemplate}>Load most recent workout template</a> : ''
 
     return (
@@ -121,6 +127,7 @@ class WorkoutForm extends Component {
           } />
 
           <FieldArray name="performedExercises" component={this.renderPerformedExercises} />
+          {this.renderError(errors, 'uniqueExerciseError')}
           <RaisedButton style={{marginTop: '10px'}} label={this.props.action} primary={true} type="submit" />
       </form>
       </div>

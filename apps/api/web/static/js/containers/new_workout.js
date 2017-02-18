@@ -5,7 +5,7 @@ import {Link} from 'react-router'
 
 import {fetchWorkoutTemplate, saveWorkout, fetchExercises} from '../actions/index'
 import { browserHistory } from 'react-router';
-import {validateWorkoutCreate, validatePExerciseCreate} from '../helpers/validator'
+import {validateWorkoutCreate, validatePExerciseCreate, validatePExerciseUnique} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
 
 import moment from 'moment'
@@ -29,6 +29,7 @@ class NewWorkout extends Component {
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.handleLoadTemplate = this.handleLoadTemplate.bind(this)
+    this.state = {errors: []}
   }
 
   componentDidMount() {
@@ -43,6 +44,7 @@ class NewWorkout extends Component {
         action="Create"
         exercises={this.props.exercises}
         validate={validate}
+        errors={this.state.errors}
       />
     )
   }
@@ -56,6 +58,7 @@ class NewWorkout extends Component {
     const errors = validate(payload)
 
     if (!_.isEmpty(errors)) {
+      this.setState({errors})
       throw new SubmissionError(errors)
     }
 
@@ -79,11 +82,23 @@ class NewWorkout extends Component {
 function validate(data) {
   const topLevelErrors = validateWorkoutCreate(_.omit(data, 'performedExercises'))
   const exerciseErrors = _.map(data.performedExercises, validatePExerciseCreate)
+  const exerciseIds = _(data.performedExercises)
+    .map('exerciseId')
+    .compact()
+    .map(id => toDecimal(id)) //the 2nd parameter of map is causing trouble
+    .value()
+
+  const exerciseUniqueError = validatePExerciseUnique(exerciseIds).error
 
   const errorMessages = _.reduce(_.get(topLevelErrors, 'error.details'), (memo, {message, path}) => {
     memo[path] = _.replace(message, /"/g, '')
     return memo
   }, {})
+
+  if (exerciseUniqueError) {
+    const err = "You can not assign an exercise multiple times"
+    errorMessages.uniqueExerciseError = err
+  }
 
   const someErrorsPresentInExercises = _.some(exerciseErrors, ({error}) => error)
 

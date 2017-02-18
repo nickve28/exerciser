@@ -27,6 +27,7 @@ class EditWorkout extends Component {
     super(props)
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
+    this.state = {errors: []}
   }
 
   componentDidMount() {
@@ -41,6 +42,7 @@ class EditWorkout extends Component {
         action="Edit"
         exercises={this.props.exercises}
         validate={validate}
+        errors={this.state.errors}
       />
     )
   }
@@ -50,6 +52,7 @@ class EditWorkout extends Component {
     const errors = validate(values)
 
     if (!_.isEmpty(errors)) {
+      this.setState({errors})
       throw new SubmissionError(errors)
     }
 
@@ -73,13 +76,25 @@ class EditWorkout extends Component {
 }
 
 function validate(data) {
-  const topLevelErrors = validateWorkoutCreate(_.omit(data, 'performedExercises', 'id'))
+  const topLevelErrors = validateWorkoutCreate(_.omit(data, 'performedExercises'))
   const exerciseErrors = _.map(data.performedExercises, validatePExerciseCreate)
+  const exerciseIds = _(data.performedExercises)
+    .map('exerciseId')
+    .compact()
+    .map(id => toDecimal(id)) //the 2nd parameter of map is causing trouble
+    .value()
+
+  const exerciseUniqueError = validatePExerciseUnique(exerciseIds).error
 
   const errorMessages = _.reduce(_.get(topLevelErrors, 'error.details'), (memo, {message, path}) => {
     memo[path] = _.replace(message, /"/g, '')
     return memo
   }, {})
+
+  if (exerciseUniqueError) {
+    const err = "You can not assign an exercise multiple times"
+    errorMessages.uniqueExerciseError = err
+  }
 
   const someErrorsPresentInExercises = _.some(exerciseErrors, ({error}) => error)
 
