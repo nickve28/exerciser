@@ -68,7 +68,7 @@ class EditWorkout extends Component {
 }
 
 function validate(data) {
-  const topLevelErrors = validateWorkoutCreate(_.omit(data, 'performedExercises'))
+  const topLevelErrors = validateWorkoutCreate(_.omit(data, ['performedExercises', 'id']))
   const exerciseErrors = _.map(data.performedExercises, validatePExerciseCreate)
   const exerciseIds = _(data.performedExercises)
     .map('exerciseId')
@@ -84,7 +84,7 @@ function validate(data) {
   }, {})
 
   if (exerciseUniqueError) {
-    const err = "You can not assign an exercise multiple times"
+    const err = 'You can not assign an exercise multiple times'
     errorMessages.uniqueExerciseError = err
   }
 

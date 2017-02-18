@@ -1,6 +1,7 @@
-import domHelper from '../helpers/dom_helper'
+import '../helpers/dom_helper'
+import {describe, it, before, afterEach} from 'mocha'
 
-import React from 'react';
+import React from 'react'
 import chai from 'chai'
 import chaiEnzyme from 'chai-enzyme'
 import sinon from 'sinon'

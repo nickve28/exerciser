@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 import configuration from '../configs/index'
 export const URL = `${configuration.apiHost}:${configuration.apiPort}/api/graphql`
 export const LOGIN_ENDPOINT = `${configuration.apiHost}:${configuration.apiPort}/api/login`

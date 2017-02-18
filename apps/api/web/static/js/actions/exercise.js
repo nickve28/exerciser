@@ -6,7 +6,6 @@ export const url = `${configuration.apiHost}:${configuration.apiPort}/api/graphq
 
 import _ from 'lodash'
 import HttpTransport from 'lokka-transport-http'
-const transport = new HttpTransport(url)
 
 export const FETCH_EXERCISES = 'FETCH_EXERCISES'
 export const SAVE_EXERCISE = 'SAVE_EXERCISE'
@@ -20,7 +19,7 @@ export const fetchExercises = () => {
     const headers = {
       authorization: `Bearer ${token}`
     }
-    return post(`{exercises { name, id, categories, description }, exerciseCount }`, {headers, url}).then(function (data) {
+    return post('{exercises { name, id, categories, description }, exerciseCount }', {headers, url}).then(function (data) {
       return dispatch({
         type: FETCH_EXERCISES,
         payload: data
@@ -76,7 +75,7 @@ export const fetchCategories = () => {
       authorization: `Bearer ${token}`
     }
     const transport = new HttpTransport(url, {headers})
-    transport.send(`{categories}`).then(function (data) {
+    transport.send('{categories}').then(function (data) {
       return dispatch({
         type: FETCH_CATEGORIES,
         payload: data.categories

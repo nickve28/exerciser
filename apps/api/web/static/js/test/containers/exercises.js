@@ -1,12 +1,10 @@
 import domHelper from '../helpers/dom_helper'
-import actions from '../helpers/actions'
+import '../helpers/actions'
+import {it, beforeEach, describe} from 'mocha'
 
 import React from 'react'
 import chai from 'chai'
-import sinon from 'sinon'
 import chaiEnzyme from 'chai-enzyme'
-
-import _ from 'lodash'
 
 import Exercises from '../../containers/exercises'
 
@@ -35,7 +33,7 @@ describe('<Exercises />', () => {
     const wrapper = mountRender(<Exercises />, {store})
 
     const title = wrapper.find('h3')
-    expect(title.text()).to.eql('Exercises (0)');
+    expect(title.text()).to.eql('Exercises (0)')
   })
 
   describe('when the noExerciseDeleted dialog should be shown', () => {

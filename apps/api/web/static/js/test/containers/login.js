@@ -1,16 +1,16 @@
 import domHelper from '../helpers/dom_helper'
+import {it, beforeEach, describe} from 'mocha'
 
 import React from 'react'
 import chai from 'chai'
 import sinon from 'sinon'
 import chaiEnzyme from 'chai-enzyme'
 
-import _ from 'lodash'
 
 import Login from '../../containers/login'
 import {Snackbar} from 'material-ui'
 
-import {shallowRender, mountRender} from '../helpers/theme_helper'
+import {mountRender} from '../helpers/theme_helper'
 import createStore from '../helpers/store_helper'
 
 

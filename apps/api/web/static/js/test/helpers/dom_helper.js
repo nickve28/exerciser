@@ -1,3 +1,4 @@
+/* eslint-disable */
 var jsdom = require('jsdom')
 
 // setup the simplest document possible

@@ -3,10 +3,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux'
 import ReduxThunk from 'redux-thunk'
 
-import App from './components/app'
 import reducers from './reducers/index'
 
 import Root from './containers/root'
@@ -23,9 +22,9 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 
-const createStoreWithMiddleware = applyMiddleware(ReduxThunk)(createStore);
+const createStoreWithMiddleware = applyMiddleware(ReduxThunk)(createStore)
 
-injectTapEventPlugin();
+injectTapEventPlugin()
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>

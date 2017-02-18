@@ -85,13 +85,13 @@ class WorkoutForm extends Component {
   }
 
   renderError(error, key) {
-    if (!error[key]) { return '' }
+    if (!_.get(error, key)) { return '' }
     return <div className="error-text">{error[key]}</div>
   }
 
   render() {
     const {handleFormSubmit, handleLoadTemplate, action, errors} = this.props
-    const loadTemplateTxt = action === "Create" ? <a href="javascript:void(0);" onClick={handleLoadTemplate}>Load most recent workout template</a> : ''
+    const loadTemplateTxt = action === 'Create' ? <a href="javascript:void(0);" onClick={handleLoadTemplate}>Load most recent workout template</a> : ''
 
     return (
       <div>

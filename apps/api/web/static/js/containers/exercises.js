@@ -6,7 +6,7 @@ import _ from 'lodash'
 import ExerciseEntry from '../components/exercise_entry'
 import ExerciseForm from '../components/exercise_form'
 
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
+import {Table, TableBody, TableHeaderColumn, TableRow} from 'material-ui/Table'
 import {Snackbar} from 'material-ui'
 
 
@@ -46,7 +46,6 @@ class Exercises extends Component {
   }
 
   render() {
-    const {exercises} = this.props
     return (
       <div>
         <div style={{marginBottom: '10px'}} />

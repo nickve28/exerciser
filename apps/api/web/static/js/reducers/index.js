@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux'
 
 import CategoryReducer from './category'
 import ExerciseReducer from './exercise'

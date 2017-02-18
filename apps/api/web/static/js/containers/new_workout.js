@@ -3,7 +3,7 @@ import { reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
 
 import {fetchWorkoutTemplate, saveWorkout, fetchExercises} from '../actions/index'
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router'
 import {validateWorkoutCreate, validatePExerciseCreate, validatePExerciseUnique} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
 
@@ -87,7 +87,7 @@ function validate(data) {
   }, {})
 
   if (exerciseUniqueError) {
-    const err = "You can not assign an exercise multiple times"
+    const err = 'You can not assign an exercise multiple times'
     errorMessages.uniqueExerciseError = err
   }
 
