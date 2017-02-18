@@ -19,7 +19,7 @@ export const loginUser = (user, password) => {
         type: USER_LOGIN,
         payload: loginData.data
       })
-    }).catch(httpError => {
+    }).catch(() => {
       return dispatch({
         type: USER_LOGIN_FAILED
       })

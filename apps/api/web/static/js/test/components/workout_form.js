@@ -1,13 +1,11 @@
-import domHelper from '../helpers/dom_helper'
+import '../helpers/dom_helper'
+import {describe, it} from 'mocha'
 
-import React from 'react';
+import React from 'react'
 import chai from 'chai'
 import chaiEnzyme from 'chai-enzyme'
-import sinon from 'sinon'
 
-import _ from 'lodash'
-
-import LoginForm from '../../components/workout_form';
+import LoginForm from '../../components/workout_form'
 import {shallowRender} from '../helpers/theme_helper'
 
 chai.use(chaiEnzyme())
@@ -66,8 +64,6 @@ describe('<WorkoutForm />', () => {
   })
 
   describe('when Create is called, and the user clicks Create', () => {
-    let spy
-
     it('should call the submit callback', done => {
       const wrapper = shallowRender(<LoginForm action="Create" handleFormSubmit={done} />)
       const form = wrapper.find('form')

@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 
 import _ from 'lodash'
 
-import {Popover, Menu, MenuItem} from 'material-ui'
+import {Popover, Menu} from 'material-ui'
 
 export default class NavigationBar extends Component {
   constructor(props) {

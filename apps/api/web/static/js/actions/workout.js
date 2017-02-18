@@ -5,7 +5,6 @@ export const URL = `${configuration.apiHost}:${configuration.apiPort}/api/graphq
 
 import _ from 'lodash'
 import HttpTransport from 'lokka-transport-http'
-const transport = new HttpTransport(URL)
 
 export const FETCH_WORKOUTS = 'FETCH_WORKOUTS'
 export const FETCH_MORE_WORKOUTS = 'FETCH_MORE_WORKOUTS'

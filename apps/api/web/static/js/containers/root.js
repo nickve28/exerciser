@@ -1,14 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 
-import { Router, Route, browserHistory } from 'react-router'
-
 import Login from './login'
 import NavigationBar from '../components/navigation_bar'
 
 import {fetchMe} from '../actions/index'
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import _ from 'lodash'
 
@@ -39,7 +37,7 @@ class Root extends Component {
   render() {
     const isLoggedIn =_.get(this.props, 'authentication.token')
 
-    let content;
+    let content
     if (isLoggedIn) {
       content = <BodyData
         user={this.props.user}

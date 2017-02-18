@@ -1,8 +1,8 @@
 import React from 'react'
 import _ from 'lodash'
 
-import {TableRow, TableRowColumn} from 'material-ui/Table';
-import FlatButton from 'material-ui/FlatButton';
+import {TableRow, TableRowColumn} from 'material-ui/Table'
+import FlatButton from 'material-ui/FlatButton'
 
 export default ({exercise, onDelete}) => {
   return (

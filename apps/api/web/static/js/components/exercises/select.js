@@ -1,7 +1,7 @@
 import React from 'react'
 import _ from 'lodash'
 
-import {MenuItem, SelectField} from 'material-ui';
+import {MenuItem, SelectField} from 'material-ui'
 
 const renderItems = exercises => {
   return _.map(exercises, exercise => {

@@ -7,7 +7,7 @@ let configuration = {
   apiPort: 4000
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') { //eslint-disable-line
   configuration = {
     apiHost: 'https://devnix.nl',
     apiPort: 25570

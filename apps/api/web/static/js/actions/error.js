@@ -13,7 +13,7 @@ export default (error, dispatch) => {
     //after 5 sec, send end of user expiry event
     setTimeout(function() {
       dispatch({type: USER_LOGIN_EXPIRE_END})
-    }, 5000);
+    }, 5000)
   }
 
   //now some real error handling

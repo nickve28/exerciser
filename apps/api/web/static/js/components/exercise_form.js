@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
-import {saveExercise} from '../actions/index'
 import _ from 'lodash'
 
-import {TextField, RaisedButton, MenuItem} from 'material-ui'
+import {TextField, RaisedButton} from 'material-ui'
 import ChipInput from 'material-ui-chip-input'
 
 export default class ExerciseForm extends Component {
@@ -66,15 +65,4 @@ export default class ExerciseForm extends Component {
       )
     }
   }
-}
-
-const mapCategories = (categories) => {
-  return _.map(categories, category => {
-    return {
-      text: category,
-      value: (
-        <MenuItem primaryText={category} />
-      )
-    }
-  })
 }

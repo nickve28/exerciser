@@ -25,7 +25,7 @@ class WorkoutDetail extends Component {
           <span className="float-right">
             <span>
               <Link to={`/workouts/${workout.id}/edit`}>Edit</Link>
-              {"  |  "}
+              {'  |  '}
               <Link to="/workouts">Go Back</Link>
             </span>
           </span>
