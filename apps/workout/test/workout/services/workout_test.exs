@@ -129,14 +129,34 @@ defmodule Workout.Services.WorkoutTest do
     datetime = Timex.to_datetime(:calendar.local_time)
     |> Timex.Ecto.DateTime.cast!
 
-    exercise = %Schemas.Workout{description: "Saturday workout",
+    workout = %Schemas.Workout{description: "Saturday workout",
       workout_date: datetime, user_id: 1, performed_exercises: [
-        %{exercise_id: 1, reps: 2, weight: 60.0}
+        %{exercise_id: 1, reps: 2, weight: 60.0},
+        %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, metric: "km/h"}
       ]}
     |> RepoHelper.create
 
-    id = exercise.id
-    assert {:ok, %{id: ^id}} = Services.Workout.get(%{id: exercise.id})
+    id = workout.id
+    assert {:ok, %{id: ^id}} = Services.Workout.get(%{id: workout.id})
+  end
+
+  @tag :get
+  test "#get should return the correct modeled performed_exercises" do
+    datetime = Timex.to_datetime(:calendar.local_time)
+    |> Timex.Ecto.DateTime.cast!
+
+    workout = %Schemas.Workout{description: "Saturday workout",
+      workout_date: datetime, user_id: 1, performed_exercises: [
+        %{exercise_id: 1, reps: 2, weight: 60.0},
+        %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, metric: "km/h"}
+      ]}
+    |> RepoHelper.create
+
+    id = workout.id
+    assert {:ok, %{performed_exercises: [
+      %{exercise_id: 1, reps: 2, weight: 60.0},
+      %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, metric: "km/h"}
+    ]}} = Services.Workout.get(%{id: workout.id})
   end
 
   describe "#create" do

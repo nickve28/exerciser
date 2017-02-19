@@ -5,13 +5,14 @@ defmodule Workout.Repositories.Workout do
   import Ecto.Query
 
   @date_format "{YYYY}-{0M}-{0D}"
+  @exercise_fields [:exercise_id, :reps, :weight, :sets, :duration, :metric, :amount, :mode]
 
   def to_model(nil), do: nil
 
   def to_model(data) when is_list(data), do: Enum.map(data, &to_model/1)
 
   def to_model(%PerformedExercise{} = model) do
-    Map.take(model, [:exercise_id, :reps, :weight, :sets])
+    Map.take(model, @exercise_fields)
   end
 
   def to_model(workout) do
