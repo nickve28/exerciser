@@ -53,6 +53,14 @@ defmodule Workout.Schemas.Workout do
     |> validate_property(:weight, index, exercise)
   end
 
+  defp validate_performed_exercise(changeset, "endurance", exercise, index) do
+    changeset
+    |> validate_property(:duration, index, exercise)
+    |> validate_property(:amount, index, exercise)
+    |> validate_property(:metric, index, exercise)
+    |> validate_property(:mode, index, exercise)
+  end
+
   defp validate_property(changeset, property, index, payload) do
     changeset = case Map.get(payload, property) do
       nil -> add_error(changeset, to_assoc_error_key(property, index), "is required")
