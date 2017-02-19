@@ -233,7 +233,7 @@ defmodule Workout.Services.WorkoutTest do
 
       workout = %Schemas.Workout{description: "Saturday workout",
         workout_date: datetime, user_id: 1, performed_exercises: [
-          %{exercise_id: 1, reps: 2, weight: 60.0}
+          %{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}
         ]}
       |> RepoHelper.create
       {:ok, workout: workout}

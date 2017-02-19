@@ -4,7 +4,16 @@ defmodule Workout.Services.Workout do
   """
   use GenServer
 
-  @type performed_exercise :: %{exercise_id: integer, weight: float, reps: integer, sets: integer}  #update
+  @type performed_exercise :: %{
+    exercise_id: integer,
+    eight: float,
+    reps: integer,
+    sets: integer,
+    metric: String.t,
+    amount: float,
+    duration: float,
+    mode: float
+  }
   @type workout :: %{id: integer, description: String.t, workout_date: String.t, performed_exercises: [performed_exercise]}
 
   @type create_workout_payload :: %{description: String.t, workout_date: String.t, performed_exercises: [performed_exercise]}
@@ -133,9 +142,10 @@ defmodule Workout.Services.Workout do
   def handle_call({:update, payload}, _from, state) do
     id = payload[:id]
     result = with {:ok, workout}         <- find_workout(id),
-                  {:ok, update_payload}  <- Workout.Schemas.Workout.update_changeset(workout, payload),
-                  {:ok, _}  <- get_exercises_details(payload),
-                  {:ok, updated_workout} <- Workout.Repositories.Workout.update(update_payload)
+                  {:ok, exercises}       <- get_exercises_details(payload),
+                  update_payload         <- %{payload | performed_exercises: exercises},
+                  {:ok, changeset}       <- Workout.Schemas.Workout.update_changeset(workout, update_payload),
+                  {:ok, updated_workout} <- Workout.Repositories.Workout.update(changeset)
     do
       {:ok, updated_workout}
     else
