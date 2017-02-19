@@ -147,15 +147,15 @@ defmodule Workout.Services.WorkoutTest do
 
     workout = %Schemas.Workout{description: "Saturday workout",
       workout_date: datetime, user_id: 1, performed_exercises: [
-        %{exercise_id: 1, reps: 2, weight: 60.0},
-        %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, metric: "km/h"}
+        %{exercise_id: 1, reps: 2, weight: 60.0, type: "strength"},
+        %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, metric: "km/h", type: "endurance"}
       ]}
     |> RepoHelper.create
 
     id = workout.id
     assert {:ok, %{performed_exercises: [
-      %{exercise_id: 1, reps: 2, weight: 60.0},
-      %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, metric: "km/h"}
+      %{exercise_id: 1, reps: 2, weight: 60.0, type: "strength"},
+      %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, metric: "km/h", type: "endurance"}
     ]}} = Services.Workout.get(%{id: workout.id})
   end
 

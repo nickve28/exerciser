@@ -5,7 +5,7 @@ defmodule Workout.Repositories.Workout do
   import Ecto.Query
 
   @date_format "{YYYY}-{0M}-{0D}"
-  @exercise_fields [:exercise_id, :reps, :weight, :sets, :duration, :metric, :amount, :mode]
+  @exercise_fields [:exercise_id, :reps, :weight, :sets, :duration, :metric, :amount, :mode, :type]
 
   def to_model(nil), do: nil
 
