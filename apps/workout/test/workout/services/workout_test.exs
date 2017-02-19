@@ -192,6 +192,13 @@ defmodule Workout.Services.WorkoutTest do
             reps: 12,
             sets: 2,
             weight: 60.0
+          },
+          %{
+            exercise_id: 2,
+            metric: "km/h",
+            duration: 15.0,
+            amount: 10.0,
+            mode: 10.0
           }
         ]
       }
