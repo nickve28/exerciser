@@ -35,6 +35,7 @@ defmodule Progress.Services.ProgressTest do
   test "#get should return an empty list when workouts returns an empty list" do
     expected = %{
       exercise_id: 2,
+      exercise_type: nil,
       progress: []
     }
 
@@ -45,6 +46,7 @@ defmodule Progress.Services.ProgressTest do
 
     expected = %{
       exercise_id: 1,
+      exercise_type: "strength",
       progress: [
         %{date: "2017-01-01", weight: 10, sets: 2, reps: 2},
         %{date: "2017-01-03", weight: 20, sets: 2, reps: 2}
@@ -54,11 +56,13 @@ defmodule Progress.Services.ProgressTest do
     assert {:ok, expected} === Progress.get(%{user_id: 1, exercise_id: 1})
   end
 
+
   test "#get should return a list of progressions for the exercise filtered by from date" do
     payload = %{user_id: 1, exercise_id: 1, from: "2017-01-03"}
 
     expected = %{
       exercise_id: 1,
+      exercise_type: "strength",
       progress: [
         %{date: "2017-01-03", weight: 20, sets: 2, reps: 2}
       ]
@@ -72,6 +76,7 @@ defmodule Progress.Services.ProgressTest do
 
     expected = %{
       exercise_id: 1,
+      exercise_type: "strength",
       progress: [
         %{date: "2017-01-01", weight: 10, sets: 2, reps: 2}
       ]
