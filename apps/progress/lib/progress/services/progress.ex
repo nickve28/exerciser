@@ -55,6 +55,7 @@ defmodule Progress.Services.Progress do
     end)
   end
 
+  #Exercise coupling is required!!!!
   def handle_call({:get, payload}, _from, state) do
     with :ok                               <- Validator.validate(:get, payload),
          {:ok, _}                          <- @user_repo.get(payload[:user_id]),

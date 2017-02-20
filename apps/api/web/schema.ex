@@ -38,6 +38,7 @@ defmodule Api.Schema do
       arg :name, non_null(:string)
       arg :description, non_null(:string)
       arg :categories, list_of(:string)
+      arg :type, :string
 
       resolve &Api.Resolvers.ExerciseResolver.create/2
     end

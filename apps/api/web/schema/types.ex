@@ -41,6 +41,10 @@ defmodule Api.Schema.Types do
     field :reps, :integer
     field :sets, :integer
     field :weight, :float
+    field :mode, :float
+    field :duration, :float
+    field :amount, :float
+    field :metric, :string
   end
 
   object :progression do
@@ -48,10 +52,15 @@ defmodule Api.Schema.Types do
     field :reps, :integer
     field :sets, :integer
     field :weight, :float
+    field :mode, :float
+    field :duration, :float
+    field :amount, :float
+    field :metric, :string
   end
 
   object :progress do
     field :exercise_id, :integer
+    field :exercise_type, :string
     field :progress, list_of(:progression)
   end
 end
