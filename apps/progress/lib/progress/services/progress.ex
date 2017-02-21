@@ -56,7 +56,6 @@ defmodule Progress.Services.Progress do
     end)
   end
 
-  #Exercise coupling is required!!!!
   def handle_call({:get, payload}, _from, state) do
     with :ok                                <- Validator.validate(:get, payload),
          {:ok, {_user, workouts, exercise}} <- retrieve_progress_associated_data(payload),
