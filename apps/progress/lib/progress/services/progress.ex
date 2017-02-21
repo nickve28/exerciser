@@ -23,6 +23,7 @@ defmodule Progress.Services.Progress do
 
   @user_repo Application.get_env(:progress, :user_repo)
   @workout_repo Application.get_env(:progress, :workout_repo)
+  @exercise_repo Application.get_env(:progress, :exercise_repo)
 
   @exercise_properties [:weight, :sets, :reps, :duration, :amount, :mode, :metric]
 
@@ -57,12 +58,11 @@ defmodule Progress.Services.Progress do
 
   #Exercise coupling is required!!!!
   def handle_call({:get, payload}, _from, state) do
-    with :ok                               <- Validator.validate(:get, payload),
-         {:ok, _}                          <- @user_repo.get(payload[:user_id]),
-         workout_payload                   <- Map.take(payload, @list_workout_filters),
-         {:ok, workouts}                   <- @workout_repo.list(workout_payload),
-         progression                       <- to_progression(workouts, payload[:exercise_id]),
-         result                            <- %{exercise_id: payload[:exercise_id], progress: progression, exercise_type: to_type(workouts)}
+    with :ok                                <- Validator.validate(:get, payload),
+         {:ok, {_user, workouts, exercise}} <- retrieve_progress_associated_data(payload),
+         %{type: type}                      <- exercise,
+         progression                        <- to_progression(workouts, payload[:exercise_id]),
+         result                             <- %{exercise_id: payload[:exercise_id], progress: progression, exercise_type: type}
     do
       {:reply, {:ok, result}, state}
     else
@@ -72,14 +72,40 @@ defmodule Progress.Services.Progress do
     end
   end
 
+  defp retrieve_progress_associated_data(payload) do
+    workout_payload = Map.take(payload, @list_workout_filters)
 
-  #TODO: Consider coupling to the exercise service, tradeoff being we need to handle :enotfound
-  defp to_type([%{performed_exercises: exercises}|_]) do
-    [exercise|_] = exercises
-    exercise[:type]
+    [user, workouts, exercise] = [
+      Task.async(fn -> @user_repo.get(payload[:user_id]) end),
+      Task.async(fn -> @workout_repo.list(workout_payload) end),
+      Task.async(fn -> @exercise_repo.get(payload[:exercise_id]) end)
+    ]
+    |> Enum.map(&Task.await/1)
+
+    errors = find_errors([{"user", user}, {"workout", workouts}, {"exercise", exercise}])
+
+    case errors do
+      []     ->
+        {:ok, user_data}     = user
+        {:ok, workout_data}  = workouts
+        {:ok, exercise_data} = exercise
+        {:ok, {user_data, workout_data, exercise_data}}
+      errors -> {:error, errors}
+    end
   end
 
-  defp to_type(_), do: nil
+  defp find_errors(result) when is_list(result) do
+    find_errors(result, [])
+  end
+
+  defp find_errors([{entity, data}|rest], buffer) do
+    case data do
+      {:error, {code, _, _}} -> find_errors(rest, [{entity, "failed with code #{code}"} | buffer])
+      _ -> find_errors(rest, buffer)
+    end
+  end
+
+  defp find_errors([], buffer), do: buffer
 
   defp to_progression([], _), do: []
 
@@ -99,7 +125,7 @@ defmodule Progress.Services.Progress do
     {:error, {:invalid, "The request was deemed invalid.", details}}
   end
 
-  defp handle_error(_) do
+  defp handle_error(x) do
     {:error, {:internal, "Internal Server Error", []}}
   end
 end

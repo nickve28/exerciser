@@ -32,4 +32,8 @@ defmodule Progress.Repositories.Mocks.Workout do
   def list(%{exercise_id: _, user_id: 1})do
     {:ok, @stub_workouts}
   end
+
+  def list(%{exercise_id: _, user_id: _})do
+    {:ok, @stub_workouts}
+  end
 end

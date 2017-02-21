@@ -27,15 +27,15 @@ defmodule Progress.Services.ProgressTest do
     assert {:error, expected} === Progress.get(%{user_id: 1})
   end
 
-  test "#get should return unprocessable if the user does not exist" do
-    expected = {:unprocessable, "The request could not be processed.", [{:user_id, "The user could not be found"}]}
+  test "#get should return invalid if the user does not exist" do
+    expected = {:invalid, "The request was deemed invalid.", [{"user", "failed with code enotfound"}]}
     assert {:error, expected} === Progress.get(%{user_id: 2, exercise_id: 1})
   end
 
   test "#get should return an empty list when workouts returns an empty list" do
     expected = %{
       exercise_id: 2,
-      exercise_type: nil,
+      exercise_type: "strength",
       progress: []
     }
 
