@@ -21,7 +21,7 @@ defmodule Exercises.Schemas.Exercise do
 
     case changeset.errors do
       [] -> {:ok, changeset}
-      errors -> {:error, {:invalid, to_errors(errors)}}
+      errors -> {:error, {:invalid, "The request was deemed invalid.", to_errors(errors)}}
     end
   end
 

@@ -70,35 +70,35 @@ defmodule ExercisesTest do
   test "#insert should fail if no name is given" do
     payload = %{description: "foo", categories: ["bar"], type: "strength"}
 
-    assert {:error, {:invalid, [name: :required]}}=== Services.Exercise.create(payload)
+    assert {:error, {:invalid, "The request was deemed invalid.", [name: :required]}}=== Services.Exercise.create(payload)
   end
 
   @tag :create
   test "#insert should fail if no description is given" do
     payload = %{name: "foo", categories: ["bar"], type: "strength"}
 
-    assert {:error, {:invalid, [description: :required]}} === Services.Exercise.create(payload)
+    assert {:error, {:invalid, "The request was deemed invalid.", [description: :required]}} === Services.Exercise.create(payload)
   end
 
   @tag :create
   test "#insert should fail if no categories are given" do
     payload = %{name: "foo", description: "bar", type: "strength"}
 
-    assert {:error, {:invalid, [categories: :required]}} === Services.Exercise.create(payload)
+    assert {:error, {:invalid, "The request was deemed invalid.", [categories: :required]}} === Services.Exercise.create(payload)
   end
 
   @tag :create
   test "#insert should fail if no type is given" do
     payload = %{name: "foo", description: "bar", categories: ["a"]}
 
-    assert {:error, {:invalid, [type: :required]}} === Services.Exercise.create(payload)
+    assert {:error, {:invalid, "The request was deemed invalid.", [type: :required]}} === Services.Exercise.create(payload)
   end
 
   @tag :create
   test "#insert should fail if invalid type is given" do
     payload = %{name: "foo", description: "bar", categories: ["a"], type: "gamma"}
 
-    assert {:error, {:invalid, [type: :invalid_value]}} === Services.Exercise.create(payload)
+    assert {:error, {:invalid, "The request was deemed invalid.", [type: :invalid_value]}} === Services.Exercise.create(payload)
   end
 
   @tag :create
