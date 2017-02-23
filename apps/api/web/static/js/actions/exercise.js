@@ -28,7 +28,7 @@ export const fetchExercises = () => {
   }
 }
 
-export const saveExercise = ({name, description, categories}) => {
+export const saveExercise = ({name, description, categories, type}) => {
   const token = localStorage.getItem('auth_token')
   const formatted_categories = _.chain(categories)
                                 .map(category => `"${category}"`)
@@ -39,7 +39,7 @@ export const saveExercise = ({name, description, categories}) => {
   return dispatch => {
     const transport = new HttpTransport(url, {headers})
     return transport.send(`mutation {
-      create_exercise(name: "${name}", categories: [${formatted_categories}], description: "${description}") {
+      create_exercise(name: "${name}", categories: [${formatted_categories}], description: "${description}", type: "${type}") {
         name, id
       }
     }`).then(function (data) {
