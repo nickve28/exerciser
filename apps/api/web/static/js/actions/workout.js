@@ -119,10 +119,28 @@ export const fetchWorkoutAndExercises = (id) => {
   }
 }
 
-export const saveWorkout = ({description, workoutDate, performedExercises}) => {
+const toFields = pExercise => {
+  const fieldString = _.chain(pExercise)
+    .keys()
+    .reduce((memo, prop) => {
+      if (_.isNull(pExercise[prop])) {
+        return memo
+      }
+      let value = pExercise[prop]
+      if (_.isString(value)) {
+        value = `"${value}"`
+      }
+
+      return _.concat(memo, `${prop}: ${value}`)
+    }, []).join(', ').value()
+  return `{${fieldString}}`
+}
+
+export const saveWorkout = (payload) => {
+  const {description, workoutDate, performedExercises} = payload
   const token = localStorage.getItem('auth_token')
   const formattedExercises = _.chain(performedExercises)
-                               .map(({exerciseId, reps, sets, weight}) => `{exercise_id: ${exerciseId}, reps: ${reps}, weight: ${weight}, sets: ${sets}}`)
+                               .map(toFields)
                                .join(',').value()
   const headers = {
     authorization: `Bearer ${token}`

@@ -19,7 +19,7 @@ export const fetchExercises = () => {
     const headers = {
       authorization: `Bearer ${token}`
     }
-    return post('{exercises { name, id, categories, description }, exerciseCount }', {headers, url}).then(function (data) {
+    return post('{exercises { name, id, categories, description, type }, exerciseCount }', {headers, url}).then(function (data) {
       return dispatch({
         type: FETCH_EXERCISES,
         payload: data

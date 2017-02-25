@@ -8,11 +8,44 @@ const CREATE_WORKOUT_SCHEMA = Joi.object().keys({
   description: Joi.string().required(),
 })
 
-const CREATE_PERFORMED_EXERCISE_SCHEMA = Joi.object().keys({
+const CREATE_PERFORMED_EXERCISE_SCHEMA = Joi.object().keys({ //todo: edit
   exerciseId: Joi.number().integer().required(),
-  weight: Joi.number().required(),
-  reps: Joi.number().integer().required(),
-  sets: Joi.number().integer().required()
+  type: Joi.string(),
+  weight: Joi.when('type', {
+    is: Joi.string().valid('strength'),
+    then: Joi.number().required(),
+    else: Joi.forbidden()
+  }),
+  reps: Joi.when('type', {
+    is: Joi.string().valid('strength'),
+    then: Joi.number().integer().required(),
+    else: Joi.forbidden()
+  }),
+  sets: Joi.when('type', {
+    is: Joi.string().valid('strength'),
+    then: Joi.number().integer().required(),
+    else: Joi.forbidden()
+  }),
+  metric: Joi.when('type', {
+    is: Joi.string().valid('endurance'),
+    then: Joi.string().required(),
+    else: Joi.forbidden()
+  }),
+  duration: Joi.when('type', {
+    is: Joi.string().valid('endurance'),
+    then: Joi.number().required(),
+    else: Joi.forbidden()
+  }),
+  amount: Joi.when('type', {
+    is: Joi.string().valid('endurance'),
+    then: Joi.number().required(),
+    else: Joi.forbidden()
+  }),
+  mode: Joi.when('type', {
+    is: Joi.string().valid('endurance'),
+    then: Joi.number().required(),
+    else: Joi.forbidden()
+  })
 })
 
 const CREATE_EXERCISE_SCHEMA = Joi.object().keys({
