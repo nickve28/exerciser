@@ -116,7 +116,7 @@ defmodule Workout.Services.WorkoutTest do
     |> RepoHelper.create
 
     {:ok, [workout | _]} = Services.Workout.list(%{user_id: 1})
-    assert %{performed_exercises: [%{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}]} === Map.take(workout, [:performed_exercises])
+    assert %{performed_exercises: [%{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}]} = Map.take(workout, [:performed_exercises])
   end
 
   @tag :get
