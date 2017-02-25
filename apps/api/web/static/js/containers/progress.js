@@ -39,6 +39,7 @@ class Progress extends Component {
     const exerciseOverview = exercises.exercises
 
     const progressData = _.get(progress, 'progress', [])
+    const exerciseType = _.get(progress, 'exerciseType')
     const startDate = _.get(_.last(progressData), 'date')
     const endDate = _.get(_.first(progressData), 'date')
 
@@ -63,7 +64,7 @@ class Progress extends Component {
         <SelectDateRange startDate={startDate} endDate={endDate} onSelect={this.onSelect} />
 
         <div style={{marginTop: '50px'}} />
-        <ProgressData progress={progress} />
+        <ProgressData exerciseType={exerciseType} progress={progress} />
       </div>
     )
   }
