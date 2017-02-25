@@ -17,10 +17,27 @@ export const UPDATE_WORKOUT = 'UPDATE_WORKOUT'
 
 import {FETCH_EXERCISES} from './exercise'
 
+const toFields = pExercise => {
+  const fieldString = _.chain(pExercise)
+    .keys()
+    .reduce((memo, prop) => {
+      if (_.isNull(pExercise[prop])) {
+        return memo
+      }
+      let value = pExercise[prop]
+      if (_.isString(value)) {
+        value = `"${value}"`
+      }
+
+      return _.concat(memo, `${prop}: ${value}`)
+    }, []).join(', ').value()
+  return `{${fieldString}}`
+}
+
 export const updateWorkout = (id, {description, workoutDate, performedExercises}) => {
   const token = localStorage.getItem('auth_token')
   const formattedExercises = _.chain(performedExercises)
-                               .map(({exerciseId, reps, sets, weight}) => `{exercise_id: ${exerciseId}, reps: ${reps}, weight: ${weight}, sets: ${sets}}`)
+                               .map(toFields)
                                .join(',').value()
   const headers = {
     authorization: `Bearer ${token}`
@@ -51,7 +68,8 @@ export const fetchWorkouts = (limit = 10, offset = 0, {append} = {append: false}
       me {
         workouts(limit: ${limit}, offset: ${offset}) {
           workout_date, performed_exercises {
-            exercise_id, reps, weight, sets
+            exercise_id, reps, weight, sets,
+            metric, mode, duration, amount
           }, description, id },
         workout_count,
       }
@@ -76,7 +94,8 @@ export const fetchWorkoutTemplate = () => {
       me {
         workouts(limit: 1) {
           workout_date, performed_exercises {
-            exercise_id, reps, weight, sets
+            exercise_id, reps, weight, sets,
+            metric, mode, duration, amount
           }, description, id },
       }
     }`).then(function (data) {
@@ -98,10 +117,11 @@ export const fetchWorkoutAndExercises = (id) => {
     transport.send(`{
       workout(id: ${id}) {
         workout_date, performed_exercises {
-          exercise_id, reps, weight, sets
+          exercise_id, reps, weight, sets,
+          metric, mode, duration, amount
         }, description, id },
       exercises {
-        id, name, description, categories
+        id, name, description, categories, type
       }
     }`).then(function (data) {
       dispatch({
@@ -117,23 +137,6 @@ export const fetchWorkoutAndExercises = (id) => {
 
     }).catch(err => handleUnauthorized(err, dispatch))
   }
-}
-
-const toFields = pExercise => {
-  const fieldString = _.chain(pExercise)
-    .keys()
-    .reduce((memo, prop) => {
-      if (_.isNull(pExercise[prop])) {
-        return memo
-      }
-      let value = pExercise[prop]
-      if (_.isString(value)) {
-        value = `"${value}"`
-      }
-
-      return _.concat(memo, `${prop}: ${value}`)
-    }, []).join(', ').value()
-  return `{${fieldString}}`
 }
 
 export const saveWorkout = (payload) => {

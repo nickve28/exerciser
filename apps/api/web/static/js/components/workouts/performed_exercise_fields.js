@@ -13,6 +13,15 @@ export default class PerformedExerciseFields extends Component {
     this.state = {fields: []}
   }
 
+  componentWillMount() {
+    const {index, fields} = this.props
+    const field = fields.get(index)
+    if (field.exerciseId) {
+      this.notifyChange(field.exerciseId)
+      this.updateFields(field, field.exerciseId)
+    }
+  }
+
   notifyChange(id) {
     const exercise = this.props.exercises[id]
     if (exercise.type === 'strength') {
@@ -33,7 +42,9 @@ export default class PerformedExerciseFields extends Component {
   }
 
   render() {
-    const {fieldName, index, renderField, exercises, fields} = this.props
+    const {fieldName, index, renderField, exercises, fields} = this.props //see if we can get the existing exercise here for template + edit
+
+
     return (
       <li className='list-group-item list-group-item-gray' key={index}>
         <div className="form-group">

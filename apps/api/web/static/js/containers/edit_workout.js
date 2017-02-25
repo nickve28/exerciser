@@ -7,10 +7,14 @@ import { browserHistory } from 'react-router'
 import {validateWorkoutCreate, validatePExerciseCreate, validatePExerciseUnique} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
 
+import exerciseIndex from '../selectors/exercise_index'
+
 import moment from 'moment'
 import _ from 'lodash'
 
 import WorkoutForm from '../components/workout_form'
+
+const PERFORMED_EXERCISE_PROPS = ['exerciseId', 'weight', 'sets', 'reps', 'metric', 'mode', 'amount', 'duration']
 
 const toDecimal = _.partialRight(parseInt, 10)
 
@@ -53,9 +57,15 @@ class EditWorkout extends Component {
 
     payload.workoutDate = moment(payload.workoutDate).format('YYYY-MM-DD')
     payload.performedExercises = _.map(payload.performedExercises, pExercise => {
-      return _.chain(pExercise)
-              .pick(['exerciseId', 'weight', 'sets', 'reps'])
-              .mapValues(toDecimal).value()
+      let filteredExercise = _.pick(pExercise, PERFORMED_EXERCISE_PROPS)
+      return _.reduce(_.keys(filteredExercise), (memo, prop) => {
+        if (prop === 'metric') {
+          memo[prop] = filteredExercise[prop]
+          return memo
+        }
+        memo[prop] = toDecimal(filteredExercise[prop])
+        return memo
+      }, {})
     }) //to int for all values
 
     const id = this.props.params.id
@@ -108,7 +118,7 @@ function mapStateToProps(state) {
   }
 
   return {
-    exercises: state.exercises.exercises,
+    exercises: exerciseIndex(state),
     initialValues: initialValues
   }
 }
