@@ -1,13 +1,29 @@
 import React, {Component} from 'react'
 import _ from 'lodash'
 
-import {TextField, RaisedButton} from 'material-ui'
+import {TextField, RaisedButton, MenuItem, SelectField} from 'material-ui'
 import ChipInput from 'material-ui-chip-input'
+
+import Promise from 'bluebird' //eslint-disable-line
+
+const EXERCISE_TYPES = ['strength', 'endurance']
+
+const renderItems = () => {
+  return _.map(EXERCISE_TYPES, type => {
+    return (
+      <MenuItem
+        key={type}
+        value={type}
+        primaryText={type}
+      />
+    )
+  })
+}
 
 export default class ExerciseForm extends Component {
   constructor(props) {
     super(props)
-    this.state = {name: '', description: '', categories: [], pageData: {showForm: false}}
+    this.state = {name: '', description: '', type: null, categories: [], pageData: {showForm: false}}
     this._handleSubmit = this._handleSubmit.bind(this)
   }
 
@@ -15,6 +31,8 @@ export default class ExerciseForm extends Component {
     e.preventDefault()
     return this.props.handler(e, _.omit(this.state, 'pageData')).then(() => {
       return this.setState({name: '', description: '', categories: [], pageData: {showForm: false}})
+    }).catch(() => {
+      return true
     })
   }
 
@@ -24,6 +42,11 @@ export default class ExerciseForm extends Component {
       newState.categories = e
       return this.setState(newState)
     }
+
+    if (prop === 'type') {
+      return this.setState({type: e})
+    }
+
     return this.setState(_.merge({}, this.state, {[prop]: e.target.value}))
   }
 
@@ -54,6 +77,17 @@ export default class ExerciseForm extends Component {
             <div className="form-group">
               <div><label>Description</label></div>
               <TextField name="description" value={this.state.description} onChange={(e) => this._setProperty('description', e)} />
+            </div>
+
+            <div className="form-group">
+              <div><label>Type</label></div>
+              <SelectField
+                floatingLabelText="Exercise Type"
+                value={this.state.type}
+                onChange={(event, index, type) => this._setProperty('type', type)}
+              >
+                {renderItems()}
+              </SelectField>
             </div>
             <RaisedButton label="Submit" primary={true} onClick={this._handleSubmit} />
           </form>

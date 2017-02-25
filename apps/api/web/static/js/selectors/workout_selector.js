@@ -20,10 +20,15 @@ const combineExercises = (workout, exercises) => {
     return memo
   }, {})
 
-  const mergedExercises = _.map(workout.performedExercises, ({exerciseId, sets, reps, weight}) => {
+  const mergedExercises = _.map(workout.performedExercises, exercise => {
+    const {
+      exerciseId, sets, reps, weight, metric, mode, duration, amount
+    } = exercise
     return {
       exerciseId, sets, reps, weight,
-      name: exerciseMap[exerciseId].name
+      metric, mode, duration, amount,
+      name: exerciseMap[exerciseId].name,
+      type: exerciseMap[exerciseId].type
     }
   })
   return _.defaults({performedExercises: mergedExercises}, workout)

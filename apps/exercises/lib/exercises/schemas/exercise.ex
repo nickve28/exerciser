@@ -1,5 +1,6 @@
 defmodule Exercises.Schemas.Exercise do
   @moduledoc false
+  @valid_types ["strength", "endurance"]
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -7,18 +8,35 @@ defmodule Exercises.Schemas.Exercise do
     field :name, :string
     field :description, :string
     field :categories, {:array, :string}
+    field :type, :string
   end
 
   def create_changeset(payload) do
     changeset = %Exercises.Schemas.Exercise{}
-    |> cast(payload, [:name, :description, :categories])
-    |> validate_required([:name, :description, :categories])
+    |> cast(payload, [:name, :description, :categories, :type])
+    |> validate_required([:name, :description, :categories, :type])
+    |> validate_type
     |> cast_capitalize(:name)
     |> cast_capitalize_all(:categories)
 
     case changeset.errors do
       [] -> {:ok, changeset}
-      errors -> {:error, {:invalid, to_errors(errors)}}
+      errors -> {:error, {:invalid, "The request was deemed invalid.", to_errors(errors)}}
+    end
+  end
+
+  defp validate_type(changeset) do
+    with {:ok, change} <- changeset |> fetch_change(:type) do
+      type = String.downcase(change)
+      if type in @valid_types do
+        changeset
+        |> put_change(:type, type)
+      else
+        changeset
+        |> add_error(:type, "invalid_value")
+      end
+    else
+      _ -> changeset
     end
   end
 
@@ -47,6 +65,7 @@ defmodule Exercises.Schemas.Exercise do
     for {prop, {value, _}} <- errors do
       val = case value do
         "can't be blank" -> :required
+        "invalid_value" -> :invalid_value
         _ -> value
       end
       {prop, val}

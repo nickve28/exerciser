@@ -16,10 +16,10 @@ const toWorkoutModel = (workoutData) => {
     description, id,
     workoutDate: workoutData.workout_date,
     performedExercises: _.map(workoutData.performed_exercises, pExercise => {
-      const {weight, sets, reps } = pExercise
+      const {weight, sets, reps, metric, mode, amount, duration} = pExercise
       return {
         exerciseId: pExercise.exercise_id,
-        weight, sets, reps
+        weight, sets, reps, metric, mode, amount, duration
       }
     })
   }

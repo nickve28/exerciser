@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {fetchExercises, saveExercise, fetchCategories, deleteExercise} from '../actions/index'
+import {validateExerciseCreate as validate} from '../helpers/validator'
 import _ from 'lodash'
 
 import ExerciseEntry from '../components/exercise_entry'
@@ -33,8 +34,15 @@ class Exercises extends Component {
 
   _handleSubmit(e, exercise) {
     e.preventDefault()
-    return this.props.saveExercise(exercise).then(() => {
-      this.loadData()
+
+    const validationError = validate(exercise).error
+    return Promise.try(() => {
+      if (!validationError) {
+        return this.props.saveExercise(exercise).then(() => {
+          this.loadData()
+        })
+      }
+      throw validationError
     })
   }
 
@@ -81,7 +89,7 @@ class Exercises extends Component {
   }
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = state => {
   return {
     exercises: state.exercises.exercises,
     exerciseCount: state.exercises.count,

@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import { Field, FieldArray } from 'redux-form'
 import {Link} from 'react-router'
-import {DatePicker, TextField, SelectField, MenuItem, RaisedButton} from 'material-ui'
+import {DatePicker, TextField, RaisedButton} from 'material-ui'
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import PerformedExerciseFields from './workouts/performed_exercise_fields'
 
 import moment from 'moment'
 import _ from 'lodash'
@@ -12,7 +13,11 @@ const EMPTY_EXERCISE = {
   exerciseId: null,
   weight: null,
   reps: null,
-  sets: null
+  sets: null,
+  mode: null,
+  metric: null,
+  amount: null,
+  duration: null
 }
 
 class WorkoutForm extends Component {
@@ -35,37 +40,14 @@ class WorkoutForm extends Component {
           transitionLeaveTimeout={300}
         >
           {fields.map((fieldName, index) => {
-            return (
-              <li className='list-group-item list-group-item-gray' key={index}>
-                <div className="form-group">
-                  <div>
-                    <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>
-                    <span className="pull-right glyphicon glyphicon-minus" onClick={() => fields.remove(index)} />
-                  </div>
-                  <Field className="form-control" name={`${fieldName}.exerciseId`} component={properties =>
-                    <div>
-                      <SelectField
-                        name="exerciseId"
-                        value={properties.input.value.toString()}
-                        onChange={(e, key, value) => properties.input.onChange(value)}
-                        maxHeight={200}
-                      >
-                        {_.map(this.props.exercises, exercise => {
-                          return <MenuItem name="exercise_list" value={exercise.id} key={exercise.id} primaryText={exercise.name} />
-                        })}
-                      </SelectField>
-
-                      <div>
-                        {properties.meta.touched && <span className="error-text">{properties.meta.error}</span>}
-                      </div>
-                    </div>
-                  } />
-                </div>
-                <Field name={`${fieldName}.weight`} component={this.renderField} label="Weight" />
-                <Field name={`${fieldName}.sets`} component={this.renderField} label="Sets" />
-                <Field name={`${fieldName}.reps`} component={this.renderField} label="Reps" />
-              </li>
-            )
+            return <PerformedExerciseFields
+              key={index}
+              index={index}
+              fieldName={fieldName}
+              exercises={this.props.exercises}
+              renderField={this.renderField}
+              fields={fields}
+            />
           })}
         </ReactCSSTransitionGroup>
         <a className="add-exercise" href="javascript:void(0);" style={{marginBottom: '5px'}} onClick={() => fields.push(EMPTY_EXERCISE)}>+ Add Exercise</a><br />

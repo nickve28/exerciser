@@ -10,9 +10,9 @@ defmodule CategoryTest do
     Repo.delete_all(Schemas.Exercise)
 
     RepoHelper.create_exercise(%{name: "Barbell Bench Press", description: "Barbell bench press",
-      categories: ["Triceps", "Chest", "Shoulders"]})
+      categories: ["Triceps", "Chest", "Shoulders"], type: "strength"})
     RepoHelper.create_exercise(%{name: "Shoulder Press", description: "Shoulder Press",
-      categories: ["Shoulders"]})
+      categories: ["Shoulders"], type: "strength"})
     :ok
   end
 
