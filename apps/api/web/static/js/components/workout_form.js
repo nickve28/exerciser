@@ -20,11 +20,30 @@ const EMPTY_EXERCISE = {
   duration: null
 }
 
+const STRENGTH_FIELDS = ['weight', 'sets', 'reps']
+const ENDURANCE_FIELDS = ['metric', 'amount', 'duration', 'mode']
+
+const decideFields = (exercise) => {
+  if (!exercise) return []
+  if (exercise.type === 'strength') return STRENGTH_FIELDS
+  return ENDURANCE_FIELDS
+}
+
 class WorkoutForm extends Component {
   constructor(props) {
     super(props)
 
     this.renderPerformedExercises = this.renderPerformedExercises.bind(this)
+    this.onExerciseChange = this.onExerciseChange.bind(this)
+  }
+
+  onExerciseChange(exerciseId, index, fields) {
+    fields.remove(index)
+    const {type} = _.get(this, 'props.exercises', {})[exerciseId]
+    const newExercise = _.defaults({exerciseId, type}, EMPTY_EXERCISE)
+    setTimeout(() => {
+      fields.insert(index, newExercise)
+    }, 100) //this is for now needed, due to: https://github.com/erikras/redux-form/issues/2466 which is not available currently
   }
 
 
@@ -40,13 +59,18 @@ class WorkoutForm extends Component {
           transitionLeaveTimeout={300}
         >
           {fields.map((fieldName, index) => {
+            const currentValue = fields.get(index)
+            const fieldsToRender = decideFields(currentValue)
             return <PerformedExerciseFields
               key={index}
               index={index}
               fieldName={fieldName}
               exercises={this.props.exercises}
               renderField={this.renderField}
-              fields={fields}
+              remove={() => fields.remove(index)}
+              currentValue={currentValue}
+              onChange={(exerciseId) => this.onExerciseChange(exerciseId, index, fields)}
+              fields={fieldsToRender}
             />
           })}
         </ReactCSSTransitionGroup>
