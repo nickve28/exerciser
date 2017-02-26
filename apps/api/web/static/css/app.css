@@ -66,7 +66,6 @@ body {
     position: absolute;
     height: 400px;
     width: 100%;
-    /*background-color: #000066;*/
     background-color: #009688;
     z-index: -2;
   }
@@ -108,27 +107,24 @@ body {
 
 @media screen and (max-width: 1024px) {
   .navbar-app {
-    height: 50px;
     background-color: #00796B;
   }
 
   .color-bar {
-    /*position: absolute;
-    height: 400px;
-    width: 100%;
-    /*background-color: #000066;
-    background-color: #009688;
-    z-index: -2;*/
     visibility: hidden;
   }
 
   .navbar-nav {
     margin-top: 0px;
+    margin-bottom: 0px;
   }
 
 
   .navbar-nav li {
     display: inline;
+  }
+
+  .navbar-nav li:first-of-type {
     padding-left: 10px;
   }
 
