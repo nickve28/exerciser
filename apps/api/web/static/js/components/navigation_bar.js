@@ -54,6 +54,7 @@ export default class NavigationBar extends Component {
 
   render() {
     const {user} = this.props
+    const username = _.get(user, 'name', '')
     const showMenu = this.state.showMenu ? 'show-menu' : 'hide-menu'
 
     return (
@@ -62,7 +63,7 @@ export default class NavigationBar extends Component {
         <nav className="navbar-app" id="navigation">
           <div>
             <i href="#" className="zmdi zmdi-menu zmdi-hc-2x white-icon menu-nav" onClick={this.toggleMenu} />
-            <span className="float-right show-mobile user-name">{user.name}</span>
+            <span className="float-right show-mobile user-name">{username}</span>
             <ul className={`nav navbar-nav ${showMenu}`}>
               <li><Link to={'/'} onClick={this.toggleMenu}>Exercises</Link></li>
               <li><Link to={'/workouts'} onClick={this.toggleMenu}>Workouts</Link></li>
