@@ -30,8 +30,9 @@ export default class NavigationBar extends Component {
 
     this.handleUserClick = this.handleUserClick.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this)
+    this.toggleMenu = this.toggleMenu.bind(this)
 
-    this.state = {openDialog: false}
+    this.state = {openDialog: false, showMenu: false}
   }
 
   handleUserClick(e) {
@@ -47,19 +48,25 @@ export default class NavigationBar extends Component {
     this.setState({openDialog: false})
   }
 
+  toggleMenu() {
+    this.setState({showMenu: !this.state.showMenu})
+  }
+
   render() {
     const {user} = this.props
-
+    const showMenu = this.state.showMenu ? 'show-menu' : 'hide-menu'
 
     return (
       <div>
         <div className="color-bar" />
         <nav className="navbar-app" id="navigation">
           <div>
-            <ul className="nav navbar-nav">
-              <li><Link to={'/'}>Exercises</Link></li>
-              <li><Link to={'/workouts'}>Workouts</Link></li>
-              <li><Link to={'/progress'}>Progress</Link></li>
+            <i href="#" className="zmdi zmdi-menu zmdi-hc-2x white-icon menu-nav" onClick={this.toggleMenu} />
+            <span className="float-right show-mobile user-name">{user.name}</span>
+            <ul className={`nav navbar-nav ${showMenu}`}>
+              <li><Link to={'/'} onClick={this.toggleMenu}>Exercises</Link></li>
+              <li><Link to={'/workouts'} onClick={this.toggleMenu}>Workouts</Link></li>
+              <li><Link to={'/progress'} onClick={this.toggleMenu}>Progress</Link></li>
               <li className="float-right">
                 {!_.isEmpty(user) ? (<span>
                   <MediaQuery query={largeDeviceQuery} component="div" className="user-nav">
