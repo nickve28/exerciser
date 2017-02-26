@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 
-import {DatePicker} from 'material-ui'
+import DatePicker from './datepicker'
 
 const formatDate = date => {
   return moment(date).format('YYYY-MM-DD')
@@ -24,8 +24,6 @@ export default ({startDate, endDate, onSelect}) => {
           const date = formatDate(val)
           onSelect({from: date})
         }}
-        container="inline"
-        mode="landscape"
         defaultDate={moment(startDate).toDate() || moment().toDate()}
       />
       <label>End date</label>
@@ -37,8 +35,6 @@ export default ({startDate, endDate, onSelect}) => {
           const date = formatDate(val)
           onSelect({until: date})
         }}
-        container="inline"
-        mode="landscape"
         defaultDate={moment(endDate).toDate() || moment().toDate()}
       />
     </div>
