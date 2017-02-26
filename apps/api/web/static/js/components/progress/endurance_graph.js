@@ -1,5 +1,5 @@
 import React from 'react'
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts'
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 import _ from 'lodash'
 
@@ -33,16 +33,18 @@ export default ({progress}) => {
   const metric = _.get(data, '0.metric')
 
   return (
-    <LineChart width={800} height={300} data={graphData}>
-      <Line type="monotone" dataKey="mode" stroke="#8884d8" connectNulls={true} />
-      <Line type="monotone" name={metric} dataKey="amount" stroke="#000000" connectNulls={true} />
-      <Line type="monotone" dataKey="duration" stroke="#213000" connectNulls={true} />
-      <CartesianGrid stroke="#ccc" />
-      <XAxis dataKey="date" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-    </LineChart>
+    <ResponsiveContainer width="95%" height={300}>
+      <LineChart data={graphData}>
+        <Line type="monotone" dataKey="mode" stroke="#8884d8" connectNulls={true} />
+        <Line type="monotone" name={metric} dataKey="amount" stroke="#000000" connectNulls={true} />
+        <Line type="monotone" dataKey="duration" stroke="#213000" connectNulls={true} />
+        <CartesianGrid stroke="#ccc" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+      </LineChart>
+    </ResponsiveContainer>
   )
 
 }
