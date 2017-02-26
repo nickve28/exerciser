@@ -43,7 +43,7 @@ class WorkoutForm extends Component {
     const newExercise = _.defaults({exerciseId, type}, EMPTY_EXERCISE)
     setTimeout(() => {
       fields.insert(index, newExercise)
-    }, 100) //this is for now needed, due to: https://github.com/erikras/redux-form/issues/2466 which is not available currently
+    }, 50) //this is for now needed, due to: https://github.com/erikras/redux-form/issues/2466 which is not available currently
   }
 
 
