@@ -4,6 +4,10 @@ body {
   padding-top: 0px !important;
 }
 
+.float-right {
+  float: right !important;
+}
+
 .app-container {
   z-index: 3;
   background-color: #f2f2f2;
@@ -48,106 +52,8 @@ body {
   color: white;
 }
 
-@media screen and (min-width: 1024px) {
-  .app-container {
-    margin-top: 90px;
-  }
-
-  .app-container-size {
-    width: 50%;
-  }
-
-  .navbar-app {
-    height: 50px;
-    background-color: #00796B;
-  }
-
-  .color-bar {
-    position: absolute;
-    height: 400px;
-    width: 100%;
-    background-color: #009688;
-    z-index: -2;
-  }
-
-
-  .float-right {
-    float: right !important;
-  }
-
-  .navbar-nav li:last-child {
-    padding-right: 30px;
-  }
-
-  .navbar-nav {
-    overflow: auto;
-    width: 100%
-  }
-
-  .navbar-nav li {
-    float: left;
-  }
-
-  .navbar-nav li:first-of-type {
-    margin-left: 10px;
-  }
-
-  .navbar-nav li a {
-    color: white;
-  }
-
-  .user-nav-data {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
-    font-size: 20px;
-    color: white;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .navbar-app {
-    background-color: #00796B;
-  }
-
-  .color-bar {
-    visibility: hidden;
-  }
-
-  .navbar-nav {
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
-
-
-  .navbar-nav li {
-    display: inline;
-  }
-
-  .navbar-nav li:first-of-type {
-    padding-left: 10px;
-  }
-
-
-  .navbar-nav > li:last-child {
-    float: right;
-  }
-
-  .navbar-nav li a {
-    display: inline;
-    color: white;
-  }
-
-  .app-container-size {
-    width: 100%;
-  }
-
-  .user-nav-data {
-    display: flex;
-    align-items: center;
-    margin-left: 10px;
-    color: white;
-  }
+.white-icon {
+  color: white;
 }
 
 .top-padding-20 {
@@ -186,3 +92,6 @@ body {
   0% { opacity: 0 }
   100% { opacity: 1 }
 }
+
+@import url("desktop.css");
+@import url("mobile.css");

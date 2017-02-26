@@ -1,0 +1,59 @@
+@media screen and (max-width: 1024px) {
+  .menu-nav {
+    display: block;
+    cursor: pointer;
+    padding-left: 10px;
+  }
+
+  .show-menu {
+    width: 100%;
+    position: absolute;
+    z-index: 3;
+    background-color: #00796B;
+    overflow: auto;
+
+  }
+
+  .hide-menu {
+    display: none;
+  }
+
+  .navbar-app {
+    background-color: #00796B;
+  }
+
+  .navbar-nav {
+    margin: 0px !important;
+  }
+
+  .navbar-nav li:last-child {
+    display: none; /*User field, should be done different on mobile */
+  }
+
+  .navbar-nav li a {
+    color: white;
+  }
+
+  .color-bar {
+    visibility: hidden;
+  }
+
+  .app-container-size {
+    width: 100%;
+  }
+
+  .user-nav-data {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    color: white;
+  }
+
+  .user-name {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    margin-top: 5px;
+    color: white;
+  }
+}

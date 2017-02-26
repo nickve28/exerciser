@@ -1,0 +1,59 @@
+@media screen and (min-width: 1024px) {
+  .show-mobile {
+    display: none;
+  }
+
+  .menu-nav {
+    display: none !important;
+  }
+
+  .app-container {
+    margin-top: 90px;
+  }
+
+  .app-container-size {
+    width: 50%;
+  }
+
+  .navbar-app {
+    height: 50px;
+    background-color: #00796B;
+  }
+
+  .color-bar {
+    position: absolute;
+    height: 400px;
+    width: 100%;
+    background-color: #009688;
+    z-index: -2;
+  }
+
+  .navbar-nav li:last-child {
+    padding-right: 30px;
+  }
+
+  .navbar-nav {
+    overflow: auto;
+    width: 100%
+  }
+
+  .navbar-nav li {
+    float: left;
+  }
+
+  .navbar-nav li:first-of-type {
+    margin-left: 10px;
+  }
+
+  .navbar-nav li a {
+    color: white;
+  }
+
+  .user-nav-data {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 20px;
+    color: white;
+  }
+}
