@@ -14,7 +14,7 @@ import _ from 'lodash'
 
 import WorkoutForm from '../components/workout_form'
 
-const PERFORMED_EXERCISE_PROPS = ['exerciseId', 'weight', 'sets', 'reps', 'metric', 'mode', 'amount', 'duration']
+import preparePayload from '../helpers/prepare_workout_payload'
 
 const toDecimal = _.partialRight(parseInt, 10)
 
@@ -57,23 +57,9 @@ class NewWorkout extends Component {
       throw new SubmissionError(errors)
     }
 
-    if (!payload.workoutDate)
-      payload.workoutDate = moment()
+    const createPayload = preparePayload(payload)
 
-    payload.workoutDate = moment(payload.workoutDate).format('YYYY-MM-DD')
-    payload.performedExercises = _.map(payload.performedExercises, pExercise => {
-      let filteredExercise = _.pick(pExercise, PERFORMED_EXERCISE_PROPS)
-      return _.reduce(_.keys(filteredExercise), (memo, prop) => {
-        if (prop === 'metric') {
-          memo[prop] = filteredExercise[prop]
-          return memo
-        }
-        memo[prop] = toDecimal(filteredExercise[prop])
-        return memo
-      }, {})
-    }) //to int for all values
-
-    this.props.saveWorkout(payload).then(() => {
+    this.props.saveWorkout(createPayload).then(() => {
       browserHistory.push('/workouts') //best way to navigate..
     })
   }
@@ -115,13 +101,17 @@ function validate(data) {
 }
 
 function mapStateToProps(state) {
+  const exercises = exerciseIndex(state)
   const initialValues = state.workouts.workoutTemplate
   if (initialValues) {
     initialValues.workoutDate = moment(initialValues.workoutDate).toDate()
+    initialValues.performedExercises = _.map(initialValues.performedExercises, pExercise => {
+      return _.merge({}, pExercise, {type: exercises[pExercise.exerciseId].type})
+    })
   }
 
   return {
-    exercises: exerciseIndex(state),
+    exercises: exercises,
     initialValues: initialValues
   }
 }
