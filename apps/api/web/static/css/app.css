@@ -5,24 +5,10 @@ body {
 }
 
 .app-container {
-  width: 95%;
-  margin-top: 90px;
   z-index: 3;
   background-color: #f2f2f2;
   box-shadow: 1px 1px 1px 1px #ccc;
   min-height: 500px;
-}
-
-@media screen and (min-width: 1024px) {
-  .app-container-size {
-    width: 50%;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .app-container-size {
-    width: 95%;
-  }
 }
 
 .exerciser-logo {
@@ -58,19 +44,19 @@ body {
   margin-right: 20px;
 }
 
-.user-nav-data {
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-  font-size: 20px;
-  color: white;
-}
-
 .user-nav-icon {
   color: white;
 }
 
 @media screen and (min-width: 1024px) {
+  .app-container {
+    margin-top: 90px;
+  }
+
+  .app-container-size {
+    width: 50%;
+  }
+
   .navbar-app {
     height: 50px;
     background-color: #00796B;
@@ -80,7 +66,6 @@ body {
     position: absolute;
     height: 400px;
     width: 100%;
-    /*background-color: #000066;*/
     background-color: #009688;
     z-index: -2;
   }
@@ -110,30 +95,36 @@ body {
   .navbar-nav li a {
     color: white;
   }
+
+  .user-nav-data {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    font-size: 20px;
+    color: white;
+  }
 }
 
 @media screen and (max-width: 1024px) {
   .navbar-app {
-    height: 50px;
     background-color: #00796B;
   }
 
   .color-bar {
-    position: absolute;
-    height: 400px;
-    width: 100%;
-    /*background-color: #000066;*/
-    background-color: #009688;
-    z-index: -2;
+    visibility: hidden;
   }
 
   .navbar-nav {
     margin-top: 0px;
+    margin-bottom: 0px;
   }
 
 
   .navbar-nav li {
     display: inline;
+  }
+
+  .navbar-nav li:first-of-type {
     padding-left: 10px;
   }
 
@@ -144,6 +135,17 @@ body {
 
   .navbar-nav li a {
     display: inline;
+    color: white;
+  }
+
+  .app-container-size {
+    width: 100%;
+  }
+
+  .user-nav-data {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
     color: white;
   }
 }
