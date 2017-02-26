@@ -86,8 +86,11 @@ class WorkoutForm extends Component {
     return (
       <div>
         <p><label style={{marginRight: '5px'}}>{label}</label></p>
-        <TextField {...input} type={type} name={input.name} />
-        {touched && <span className="error-text">{error}</span>}
+        <TextField {...input}
+          type={type}
+          name={input.name}
+          errorText= {touched && error}
+        />
       </div>
     )
   }

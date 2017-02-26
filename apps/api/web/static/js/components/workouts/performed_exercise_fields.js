@@ -17,7 +17,7 @@ export default (props) => {
           <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>
           <span className="pull-right glyphicon glyphicon-minus" onClick={remove} />
         </div>
-        <Field className="form-control" name={`${fieldName}.exerciseId`} component={properties =>
+        <Field className="form-control" name={`${fieldName}.exerciseId`}component={properties =>
           <div>
             <SelectField
               name="exerciseId"
@@ -32,7 +32,6 @@ export default (props) => {
                 return <MenuItem name="exercise_list" value={exercise.id} key={exercise.id} primaryText={exercise.name} />
               })}
             </SelectField>
-
             <div>
               {properties.meta.touched && <span className="error-text">{properties.meta.error}</span>}
             </div>
