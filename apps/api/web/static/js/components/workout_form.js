@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import { Field, FieldArray } from 'redux-form'
 import {Link} from 'react-router'
-import {DatePicker, TextField, RaisedButton} from 'material-ui'
+import {TextField, RaisedButton} from 'material-ui'
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import PerformedExerciseFields from './workouts/performed_exercise_fields'
 
-import MediaQuery from 'react-responsive'
+import DatePicker from './datepicker'
 
 import moment from 'moment'
 import _ from 'lodash'
@@ -121,23 +121,12 @@ class WorkoutForm extends Component {
           <Field type="textarea" name="description" label="Description" component={this.renderField} />
           <label style={{marginRight: '5px'}}>Workout Date</label><br />
           <Field type="text" name="workoutDate" component={properties =>
-            <MediaQuery minWidth={1024}>
-              {isMatch => {
-                let mode = isMatch ? 'landscape' : 'portrait'
-                let container = isMatch ? 'inline' : 'dialog'
-                return <DatePicker
-                  name="workoutDate"
-                  formatDate={formatDate}
-                  onChange={(e, val) =>  {
-                    //e = empty event, 2nd arg = date
-                    properties.input.onChange(val)
-                  }}
-                  container={container}
-                  mode={mode}
-                  defaultDate={properties.input.value || moment().toDate()}
-                />
-              }}
-            </MediaQuery>
+            <DatePicker
+              onChange={(e, val) => properties.input.onChange(val)}
+              formatDate={formatDate}
+              defaultDate={properties.input.value || moment().toDate()}
+              name="workoutDate"
+            />
           } />
 
           <FieldArray name="performedExercises" component={this.renderPerformedExercises} />
