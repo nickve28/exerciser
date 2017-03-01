@@ -26,7 +26,7 @@ const STRENGTH_FIELDS = ['weight', 'sets', 'reps']
 const ENDURANCE_FIELDS = ['metric', 'amount', 'duration', 'mode']
 
 const decideFields = (exercise) => {
-  if (!exercise) return []
+  if (_.isEmpty(exercise)) return []
   if (exercise.type === 'strength') return STRENGTH_FIELDS
   return ENDURANCE_FIELDS
 }
