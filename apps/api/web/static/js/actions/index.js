@@ -7,7 +7,7 @@ export const RESET_NOTIFICATIONS = 'RESET_NOTIFICATIONS'
 export {
   FETCH_WORKOUT, FETCH_WORKOUTS, FETCH_MORE_WORKOUTS, FETCH_WORKOUT_TEMPLATE, SAVE_WORKOUT, DELETE_WORKOUT,
   UPDATE_WORKOUT, DELETE_WORKOUT_NOTIFICATION_END,
-  fetchWorkoutAndExercises, fetchWorkouts, fetchWorkoutTemplate,
+  fetchWorkout, fetchWorkouts, fetchWorkoutTemplate,
   saveWorkout, deleteWorkout, updateWorkout
 } from './workout'
 

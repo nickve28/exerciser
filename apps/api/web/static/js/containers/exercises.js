@@ -71,7 +71,7 @@ class Exercises extends Component {
           transitionLeaveTimeout={300}
         >
           {
-            _.map(this.props.exercises, exercise => {
+            _.map(_.values(this.props.exercises), exercise => {
               return <ExerciseEntry key={exercise.id} exercise={exercise} onDelete={_.partial(this._handleDelete, exercise)} />
             })
           }
