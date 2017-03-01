@@ -7,7 +7,7 @@ import _ from 'lodash'
 import ExerciseEntry from '../components/exercise_entry'
 import ExerciseForm from '../components/exercise_form'
 
-import {Table, TableBody, TableHeaderColumn, TableRow} from 'material-ui/Table'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import {Snackbar} from 'material-ui'
 
 
@@ -19,6 +19,7 @@ class Exercises extends Component {
 
     this._handleSubmit = this._handleSubmit.bind(this)
     this.loadData = this.loadData.bind(this)
+    this._handleDelete = this._handleDelete.bind(this)
   }
 
   componentWillMount() {
@@ -57,25 +58,24 @@ class Exercises extends Component {
     return (
       <div>
         <div style={{marginBottom: '10px'}} />
-        <h3 style={{display: 'inline'}} >Exercises ({this.props.exerciseCount})</h3>
-        <Table>
-          <TableBody displayRowCheckbox={false}>
-            {
-              //Temporary workaround until its clear why tableheader creates a new table
-            }
-            <TableRow>
-              <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn>Categories</TableHeaderColumn>
-              <TableHeaderColumn>Description</TableHeaderColumn>
-              <TableHeaderColumn>Action</TableHeaderColumn>
-            </TableRow>
-            {_.map(this.props.exercises, exercise => {
-              return (
-                <ExerciseEntry key={exercise.id}exercise={exercise} onDelete={() => this._handleDelete(exercise)} />
-              )
-            })}
-          </TableBody>
-        </Table>
+
+        <div style={{marginBottom: '50px'}}>
+          <h3 style={{display: 'inline'}}>Exercises ({this.props.exerciseCount})</h3>
+        </div>
+
+        <ReactCSSTransitionGroup
+          component="ul"
+          className="list-group"
+          transitionName="listitem"
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}
+        >
+          {
+            _.map(this.props.exercises, exercise => {
+              return <ExerciseEntry key={exercise.id} exercise={exercise} onDelete={_.partial(this._handleDelete, exercise)} />
+            })
+          }
+        </ReactCSSTransitionGroup>
         <div className="margin-vertical">
           <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
           <Snackbar
