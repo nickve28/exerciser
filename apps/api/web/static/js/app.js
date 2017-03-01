@@ -10,6 +10,7 @@ import reducers from './reducers/index'
 
 import Root from './containers/root'
 import Exercises from './containers/exercises'
+import ExerciseDetails from './containers/exercises/details'
 import Workouts from './containers/workouts'
 import WorkoutDetail from './containers/workout_detail'
 import NewWorkout from './containers/new_workout'
@@ -32,6 +33,7 @@ ReactDOM.render(
       <Router history={browserHistory}>
         <Route path="/" component={Root}>
           <IndexRoute component={Exercises} />
+          <Route path ="/exercises/:id" component={ExerciseDetails} />
           <Route path ="/workouts" component={Workouts} />
           <Route path="/workouts/new" component={NewWorkout} />
           <Route path="/workouts/:id" component={WorkoutDetail} />

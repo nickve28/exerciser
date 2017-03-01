@@ -8,6 +8,7 @@ import _ from 'lodash'
 import HttpTransport from 'lokka-transport-http'
 
 export const FETCH_EXERCISES = 'FETCH_EXERCISES'
+export const FETCH_EXERCISE = 'FETCH_EXERCISE'
 export const SAVE_EXERCISE = 'SAVE_EXERCISE'
 export const DELETE_EXERCISE = 'DELETE_EXERCISE'
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
@@ -23,6 +24,21 @@ export const fetchExercises = () => {
       return dispatch({
         type: FETCH_EXERCISES,
         payload: data
+      })
+    }).catch(err => handleErrors(err, dispatch))
+  }
+}
+
+export const fetchExercise = (id) => {
+  const token = localStorage.getItem('auth_token')
+  return dispatch => {
+    const headers = {
+      authorization: `Bearer ${token}`
+    }
+    return post(`{exercise(id: ${id}) { name, id, categories, description, type } }`, {headers, url}).then(function (data) {
+      return dispatch({
+        type: FETCH_EXERCISE,
+        payload: data.exercise
       })
     }).catch(err => handleErrors(err, dispatch))
   }

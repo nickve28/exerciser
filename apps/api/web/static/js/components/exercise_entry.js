@@ -1,6 +1,6 @@
 import React from 'react'
 
-//import FlatButton from 'material-ui/FlatButton'
+import {Link} from 'react-router'
 
 export default ({exercise, onDelete}) => {
   return (
@@ -8,7 +8,7 @@ export default ({exercise, onDelete}) => {
       <div className="pull-right">
         <button className="btn btn-xs btn-danger" style={{marginLeft: '5px'}} onClick={onDelete}>x</button>
       </div>
-      {exercise.name}
+      <Link to={`/exercises/${exercise.id}`}>{exercise.name}</Link>
     </li>
   )
 }

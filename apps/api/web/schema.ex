@@ -10,7 +10,7 @@ defmodule Api.Schema do
     end
 
     field :exercise, :exercise do
-      arg :id, non_null(:id)
+      arg :id, non_null(:integer)
       resolve &Api.Resolvers.ExerciseResolver.get/2
     end
 
