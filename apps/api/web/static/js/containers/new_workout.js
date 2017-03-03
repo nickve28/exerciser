@@ -7,8 +7,6 @@ import { browserHistory } from 'react-router'
 import {validateWorkoutCreate, validatePExerciseCreate, validatePExerciseUnique} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
 
-import exerciseIndex from '../selectors/exercise_index'
-
 import moment from 'moment'
 import _ from 'lodash'
 
@@ -28,7 +26,10 @@ class NewWorkout extends Component {
   }
 
   componentDidMount() {
-    return this.props.fetchExercises()
+    if (_.isEmpty(this.props.exercises)) {
+      return this.props.fetchExercises()
+    }
+    return true
   }
 
   render() {
@@ -101,7 +102,7 @@ function validate(data) {
 }
 
 function mapStateToProps(state) {
-  const exercises = exerciseIndex(state)
+  const exercises = state.exercises.exercises
   const initialValues = state.workouts.workoutTemplate
   if (initialValues) {
     initialValues.workoutDate = moment(initialValues.workoutDate).toDate()

@@ -1,14 +1,22 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {fetchWorkoutAndExercises} from '../actions/index'
+import {fetchWorkout, fetchExercises} from '../actions/index'
 import _ from 'lodash'
 
 import {Link} from 'react-router'
 import workoutSelector from '../selectors/workout_selector'
 
+import Promise from 'bluebird'
+
 class WorkoutDetail extends Component {
   componentWillMount() {
-    this.props.fetchWorkoutAndExercises(this.props.params.id)
+    const fetchWorkouts = this.props.fetchWorkout(this.props.params.id)
+
+    let fetchExercises = true
+    if (_.isEmpty(this.props.exercises)) {
+      fetchExercises = this.props.fetchExercises()
+    }
+    return Promise.join(fetchWorkouts, fetchExercises)
   }
 
   render() {
@@ -54,8 +62,9 @@ class WorkoutDetail extends Component {
 
 function mapStateToProps(state) {
   return {
-    workout: workoutSelector(state)
+    workout: workoutSelector(state),
+    exercises: state.exercises.exercises
   }
 }
 
-export default connect(mapStateToProps, {fetchWorkoutAndExercises})(WorkoutDetail)
+export default connect(mapStateToProps, {fetchWorkout, fetchExercises})(WorkoutDetail)

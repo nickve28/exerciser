@@ -15,8 +15,6 @@ export const DELETE_WORKOUT = 'DELETE_WORKOUT'
 export const DELETE_WORKOUT_NOTIFICATION_END = 'DELETE_WORKOUT_NOTIFICATION_END'
 export const UPDATE_WORKOUT = 'UPDATE_WORKOUT'
 
-import {FETCH_EXERCISES} from './exercise'
-
 const toFields = pExercise => {
   const fieldString = _.chain(pExercise)
     .keys()
@@ -107,7 +105,7 @@ export const fetchWorkoutTemplate = () => {
   }
 }
 
-export const fetchWorkoutAndExercises = (id) => {
+export const fetchWorkout = (id) => {
   const token = localStorage.getItem('auth_token')
   return dispatch => {
     const headers = {
@@ -119,22 +117,12 @@ export const fetchWorkoutAndExercises = (id) => {
         workout_date, performed_exercises {
           exercise_id, reps, weight, sets,
           metric, mode, duration, amount
-        }, description, id },
-      exercises {
-        id, name, description, categories, type
-      }
+        }, description, id }
     }`).then(function (data) {
-      dispatch({
+      return dispatch({
         type: FETCH_WORKOUT,
         payload: data.workout
       })
-
-      const {exercises, exerciseCount} = data
-      return dispatch({
-        type: FETCH_EXERCISES,
-        payload: {exercises, exerciseCount}
-      })
-
     }).catch(err => handleUnauthorized(err, dispatch))
   }
 }

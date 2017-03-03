@@ -1,16 +1,14 @@
 import React from 'react'
-import _ from 'lodash'
 
-import {TableRow, TableRowColumn} from 'material-ui/Table'
-import FlatButton from 'material-ui/FlatButton'
+import {Link} from 'react-router'
 
 export default ({exercise, onDelete}) => {
   return (
-    <TableRow key={exercise.id}>
-      <TableRowColumn>{exercise.name}</TableRowColumn>
-      <TableRowColumn>{exercise.categories.join(',')}</TableRowColumn>
-      <TableRowColumn>{_.truncate(exercise.description, 30)}</TableRowColumn>
-      <TableRowColumn><FlatButton secondary={true} onClick={onDelete} label="x" /></TableRowColumn>
-    </TableRow>
+    <li className="list-group-item">
+      <div className="pull-right">
+        <button className="btn btn-xs btn-danger" style={{marginLeft: '5px'}} onClick={onDelete}>x</button>
+      </div>
+      <Link to={`/exercises/${exercise.id}`}>{exercise.name}</Link>
+    </li>
   )
 }

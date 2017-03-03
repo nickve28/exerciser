@@ -2,15 +2,14 @@ import React, {Component} from 'react'
 import { reduxForm } from 'redux-form'
 import {connect} from 'react-redux'
 
-import {fetchWorkoutAndExercises, updateWorkout} from '../actions/index'
+import {fetchWorkout, fetchExercises, updateWorkout} from '../actions/index'
 import { browserHistory } from 'react-router'
 import {validateWorkoutCreate, validatePExerciseCreate, validatePExerciseUnique} from '../helpers/validator'
 import { SubmissionError } from 'redux-form'
 
-import exerciseIndex from '../selectors/exercise_index'
-
 import moment from 'moment'
 import _ from 'lodash'
+import Promise from 'bluebird'
 
 import WorkoutForm from '../components/workout_form'
 
@@ -27,7 +26,13 @@ class EditWorkout extends Component {
   }
 
   componentDidMount() {
-    return this.props.fetchWorkoutAndExercises(this.props.params.id)
+    const fetchWorkouts = this.props.fetchWorkout(this.props.params.id)
+
+    let fetchExercises = true
+    if (_.isEmpty(this.props.exercises)) {
+      fetchExercises = this.props.fetchExercises()
+    }
+    return Promise.join(fetchWorkouts, fetchExercises)
   }
 
   render() {
@@ -97,7 +102,7 @@ function validate(data) {
 }
 
 function mapStateToProps(state) {
-  const exercises = exerciseIndex(state)
+  const exercises = state.exercises.exercises
   const initialValues = state.workouts.selectedWorkout
   if (initialValues) {
     initialValues.workoutDate = moment(initialValues.workoutDate).toDate()
@@ -118,5 +123,5 @@ EditWorkout = reduxForm({ //eslint-disable-line
   validate
 })(EditWorkout)
 
-export default connect(mapStateToProps, {fetchWorkoutAndExercises, updateWorkout})(EditWorkout)
+export default connect(mapStateToProps, {fetchWorkout, fetchExercises, updateWorkout})(EditWorkout)
 
