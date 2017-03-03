@@ -77,7 +77,7 @@ class Exercises extends Component {
           }
         </ReactCSSTransitionGroup>
         <div className="margin-vertical">
-          <ExerciseForm handler={this._handleSubmit} categories={this.props.categories} />
+          <ExerciseForm handler={this._handleSubmit} categories={_.values(this.props.categories)} />
           <Snackbar
             open={this.props.showNoExerciseDeleted || false}
             message='The exercise is used in workouts and can not be deleted'
