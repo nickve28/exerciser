@@ -19,6 +19,10 @@ defmodule Api.Resolvers.ExerciseResolver do
     handle_result(Exercises.Services.Exercise.create(args))
   end
 
+  def update(args, _info) do
+    handle_result(Exercises.Services.Exercise.update(args))
+  end
+
   def delete(%{id: id}, _info) do
     payload = %{id: String.to_integer(id)}
     handle_result(Exercises.Services.Exercise.delete(payload))

@@ -25,8 +25,8 @@ defmodule Exercises.Schemas.Exercise do
     end
   end
 
-  def update_changeset(%{id: id, name: name, type: type}, payload) do
-    changeset = %Exercises.Schemas.Exercise{id: id, name: name, type: type}
+  def update_changeset(%{id: id, name: name, type: type, description: description, categories: categories}, payload) do
+    changeset = %Exercises.Schemas.Exercise{id: id, name: name, type: type, description: description, categories: categories}
     |> cast(payload, [:description, :categories])
     |> cast_capitalize_all(:categories)
 
