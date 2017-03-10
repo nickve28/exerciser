@@ -13,6 +13,7 @@ export const SAVE_EXERCISE = 'SAVE_EXERCISE'
 export const DELETE_EXERCISE = 'DELETE_EXERCISE'
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 export const EXERCISE_NOT_DELETED = 'EXERCISE_NOT_DELETED'
+export const UPDATE_EXERCISE = 'UPDATE_EXERCISE'
 
 export const fetchExercises = () => {
   const token = localStorage.getItem('auth_token')
@@ -61,6 +62,28 @@ export const saveExercise = ({name, description, categories, type}) => {
     }`).then(function (data) {
       return dispatch({
         type: SAVE_EXERCISE,
+        payload: data
+      })
+    }).catch(err => handleErrors(err, dispatch))
+  }
+}
+
+export const updateExercise = ({id, description, categories}) => {
+  const token = localStorage.getItem('auth_token')
+  const formatted_categories = _.chain(categories)
+                                .map(category => `"${category}"`)
+                                .join(',').value()
+  const headers = {
+    authorization: `Bearer ${token}`
+  }
+  return dispatch => {
+    return post(`mutation {
+      update_exercise(id: ${id}, categories: [${formatted_categories}], description: "${description}") {
+        name, id, description, categories, type
+      }
+    }`, {url, headers}).then(function (data) {
+      return dispatch({
+        type: UPDATE_EXERCISE,
         payload: data
       })
     }).catch(err => handleErrors(err, dispatch))

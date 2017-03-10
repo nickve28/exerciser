@@ -43,6 +43,14 @@ defmodule Api.Schema do
       resolve &Api.Resolvers.ExerciseResolver.create/2
     end
 
+    field :update_exercise, :exercise do
+      arg :id, non_null(:integer)
+      arg :description, :string
+      arg :categories, list_of(:string)
+
+      resolve &Api.Resolvers.ExerciseResolver.update/2
+    end
+
     field :delete_exercise, :integer do
       arg :id, non_null(:id)
 
