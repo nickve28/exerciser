@@ -49,6 +49,22 @@ defmodule Exercises.Services.Exercise do
     end)
   end
 
+  @doc """
+    This endpoint will update an exercise in the system
+
+    Valid parameters are:
+
+    - id (Integer): The id of the exercise (required)
+    - description (String): The description of the exercise
+    - categories (String[]): The categories of the exercise (replaces all old categories!)
+  """
+
+  def update(%{id: id} = payload) when is_integer(id) do
+    :poolboy.transaction(:exercise_pool, fn pid ->
+      GenServer.call(pid, {:update, payload})
+    end)
+  end
+
   @spec delete(%{id: integer}) :: {:ok, integer}
   def delete(%{id: id}) do
     :poolboy.transaction(:exercise_pool, fn pid ->
@@ -85,6 +101,17 @@ defmodule Exercises.Services.Exercise do
     {:reply, {:ok, exercises}, state}
   end
 
+  def handle_call({:update, payload}, _from, state) do
+    with {:ok, exercise} <- find_exercise(payload[:id]),
+         {:ok, changeset} <- Exercise.update_changeset(exercise, payload),
+         updated_exercise <- Exercises.Repositories.Exercise.update(changeset)
+    do
+      {:reply, {:ok, updated_exercise}, state}
+    else
+      err -> {:reply, err, state}
+    end
+  end
+
   def handle_call({:delete, id}, _from, state) do
     result = with {:ok, 0} <- @workout_repo.count(%{exercise_id: [id]}),
                   {1, _} <- Exercises.Repositories.Exercise.delete(id)
@@ -111,5 +138,12 @@ defmodule Exercises.Services.Exercise do
 
   def handle_call(:count, _from, state) do
     {:reply, Exercises.Repositories.Exercise.count, state}
+  end
+
+  defp find_exercise(id) do
+    case Exercises.Repositories.Exercise.get(id) do
+      nil -> {:error, {:enotfound, "Exercise not found", []}}
+      exercise -> {:ok, exercise}
+    end
   end
 end

@@ -14,6 +14,8 @@ defmodule Exercises.Repositories.Exercise do
 
   def to_model(nil), do: nil
 
+  def to_model({:ok, model}), do: to_model(model)
+
   def to_model(exercise) do
     @skeleton
     |> Map.merge(exercise)
@@ -51,6 +53,11 @@ defmodule Exercises.Repositories.Exercise do
 
   def create(changeset) do
     Exercises.Repo.insert(changeset)
+  end
+
+  def update(changeset) do
+    Exercises.Repo.update(changeset)
+    |> to_model
   end
 
   def count do

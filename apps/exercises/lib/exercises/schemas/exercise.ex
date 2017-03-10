@@ -25,6 +25,17 @@ defmodule Exercises.Schemas.Exercise do
     end
   end
 
+  def update_changeset(%{id: id, name: name, type: type}, payload) do
+    changeset = %Exercises.Schemas.Exercise{id: id, name: name, type: type}
+    |> cast(payload, [:description, :categories])
+    |> cast_capitalize_all(:categories)
+
+    case changeset.errors do
+      [] -> {:ok, changeset}
+      errors -> {:error, {:invalid, "The request was deemed invalid.", to_errors(errors)}}
+    end
+  end
+
   defp validate_type(changeset) do
     with {:ok, change} <- changeset |> fetch_change(:type) do
       type = String.downcase(change)
