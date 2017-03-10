@@ -6,7 +6,7 @@ export default ({exercise}) => {
       <li className="list-group-item">Name: {exercise.name}</li>
       <li className="list-group-item">Amount: {exercise.amount} {exercise.metric}</li>
       <li className="list-group-item">Duration: {exercise.duration} Minutes</li>
-      <li className="list-group-item">Mode: {exercise.duration}</li>
+      <li className="list-group-item">Mode: {exercise.mode}</li>
     </ul>
   )
 }
