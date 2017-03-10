@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import {FETCH_EXERCISES, FETCH_EXERCISE} from '../actions/index'
+import {FETCH_EXERCISES, FETCH_EXERCISE, UPDATE_EXERCISE} from '../actions/index'
 
 const INITIAL_STATE = {
   exercises: {},
@@ -27,6 +27,14 @@ export default (state = INITIAL_STATE, action = {}) => {
       exercises: currentExercises,
       count: action.payload.exerciseCount
     }
+  }
+  if (action.type === UPDATE_EXERCISE) {
+    const exercise = action.payload.update_exercise
+
+    const {id} = exercise
+    const newStore = _.defaults({[id]: exercise}, state.exercises)
+
+    return {count: state.count, exercises: newStore}
   }
   return state
 }

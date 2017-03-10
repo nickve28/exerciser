@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 
 import {connect} from 'react-redux'
-import {fetchExercise, fetchCategories} from '../../actions/index'
+import {fetchExercise, fetchCategories, updateExercise} from '../../actions/index'
 
 import _ from 'lodash'
 import Promise from 'bluebird'
@@ -12,7 +12,7 @@ class ExerciseDetails extends Component {
   constructor(props) {
     super(props)
 
-    //this.handleUpdate = this.handleUpdate.bind(this)
+    this.handleUpdate = this.handleUpdate.bind(this)
   }
 
   componentDidMount() {
@@ -26,10 +26,12 @@ class ExerciseDetails extends Component {
     }
   }
 
-  /*handleUpdate(payload) {
+  handleUpdate(payload) {
     const selectedExercise = _.get(this.props.exercises, this.props.params.id)
     const newPayload = _.defaults(payload, selectedExercise)
-  }*/
+
+    return this.props.updateExercise(newPayload)
+  }
 
   render() {
     const selectedExercise = _.get(this.props.exercises, this.props.params.id)
@@ -39,7 +41,7 @@ class ExerciseDetails extends Component {
     return <ExerciseDetailData
       categories={_.values(this.props.categories)}
       exercise={selectedExercise}
-      handleUpdate={_.noop}
+      handleUpdate={this.handleUpdate}
     />
   }
 }
@@ -50,4 +52,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, {fetchExercise, fetchCategories})(ExerciseDetails)
+export default connect(mapStateToProps, {fetchExercise, fetchCategories, updateExercise})(ExerciseDetails)
