@@ -32,7 +32,7 @@ class WorkoutDetail extends Component {
       <div>
         <div>
           <div style={{marginBottom: '10px'}} />
-          <h3 style={{marginRight: '5px', display: 'inline'}}>Details for the workout</h3>
+          <h3 style={{marginRight: '5px', display: 'inline'}}>Workout details</h3>
           <span className="float-right">
             <span>
               <Link to={`/workouts/${workout.id}/edit`}>Edit</Link>

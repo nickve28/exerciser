@@ -25,6 +25,7 @@ class BodyData extends Component {
         <div>
           <NavigationBar user={user} />
         </div>
+        <div className="desktop-filler" />
         <div className="container-fluid app-container app-container-size">
           {this.props.children}
         </div>
@@ -49,6 +50,7 @@ class Root extends Component {
       content = (
         <div>
           <div><NavigationBar /></div>
+          <div className="desktop-filler" />
           <div className="container-fluid app-container app-container-size">
             <Login />
           </div>

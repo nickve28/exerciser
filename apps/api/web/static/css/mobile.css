@@ -20,6 +20,11 @@
 
   .navbar-app {
     background-color: #00796B;
+    top: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 4;
+    height: 28px;
   }
 
   .navbar-nav {
@@ -36,6 +41,14 @@
 
   .color-bar {
     visibility: hidden;
+  }
+
+  .desktop-fillter {
+    visibility: hidden;
+  }
+
+  .app-container {
+    margin-top: 28px;
   }
 
   .app-container-size {

@@ -7,8 +7,14 @@
     display: none !important;
   }
 
+  .desktop-filler {
+    background-color: #009688;
+    height: 50px;
+    width: 100%;
+  }
+
   .app-container {
-    margin-top: 90px;
+    margin-top: 100px;
   }
 
   .app-container-size {
@@ -18,6 +24,10 @@
   .navbar-app {
     height: 50px;
     background-color: #00796B;
+    top: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 4;
   }
 
   .color-bar {
@@ -34,7 +44,7 @@
 
   .navbar-nav {
     overflow: auto;
-    width: 100%
+    width: 100%;
   }
 
   .navbar-nav li {
