@@ -4,6 +4,7 @@ body {
   margin-top: 0px !important;
   padding-top: 0px !important;
   font-family: Sans-Serif;
+  line-height: 1.3;
 }
 
 .float-right {
@@ -32,8 +33,8 @@ body {
 
 .list-group-item-gray {
   margin-bottom: 3px;
-  border: 3px solid #E0E0E0;
-  background-color: #F5F5F5;
+  border: 1px solid #BDBDBD;
+  background-color: #FFF;
 }
 
 .error-text {
@@ -89,6 +90,15 @@ body {
   opacity: 1;
   animation: fade 500ms linear;
 }
+
+.dark-primary-color    { background: #00796B; }
+.default-primary-color { background: #009688; }
+.light-primary-color   { background: #B2DFDB; }
+.text-primary-color    { color: #FFFFFF; }
+.accent-color          { background: #00BCD4; }
+.primary-text-color    { color: #212121; }
+.secondary-text-color  { color: #757575; }
+.divider-color         { border-color: #BDBDBD; }
 
 @keyframes fade {
   0% { opacity: 0 }
