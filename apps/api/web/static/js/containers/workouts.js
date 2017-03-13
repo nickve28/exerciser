@@ -42,7 +42,7 @@ class Workouts extends Component {
 
       return (
         <li className="show-more-li-non-styled">
-          <RaisedButton backgroundColor="#a4c639" labelColor="white" onClick={() => this.loadWorkouts(limit, offset)} label="Show more" />
+          <RaisedButton backgroundColor="#00BCD4" labelColor="white" onClick={() => this.loadWorkouts(limit, offset)} label="Show more" />
         </li>
       )
     }
