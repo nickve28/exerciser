@@ -9,7 +9,7 @@
     width: 100%;
     position: absolute;
     z-index: 3;
-    background-color: #00796B;
+    background-color: #009688;
   }
 
   .hide-menu {
@@ -27,6 +27,10 @@
 
   .navbar-nav {
     margin: 0px !important;
+  }
+
+  .navbar-nav li {
+    border-bottom: 1px solid #BDBDBD;
   }
 
   .navbar-nav li:last-child {
