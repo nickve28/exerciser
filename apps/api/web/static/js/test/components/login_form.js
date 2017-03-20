@@ -21,8 +21,8 @@ describe('<LoginForm />', () => {
     expect(wrapper.state()).to.eql(expected)
   })
 
-  describe('when the username changes', function () {
-    it('should change the username state', function () {
+  describe('when the username changes', () => {
+    it('should change the username state', () => {
       const wrapper = shallowRender(<LoginForm />)
       const expected = {username: 'foo', password: ''}
 
@@ -33,8 +33,8 @@ describe('<LoginForm />', () => {
     })
   })
 
-  describe('when the password changes', function () {
-    it('should change the password state', function () {
+  describe('when the password changes', () => {
+    it('should change the password state', () => {
       const wrapper = shallowRender(<LoginForm />)
       const expected = {username: '', password: 'bar'}
 
@@ -45,8 +45,8 @@ describe('<LoginForm />', () => {
     })
   })
 
-  describe('when the data is valid', function () {
-    it('should be sent to the callback', function (done) {
+  describe('when clicking enter', () => {
+    it('should trigger the login callback', (done) => {
       const cb = (username, password) => {
         expect(username).to.eql('foo')
         expect(password).to.eql('bar')
@@ -57,7 +57,8 @@ describe('<LoginForm />', () => {
 
       wrapper.find({name: 'password'}).simulate('change', {target: {value: 'bar'}})
       wrapper.find({name: 'username'}).simulate('change', {target: {value: 'foo'}})
-      wrapper.find('RaisedButton').simulate('click', {preventDefault: _.noop})
+
+      wrapper.find('form').first().simulate('submit', {preventDefault: _.noop})
     })
   })
 })
