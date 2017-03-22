@@ -100,4 +100,10 @@
     right: 5%;
     bottom: 5%;
   }
+
+  .save-workout-btn {
+    position: fixed;
+    right: 25%;
+    bottom: 5%;
+  }
 }

@@ -1,11 +1,17 @@
 import React, {Component} from 'react'
 import { Field, FieldArray } from 'redux-form'
 import {Link} from 'react-router'
-import {TextField, RaisedButton} from 'material-ui'
+import {TextField, RaisedButton, FloatingActionButton} from 'material-ui'
+import ContentSave from 'material-ui/svg-icons/content/save'
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import PerformedExerciseFields from './workouts/performed_exercise_fields'
 import NewWorkoutAction from './workouts/new_workout_action'
+
+import MediaQuery from 'react-responsive'
+
+const SMALL_DEVICE_QUERY = '(max-device-width: 1024px)'
+const LARGE_DEVICE_QUERY = '(min-device-width: 1024px)'
 
 import DatePicker from './datepicker'
 
@@ -38,6 +44,7 @@ class WorkoutForm extends Component {
 
     this.renderPerformedExercises = this.renderPerformedExercises.bind(this)
     this.onExerciseChange = this.onExerciseChange.bind(this)
+    this.renderSaveBtn = this.renderSaveBtn.bind(this)
   }
 
   onExerciseChange(exerciseId, index, fields) {
@@ -101,6 +108,22 @@ class WorkoutForm extends Component {
     return <div className="error-text">{error[key]}</div>
   }
 
+  renderSaveBtn() {
+    return (
+      <div>
+        <MediaQuery query={SMALL_DEVICE_QUERY}>
+          <FloatingActionButton className="save-workout-btn" type="submit">
+            <ContentSave />
+          </FloatingActionButton>
+        </MediaQuery>
+
+        <MediaQuery query={LARGE_DEVICE_QUERY}>
+          <RaisedButton style={{marginTop: '10px'}} label={this.props.action} primary={true} type="submit" />
+        </MediaQuery>
+      </div>
+    )
+  }
+
   render() {
     const {handleFormSubmit, handleLoadTemplate, action, errors} = this.props
     const loadTemplateTxt = action === 'Create' ? <a href="javascript:void(0);" onClick={handleLoadTemplate}>Load most recent workout template</a> : ''
@@ -132,7 +155,7 @@ class WorkoutForm extends Component {
 
           <FieldArray name="performedExercises" component={this.renderPerformedExercises} />
           {this.renderError(errors, 'uniqueExerciseError')}
-          <RaisedButton style={{marginTop: '10px'}} label={this.props.action} primary={true} type="submit" />
+          {this.renderSaveBtn()}
       </form>
       </div>
     )
