@@ -1,4 +1,26 @@
 @media screen and (max-width: 1024px) {
+  html {
+    height: 100%;
+    overflow-y: scroll;
+  }
+
+  body {
+    height: 100%;
+  }
+
+  #root {
+    height: 100%;
+  }
+
+  #root > div {
+    height: 100%;
+  }
+
+  .app-container {
+    overflow-y: scroll;
+    height: 100%;
+  }
+
   .menu-nav {
     display: block;
     cursor: pointer;
@@ -51,6 +73,7 @@
 
   .app-container {
     margin-top: 28px;
+    min-height: 100%;
   }
 
   .app-container-size {
@@ -70,5 +93,17 @@
     margin-right: 10px;
     margin-top: 5px;
     color: white;
+  }
+
+  .add-exercise-btn {
+    position: fixed;
+    right: 5%;
+    bottom: 5%;
+  }
+
+  .save-workout-btn {
+    position: fixed;
+    right: 25%;
+    bottom: 5%;
   }
 }
