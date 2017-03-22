@@ -29,18 +29,16 @@ injectTapEventPlugin()
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
-    <div>
-      <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
-        <Route path="/" component={Root}>
-          <IndexRoute component={Exercises} />
-          <Route path ="/exercises/:id" component={ExerciseDetails} />
-          <Route path ="/workouts" component={Workouts} />
-          <Route path="/workouts/new" component={NewWorkout} />
-          <Route path="/workouts/:id" component={WorkoutDetail} />
-          <Route path="/workouts/:id/edit" component={EditWorkout} />
-          <Route path="/progress" component={Progress} />
-        </Route>
-      </Router>
-    </div>
+    <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
+      <Route path="/" component={Root}>
+        <IndexRoute component={Exercises} />
+        <Route path ="/exercises/:id" component={ExerciseDetails} />
+        <Route path ="/workouts" component={Workouts} />
+        <Route path="/workouts/new" component={NewWorkout} />
+        <Route path="/workouts/:id" component={WorkoutDetail} />
+        <Route path="/workouts/:id/edit" component={EditWorkout} />
+        <Route path="/progress" component={Progress} />
+      </Route>
+    </Router>
   </Provider>
   , document.querySelector('#root'))

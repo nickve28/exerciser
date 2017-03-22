@@ -5,6 +5,7 @@ import {TextField, RaisedButton} from 'material-ui'
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import PerformedExerciseFields from './workouts/performed_exercise_fields'
+import NewWorkoutAction from './workouts/new_workout_action'
 
 import DatePicker from './datepicker'
 
@@ -76,7 +77,7 @@ class WorkoutForm extends Component {
             />
           })}
         </ReactCSSTransitionGroup>
-        <a className="add-exercise" href="javascript:void(0);" style={{marginBottom: '5px'}} onClick={() => fields.push(EMPTY_EXERCISE)}>+ Add Exercise</a><br />
+        <NewWorkoutAction onClick={() => fields.push(EMPTY_EXERCISE)} />
       </span>
     )
   }
