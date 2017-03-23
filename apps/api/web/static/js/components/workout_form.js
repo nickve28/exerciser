@@ -58,6 +58,8 @@ class WorkoutForm extends Component {
 
 
   renderPerformedExercises({fields}) {
+    const orderedExercises = _.map(this.props.exerciseOrder, exerciseId => this.props.exercises[exerciseId])
+
     return (
       <span>
         <ReactCSSTransitionGroup
@@ -75,7 +77,7 @@ class WorkoutForm extends Component {
               key={index}
               index={index}
               fieldName={fieldName}
-              exercises={this.props.exercises}
+              exercises={orderedExercises}
               renderField={this.renderField}
               remove={() => fields.remove(index)}
               currentValue={currentValue}

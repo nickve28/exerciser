@@ -71,8 +71,9 @@ class Exercises extends Component {
           transitionLeaveTimeout={300}
         >
           {
-            _.map(_.values(this.props.exercises), exercise => {
-              return <ExerciseEntry key={exercise.id} exercise={exercise} onDelete={_.partial(this._handleDelete, exercise)} />
+            _.map(this.props.exerciseOrder, exerciseId => {
+              const exercise = this.props.exercises[exerciseId]
+              return <ExerciseEntry key={exerciseId} exercise={exercise} onDelete={_.partial(this._handleDelete, exercise)} />
             })
           }
         </ReactCSSTransitionGroup>
@@ -92,6 +93,7 @@ class Exercises extends Component {
 const mapStateToProps = state => {
   return {
     exercises: state.exercises.exercises,
+    exerciseOrder: state.exercises.exerciseOrder,
     exerciseCount: state.exercises.count,
     categories: state.categories,
     showNoExerciseDeleted: state.notifications.showNoExerciseDeleted

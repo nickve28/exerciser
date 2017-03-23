@@ -39,6 +39,7 @@ class NewWorkout extends Component {
         handleLoadTemplate={this.handleLoadTemplate}
         action="Create"
         exercises={this.props.exercises}
+        exerciseOrder={this.props.exerciseOrder}
         validate={validate}
         errors={this.state.errors}
       />
@@ -113,6 +114,7 @@ function mapStateToProps(state) {
 
   return {
     exercises: exercises,
+    exerciseOrder: state.exercises.exerciseOrder,
     initialValues: initialValues
   }
 }

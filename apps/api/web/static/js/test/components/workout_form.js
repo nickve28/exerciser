@@ -21,7 +21,7 @@ describe('<WorkoutForm />', () => {
 
     it('should set the button text to Create', () => {
       const wrapper = shallowRender(<LoginForm action="Create" />)
-      const field = wrapper.find('[type="submit"]')
+      const field = wrapper.find('RaisedButton')
       expect(field.prop('label')).to.eql('Create')
     })
 
@@ -49,7 +49,7 @@ describe('<WorkoutForm />', () => {
 
     it('should set the button text to Edit', () => {
       const wrapper = shallowRender(<LoginForm action="Edit" />)
-      const field = wrapper.find('[type="submit"]')
+      const field = wrapper.find('RaisedButton')
       expect(field.prop('label')).to.eql('Edit')
     })
 
