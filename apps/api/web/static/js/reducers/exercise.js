@@ -4,6 +4,7 @@ import {FETCH_EXERCISES, FETCH_EXERCISE, UPDATE_EXERCISE} from '../actions/index
 
 const INITIAL_STATE = {
   exercises: {},
+  exerciseOrder: [],
   count: 0
 }
 
@@ -17,6 +18,7 @@ export default (state = INITIAL_STATE, action = {}) => {
   if (action.type === FETCH_EXERCISES) {
     return {
       exercises: toKeyStore(action.payload.exercises),
+      exerciseOrder: _.map(action.payload.exercises, 'id'),
       count: action.payload.exerciseCount
     }
   }
@@ -25,6 +27,7 @@ export default (state = INITIAL_STATE, action = {}) => {
     currentExercises[action.payload.id] = action.payload
     return {
       exercises: currentExercises,
+      exerciseOrder: state.exerciseOrder || [action.payload.id],
       count: action.payload.exerciseCount
     }
   }

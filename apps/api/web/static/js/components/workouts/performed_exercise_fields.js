@@ -38,7 +38,7 @@ export default (props) => {
               }}
               maxHeight={200}
             >
-              {_.map(_.values(exercises), exercise => {
+              {_.map(exercises, exercise => {
                 return <MenuItem name="exercise_list" value={exercise.id} key={exercise.id} primaryText={exercise.name} />
               })}
             </SelectField>

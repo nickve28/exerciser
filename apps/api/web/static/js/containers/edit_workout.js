@@ -42,6 +42,7 @@ class EditWorkout extends Component {
         handleLoadTemplate={_.noop}
         action="Edit"
         exercises={this.props.exercises}
+        exerciseOrder={this.props.exerciseOrder}
         validate={validate}
         errors={this.state.errors}
       />
@@ -113,6 +114,7 @@ function mapStateToProps(state) {
 
   return {
     exercises: exercises,
+    exerciseOrder: state.exercises.exerciseOrder,
     initialValues: initialValues
   }
 }
