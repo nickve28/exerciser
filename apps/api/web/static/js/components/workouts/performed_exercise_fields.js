@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { SelectField, MenuItem } from 'material-ui'
+import Delete from 'material-ui/svg-icons/action/delete'
 import { Field } from 'redux-form'
 
 import _ from 'lodash'
@@ -20,12 +21,16 @@ export default (props) => {
     fieldName, index, renderField, exercises, remove, onChange, fields
   } = props
 
+  const deleteStyle = {
+    float: 'right'
+  }
+
   return (
     <li className='list-group-item list-group-item-gray' key={index}>
       <div className="form-group">
         <div>
           <label style={{marginRight: '5px'}}>Exercise #{index + 1}</label>
-          <span className="pull-right glyphicon glyphicon-minus" onClick={remove} />
+          <Delete style={deleteStyle} color="#7f8c8d" onClick={remove} />
         </div>
         <Field className="form-control" name={`${fieldName}.exerciseId`}component={properties =>
           <div>
