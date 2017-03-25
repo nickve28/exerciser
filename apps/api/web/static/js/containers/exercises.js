@@ -81,7 +81,7 @@ class Exercises extends Component {
           <ExerciseForm handler={this._handleSubmit} categories={_.values(this.props.categories)} />
           <Snackbar
             open={this.props.showNoExerciseDeleted || false}
-            message='The exercise is used in workouts and can not be deleted'
+            message='The exercise is used in workouts.'
             onRequestClose={_.noop}
           />
         </div>

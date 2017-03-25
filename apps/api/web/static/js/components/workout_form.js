@@ -3,6 +3,7 @@ import { Field, FieldArray } from 'redux-form'
 import {Link} from 'react-router'
 import {TextField, RaisedButton, FloatingActionButton} from 'material-ui'
 import ContentSave from 'material-ui/svg-icons/content/save'
+import ContentCopy from 'material-ui/svg-icons/content/content-copy'
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import PerformedExerciseFields from './workouts/performed_exercise_fields'
@@ -36,6 +37,15 @@ const decideFields = (exercise) => {
   if (_.isEmpty(exercise)) return []
   if (exercise.type === 'strength') return STRENGTH_FIELDS
   return ENDURANCE_FIELDS
+}
+
+const loadTemplate = handler => {
+  return (
+    <ContentCopy
+      onClick={handler}
+      style={{display: 'inline-block', marginLeft: '2px'}}
+    />
+  )
 }
 
 class WorkoutForm extends Component {
@@ -128,20 +138,18 @@ class WorkoutForm extends Component {
 
   render() {
     const {handleFormSubmit, handleLoadTemplate, action, errors} = this.props
-    const loadTemplateTxt = action === 'Create' ? <a href="javascript:void(0);" onClick={handleLoadTemplate}>Load most recent workout template</a> : ''
+    const loadTemplateTxt = action === 'Create' ? loadTemplate(handleLoadTemplate) : ''
 
     return (
       <div>
         <div style={{marginBottom: '10px'}} />
         <div>
           <h3 style={{display: 'inline'}}>{action} Workout</h3>
+          {loadTemplateTxt}
           <span className="float-right">
             <Link to="/workouts">Go Back</Link>
           </span>
         </div>
-        <small>
-          {loadTemplateTxt}
-        </small>
 
         <form className="form" onSubmit={handleFormSubmit}>
           <Field type="textarea" name="description" label="Description" component={this.renderField} />
