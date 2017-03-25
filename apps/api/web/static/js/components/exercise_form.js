@@ -23,7 +23,13 @@ const renderItems = () => {
 export default class ExerciseForm extends Component {
   constructor(props) {
     super(props)
-    this.state = {name: '', description: '', type: null, categories: [], pageData: {showForm: false}}
+    this.state = {
+      name: '',
+      description: '',
+      type: null,
+      categories: [],
+      pageData: {showForm: false}
+    }
     this._handleSubmit = this._handleSubmit.bind(this)
   }
 
