@@ -27,10 +27,9 @@ defmodule Workout.Services.Workout do
   @count_filters [:exercise_id, :user_id]
   @list_filters [:user_id, :exercise_id, :from, :until]
 
-  @date_format "{YYYY}-{0M}-{0D}"
-
   alias Workout.Schemas
-  alias Workout.Helpers.Validator
+  alias Workout.Helpers.{Validator, Pagination, Date}
+
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
@@ -119,11 +118,11 @@ defmodule Workout.Services.Workout do
 
   def handle_call({:list, payload}, _from, state) do
     filtered_payload = Map.take(payload, @list_filters)
-    pagination = set_pagination(payload)
+    pagination = Pagination.set_pagination(payload)
     filtered_payload = Map.merge(filtered_payload, pagination)
 
     with :ok                 <- Validator.validate_list(filtered_payload),
-         transformed_payload <- to_date(filtered_payload, :from) |> to_date(:until)
+         transformed_payload <- Date.to_date(filtered_payload, :from) |> Date.to_date(:until)
     do
       workouts = Workout.Repositories.Workout.list(transformed_payload)
       {:reply, workouts, state}
@@ -185,25 +184,6 @@ defmodule Workout.Services.Workout do
 
     result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
-  end
-
-  defp to_date(payload, key) do
-    if payload[key] do
-      Map.put(payload, key, Timex.parse!(payload[key], @date_format))
-    else
-      payload
-    end
-  end
-
-  defp set_pagination(payload) do
-    limit = case payload[:limit] do
-      limit when limit > 10 or limit < 0 -> 10
-      nil -> 10
-      limit -> limit
-    end
-
-    offset = payload[:offset] || 0
-    %{limit: limit, offset: offset}
   end
 
   defp find_workout(id) do

@@ -15,10 +15,4 @@ defmodule Workout.Schemas.PerformedExercise do
     field :amount, :float
     field :mode, :float
   end
-
-  def changeset(changeset, payload) do
-    changeset
-    |> cast(payload, [:exercise_id, :weight, :reps, :sets])
-    |> validate_required([:exercise_id, :weight, :reps, :sets])
-  end
 end
