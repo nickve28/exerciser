@@ -30,6 +30,8 @@ defmodule Workout.Services.Workout do
   alias Workout.Schemas
   alias Workout.Helpers.{Validator, Pagination, Date}
 
+  import Workout.Operations.Workout
+
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
@@ -57,6 +59,10 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+
+  @doc """
+    Finds a workout by its id, or an error if the workout can not be found.
+  """
   @spec get(%{id: integer}) :: {:ok, workout} | {:error, not_found}
   def get(%{id: id}) do
     :poolboy.transaction(:workout_pool, fn pid ->
@@ -64,6 +70,10 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+
+  @doc """
+    Creates a workout
+  """
   @spec create(create_workout_payload) :: {:ok, workout} | {:error, bad_request} | {:error, internal}
   def create(payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
@@ -71,6 +81,10 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+  @doc """
+    Updates the workout matching the id.
+    Performed exercises passed will replace all existing exercises.
+  """
   @spec update(workout) :: {:ok, workout} | {:error, not_found} | {:error, internal}
   def update(%{id: _} = payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
@@ -79,6 +93,9 @@ defmodule Workout.Services.Workout do
   end
 
 
+  @doc """
+    Deletes the workout with the given id, or a not found error if no workout with the given id exists
+  """
   @spec delete(%{id: integer}) :: {:ok, integer} | {:error, not_found} | {:error, internal}
   def delete(%{id: id}) do
     :poolboy.transaction(:workout_pool, fn pid ->
@@ -184,13 +201,6 @@ defmodule Workout.Services.Workout do
 
     result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
-  end
-
-  defp find_workout(id) do
-    case Workout.Repositories.Workout.get(id) do
-      {:ok, nil} -> {:error, {:enotfound, "Workout could not be found", []}}
-      result -> result
-    end
   end
 
   defp get_exercises_details(%{performed_exercises: exercises_payload} = payload) when is_list(exercises_payload) do
