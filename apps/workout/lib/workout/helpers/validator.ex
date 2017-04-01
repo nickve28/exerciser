@@ -1,4 +1,8 @@
 defmodule Workout.Helpers.Validator do
+  @moduledoc """
+    Contains functions to validate the payload of a request.
+  """
+
   @date_format "{YYYY}-{0M}-{0D}"
   @list_validation [
     from: &Workout.Helpers.Validator.validate_date/1,
@@ -6,6 +10,9 @@ defmodule Workout.Helpers.Validator do
     user_id: [presence: true]
   ]
 
+  @doc """
+    Validates payloads for list requests
+  """
   def validate_list(payload) do
     case Vex.errors(payload, @list_validation) do
       [] -> :ok

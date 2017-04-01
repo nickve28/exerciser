@@ -6,7 +6,7 @@ defmodule Workout.Services.Workout do
 
   @type performed_exercise :: %{
     exercise_id: integer,
-    eight: float,
+    weight: float,
     reps: integer,
     sets: integer,
     metric: String.t,
