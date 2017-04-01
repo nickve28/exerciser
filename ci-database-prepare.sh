@@ -2,5 +2,5 @@
 
 for app in 'exercises' 'workout' 'user'
 do
-  bash -c "MIX_ENV=test cd ./apps/$app && mix ecto.create && mix ecto.migrate"
+  bash -c "cd ./apps/$app && MIX_ENV=test mix ecto.create && MIX_ENV=test mix ecto.migrate"
 done
