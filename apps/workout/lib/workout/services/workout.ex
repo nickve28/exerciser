@@ -23,14 +23,14 @@ defmodule Workout.Services.Workout do
   @type filter :: %{exercise_id: [integer]}
   @type list_payload :: %{user_id: integer}
 
-  @exercise_repo Application.get_env(:workout, :exercise_repo)
   @count_filters [:exercise_id, :user_id]
   @list_filters [:user_id, :exercise_id, :from, :until]
 
   alias Workout.Schemas
   alias Workout.Helpers.{Validator, Pagination, Date}
 
-  import Workout.Operations.Workout
+  import Workout.Operations.{Workout, Exercise}
+  import Workout.Error
 
 
   def start_link(_args) do
@@ -144,14 +144,7 @@ defmodule Workout.Services.Workout do
       workouts = Workout.Repositories.Workout.list(transformed_payload)
       {:reply, workouts, state}
     else
-      errors ->
-        error_result = case errors do
-          {:error, errors} when is_list(errors) ->
-            {:invalid, "The request did not meet the minimal required parameters", errors}
-          _ ->
-            {:internal, "Internal Server error", []}
-        end
-        {:reply, {:error, error_result}, state}
+      error -> {:reply, {:error, handle_error(:list, error)}, state}
     end
   end
 
@@ -165,8 +158,7 @@ defmodule Workout.Services.Workout do
     do
       {:ok, updated_workout}
     else
-      {:error, error} -> {:error, error}
-      _ -> {:error, :internal}
+      error -> result = handle_error(:update, error)
     end
 
     {:reply, result, state}
@@ -183,14 +175,13 @@ defmodule Workout.Services.Workout do
 
   def handle_call({:create, payload}, _from, state) do
     result = with  {:ok, exercises} <- get_exercises_details(payload),
-         updated_payload            <- %{payload | performed_exercises: exercises},
-         {:ok, changeset}           <- Schemas.Workout.create_changeset(updated_payload),
-         {:ok, workout}             <- Workout.Repositories.Workout.create(changeset)
+                   updated_payload  <- %{payload | performed_exercises: exercises},
+                   {:ok, changeset} <- Schemas.Workout.create_changeset(updated_payload),
+                   {:ok, workout}   <- Workout.Repositories.Workout.create(changeset)
     do
       {:ok, workout}
     else
-      {:error, {:invalid, message, details}} -> {:error, {:invalid, message, details}}
-      _ -> {:error, :internal}
+      error -> result = handle_error(:create, error)
     end
 
     {:reply, result, state}
@@ -201,26 +192,5 @@ defmodule Workout.Services.Workout do
 
     result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
-  end
-
-  defp get_exercises_details(%{performed_exercises: exercises_payload} = payload) when is_list(exercises_payload) do
-    exercise_ids = for %{exercise_id: id} <- exercises_payload, do: id
-    {:ok, exercises} = @exercise_repo.list(%{ids: exercise_ids})
-
-    found_exercise_ids = for %{id: id} <- exercises, do: id
-
-    case Enum.sort(Enum.uniq(exercise_ids)) === Enum.sort(found_exercise_ids) do
-      true ->
-        indiced_exercises = for %{id: id} = exercise <- exercises, into: %{}, do: {id, exercise}
-        full_exercise_data = for %{exercise_id: id} = exercise <- exercises_payload do
-          Map.merge(exercise, %{type: indiced_exercises[id][:type]})
-        end
-        {:ok, full_exercise_data}
-      false -> {:error, {:invalid, "The data sent was invalid", [{:exercise_id, "Not found"}]}}
-    end
-  end
-
-  defp get_exercises_details(_) do
-    {:error, {:invalid, "The request was deemed invalid", [performed_exercises: "is required"]}}
   end
 end
