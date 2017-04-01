@@ -4,5 +4,5 @@ config :exercises, Exercises.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: "exercises",
   username: "postgres",
-  password: "",
+  password: "postgres",
   hostname: "localhost"

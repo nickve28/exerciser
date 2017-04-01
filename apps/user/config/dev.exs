@@ -4,7 +4,7 @@ config :user, User.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: "users",
   username: "postgres",
-  password: "",
+  password: "postgres",
   hostname: "localhost"
 
 config :user, salt: "$2a$12$OwMtd.uRLWHZ.EZphqKDCO"
