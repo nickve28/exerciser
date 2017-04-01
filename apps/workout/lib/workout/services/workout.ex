@@ -6,7 +6,7 @@ defmodule Workout.Services.Workout do
 
   @type performed_exercise :: %{
     exercise_id: integer,
-    eight: float,
+    weight: float,
     reps: integer,
     sets: integer,
     metric: String.t,
@@ -23,14 +23,15 @@ defmodule Workout.Services.Workout do
   @type filter :: %{exercise_id: [integer]}
   @type list_payload :: %{user_id: integer}
 
-  @exercise_repo Application.get_env(:workout, :exercise_repo)
   @count_filters [:exercise_id, :user_id]
   @list_filters [:user_id, :exercise_id, :from, :until]
 
-  @date_format "{YYYY}-{0M}-{0D}"
-
   alias Workout.Schemas
-  alias Workout.Helpers.Validator
+  alias Workout.Helpers.{Validator, Pagination, Date}
+
+  import Workout.Operations.{Workout, Exercise}
+  import Workout.Error
+
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
@@ -58,6 +59,10 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+
+  @doc """
+    Finds a workout by its id, or an error if the workout can not be found.
+  """
   @spec get(%{id: integer}) :: {:ok, workout} | {:error, not_found}
   def get(%{id: id}) do
     :poolboy.transaction(:workout_pool, fn pid ->
@@ -65,6 +70,10 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+
+  @doc """
+    Creates a workout
+  """
   @spec create(create_workout_payload) :: {:ok, workout} | {:error, bad_request} | {:error, internal}
   def create(payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
@@ -72,6 +81,10 @@ defmodule Workout.Services.Workout do
     end)
   end
 
+  @doc """
+    Updates the workout matching the id.
+    Performed exercises passed will replace all existing exercises.
+  """
   @spec update(workout) :: {:ok, workout} | {:error, not_found} | {:error, internal}
   def update(%{id: _} = payload) do
     :poolboy.transaction(:workout_pool, fn pid ->
@@ -80,6 +93,9 @@ defmodule Workout.Services.Workout do
   end
 
 
+  @doc """
+    Deletes the workout with the given id, or a not found error if no workout with the given id exists
+  """
   @spec delete(%{id: integer}) :: {:ok, integer} | {:error, not_found} | {:error, internal}
   def delete(%{id: id}) do
     :poolboy.transaction(:workout_pool, fn pid ->
@@ -119,23 +135,16 @@ defmodule Workout.Services.Workout do
 
   def handle_call({:list, payload}, _from, state) do
     filtered_payload = Map.take(payload, @list_filters)
-    pagination = set_pagination(payload)
+    pagination = Pagination.set_pagination(payload)
     filtered_payload = Map.merge(filtered_payload, pagination)
 
     with :ok                 <- Validator.validate_list(filtered_payload),
-         transformed_payload <- to_date(filtered_payload, :from) |> to_date(:until)
+         transformed_payload <- Date.to_date(filtered_payload, :from) |> Date.to_date(:until)
     do
       workouts = Workout.Repositories.Workout.list(transformed_payload)
       {:reply, workouts, state}
     else
-      errors ->
-        error_result = case errors do
-          {:error, errors} when is_list(errors) ->
-            {:invalid, "The request did not meet the minimal required parameters", errors}
-          _ ->
-            {:internal, "Internal Server error", []}
-        end
-        {:reply, {:error, error_result}, state}
+      error -> {:reply, {:error, handle_error(:list, error)}, state}
     end
   end
 
@@ -149,8 +158,7 @@ defmodule Workout.Services.Workout do
     do
       {:ok, updated_workout}
     else
-      {:error, error} -> {:error, error}
-      _ -> {:error, :internal}
+      error -> result = handle_error(:update, error)
     end
 
     {:reply, result, state}
@@ -167,14 +175,13 @@ defmodule Workout.Services.Workout do
 
   def handle_call({:create, payload}, _from, state) do
     result = with  {:ok, exercises} <- get_exercises_details(payload),
-         updated_payload            <- %{payload | performed_exercises: exercises},
-         {:ok, changeset}           <- Schemas.Workout.create_changeset(updated_payload),
-         {:ok, workout}             <- Workout.Repositories.Workout.create(changeset)
+                   updated_payload  <- %{payload | performed_exercises: exercises},
+                   {:ok, changeset} <- Schemas.Workout.create_changeset(updated_payload),
+                   {:ok, workout}   <- Workout.Repositories.Workout.create(changeset)
     do
       {:ok, workout}
     else
-      {:error, {:invalid, message, details}} -> {:error, {:invalid, message, details}}
-      _ -> {:error, :internal}
+      error -> result = handle_error(:create, error)
     end
 
     {:reply, result, state}
@@ -185,52 +192,5 @@ defmodule Workout.Services.Workout do
 
     result = Workout.Repositories.Workout.count(count_payload)
     {:reply, result, state}
-  end
-
-  defp to_date(payload, key) do
-    if payload[key] do
-      Map.put(payload, key, Timex.parse!(payload[key], @date_format))
-    else
-      payload
-    end
-  end
-
-  defp set_pagination(payload) do
-    limit = case payload[:limit] do
-      limit when limit > 10 or limit < 0 -> 10
-      nil -> 10
-      limit -> limit
-    end
-
-    offset = payload[:offset] || 0
-    %{limit: limit, offset: offset}
-  end
-
-  defp find_workout(id) do
-    case Workout.Repositories.Workout.get(id) do
-      {:ok, nil} -> {:error, {:enotfound, "Workout could not be found", []}}
-      result -> result
-    end
-  end
-
-  defp get_exercises_details(%{performed_exercises: exercises_payload} = payload) when is_list(exercises_payload) do
-    exercise_ids = for %{exercise_id: id} <- exercises_payload, do: id
-    {:ok, exercises} = @exercise_repo.list(%{ids: exercise_ids})
-
-    found_exercise_ids = for %{id: id} <- exercises, do: id
-
-    case Enum.sort(Enum.uniq(exercise_ids)) === Enum.sort(found_exercise_ids) do
-      true ->
-        indiced_exercises = for %{id: id} = exercise <- exercises, into: %{}, do: {id, exercise}
-        full_exercise_data = for %{exercise_id: id} = exercise <- exercises_payload do
-          Map.merge(exercise, %{type: indiced_exercises[id][:type]})
-        end
-        {:ok, full_exercise_data}
-      false -> {:error, {:invalid, "The data sent was invalid", [{:exercise_id, "Not found"}]}}
-    end
-  end
-
-  defp get_exercises_details(_) do
-    {:error, {:invalid, "The request was deemed invalid", [performed_exercises: "is required"]}}
   end
 end
