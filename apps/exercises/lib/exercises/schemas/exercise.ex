@@ -26,6 +26,10 @@ defmodule Exercises.Schemas.Exercise do
     |> cast_capitalize_all(:categories)
   end
 
+  def delete_changeset(%{id: id}) do
+    %Exercises.Schemas.Exercise{id: id}
+  end
+
   defp validate_type(changeset) do
     with {:ok, change} <- changeset |> fetch_change(:type) do
       type = String.downcase(change)

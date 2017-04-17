@@ -56,9 +56,8 @@ defmodule Exercises.Repositories.Exercise do
     {:ok, Exercises.Repo.aggregate(Exercise, :count, :id)}
   end
 
-  def delete(id) when is_integer(id) do
-    Exercises.Repo.delete_all(from e in Exercise,
-                              where: ^id == e.id)
+  def delete(changeset) do
+    Exercises.Repo.delete(changeset) |> to_model
   end
 
   def list_categories do

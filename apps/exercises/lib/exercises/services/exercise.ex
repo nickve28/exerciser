@@ -105,7 +105,7 @@ defmodule Exercises.Services.Exercise do
 
   def handle_call({:update, payload}, _from, state) do
     with {:ok, exercise} <- find_exercise(payload[:id]) do
-      result = Exercise.update_changeset(exercise |> Map.from_struct, payload)
+      result = Exercise.update_changeset(exercise, payload)
       |> Exercises.Repositories.Exercise.update
 
       {:reply, result, state}
@@ -116,15 +116,13 @@ defmodule Exercises.Services.Exercise do
 
   def handle_call({:delete, id}, _from, state) do
     result = with {:ok, 0} <- @workout_repo.count(%{exercise_id: [id]}),
-                  {1, _} <- Exercises.Repositories.Exercise.delete(id)
+                  {:ok, exercise} <- find_exercise(id)
     do
-      {:ok, id}
+      {:ok, %{id: deleted_id}} = Exercise.delete_changeset(exercise)
+      |> Exercises.Repositories.Exercise.delete
+      {:ok, deleted_id}
     else
-      error -> case error do
-        {0, _} -> {:error, {:enotfound, "Exercise not found", []}}
-        {:ok, count} when count > 0 -> {:error, {:unprocessable, "The request could not be processed.", [{:id, "is used in a workout"}]}}
-        _ -> error
-      end
+      error -> handle_error(error)
     end
     {:reply, result, state}
   end
