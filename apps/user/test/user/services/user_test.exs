@@ -25,7 +25,7 @@ defmodule User.Services.UserTest do
   test "#create should create the new user" do
     payload = %{name: "Nick", password: "Foo"}
 
-    assert {:ok, %{id: _, name: "Nick", password: nil}} = Services.User.create(payload)
+    assert {:ok, %User.Models.User{id: _, name: "Nick"}} = Services.User.create(payload)
   end
 
   describe "#authenticate" do
@@ -50,6 +50,13 @@ defmodule User.Services.UserTest do
       ]
 
       assert {:error, {:unauthorized, "The request is not authorized", details}} === Services.User.authenticate(payload)
+    end
+
+    test "should return the token if the user is authorized" do
+      payload = %{name: "Nick", password: "foo"}
+
+      assert {:ok, %{token: token}} = Services.User.authenticate(payload)
+      assert token != nil
     end
   end
 end

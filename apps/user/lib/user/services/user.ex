@@ -54,6 +54,7 @@ defmodule User.Services.User do
   end
 
   def handle_call({:create, %{name: name, password: password}}, _from, state) do
+    #todo improve, changeset etc
     {:ok, hashed_pw} = :bcrypt.hashpw(password, @salt)
     hashed_pw = to_string(hashed_pw)
     new_user_payload = %{
@@ -63,7 +64,7 @@ defmodule User.Services.User do
 
     result = case User.Repositories.User.create(new_user_payload) do
       {:error, reason} -> {:error, reason}
-      {:ok, user} -> {:ok, Map.merge(user, @empty_pass)}
+      {:ok, user} -> {:ok, user}
       _ -> {:error, {:internal, "Internal error", []}}
     end
 
@@ -96,16 +97,14 @@ defmodule User.Services.User do
   defp verify_user(_, _), do: {:error, {:unauthorized, "The request is not authorized", [{:password, "no match"}]}}
 
   defp sign_token_for_user(user) do
-    token = %{id: user[:id]}
+    token = Map.take(user, [:id])
     |> token
     |> with_signer(hs256(@token_secret))
     |> with_exp(Joken.current_time + @one_hour)
     |> sign
     |> get_compact
 
-    user = user
-    |> Map.merge(@empty_pass)
-    |> Map.merge(%{token: token})
+    user = %User.Models.User{user | token: token}
     {:ok, user}
   end
 end
