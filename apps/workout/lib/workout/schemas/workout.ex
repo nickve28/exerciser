@@ -23,11 +23,13 @@ defmodule Workout.Schemas.Workout do
   end
 
   def update_changeset(workout, payload) do
-    workout_date = Timex.parse!(workout[:workout_date], @date_format)
+    %{id: id, workout_date: workout_date, description: description} = workout
+
+    workout_date = Timex.parse!(workout_date, @date_format)
     |> Timex.Ecto.DateTime.cast!
 
-    result = %Workout.Schemas.Workout{id: workout[:id],
-      workout_date: workout_date, description: workout[:description]}
+    result = %Workout.Schemas.Workout{id: id,
+      workout_date: workout_date, description: description}
     |> Workout.Repo.preload(:performed_exercises)
     |> cast(payload, [:id, :description])
     |> cast_to_date(:workout_date, payload[:workout_date])
