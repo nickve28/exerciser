@@ -18,22 +18,12 @@ defmodule Exercises.Schemas.Exercise do
     |> validate_type
     |> cast_capitalize(:name)
     |> cast_capitalize_all(:categories)
-
-    case changeset.errors do
-      [] -> {:ok, changeset}
-      errors -> {:error, {:invalid, "The request was deemed invalid.", to_errors(errors)}}
-    end
   end
 
   def update_changeset(%{id: id, name: name, type: type, description: description, categories: categories}, payload) do
     changeset = %Exercises.Schemas.Exercise{id: id, name: name, type: type, description: description, categories: categories}
     |> cast(payload, [:description, :categories])
     |> cast_capitalize_all(:categories)
-
-    case changeset.errors do
-      [] -> {:ok, changeset}
-      errors -> {:error, {:invalid, "The request was deemed invalid.", to_errors(errors)}}
-    end
   end
 
   defp validate_type(changeset) do
@@ -69,17 +59,6 @@ defmodule Exercises.Schemas.Exercise do
       |> put_change(key, capitalized_changes)
     else
       _ -> changeset
-    end
-  end
-
-  defp to_errors(errors) do
-    for {prop, {value, _}} <- errors do
-      val = case value do
-        "can't be blank" -> :required
-        "invalid_value" -> :invalid_value
-        _ -> value
-      end
-      {prop, val}
     end
   end
 end
