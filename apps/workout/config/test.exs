@@ -4,7 +4,7 @@ config :workout, Workout.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: "workouts_test",
   username: "postgres",
-  password: "",
+  password: "postgres",
   hostname: "localhost"
 
 config :workout,

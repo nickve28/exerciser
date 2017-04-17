@@ -7,7 +7,7 @@ defmodule User.RepoHelper do
   @salt Application.get_env(:user, :salt)
 
   def to_model(%Schemas.User{} = user) do
-    User.Repositories.User.to_model(user)
+    User.Models.User.to_model(user)
   end
 
   def create_user(name, password) do

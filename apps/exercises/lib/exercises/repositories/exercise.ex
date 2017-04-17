@@ -3,24 +3,8 @@ defmodule Exercises.Repositories.Exercise do
   alias Exercises.Repo
   alias Exercises.Schemas.Exercise
   import Ecto.Query#, only: [from: 2]
-
-  @skeleton %{
-    name: nil,
-    id: nil,
-    description: nil,
-    categories: nil,
-    type: nil
-  }
-
-  def to_model(nil), do: nil
-
-  def to_model({:ok, model}), do: to_model(model)
-
-  def to_model(exercise) do
-    @skeleton
-    |> Map.merge(exercise)
-    |> Map.take([:name, :id, :description, :categories, :type])
-  end
+  import Exercises.Models.Exercise, only: [to_model: 1]
+  import Exercises.Error, only: [handle_error: 1]
 
   def get(id) do
     Repo.get(Exercise, id)
@@ -48,25 +32,32 @@ defmodule Exercises.Repositories.Exercise do
     query
     |> order_by([exercise], [asc: fragment("lower(?)", exercise.name)])
     |> Repo.all
-    |> Enum.map(&to_model/1)
+    |> Enum.map(fn exercise ->
+      {:ok, model} = to_model(exercise)
+      model
+    end)
   end
 
   def create(changeset) do
-    Exercises.Repo.insert(changeset)
+    case Exercises.Repo.insert(changeset) do
+      {:error, changeset} -> {:error, handle_error(changeset.errors)}
+      {:ok, model} -> to_model(model)
+    end
   end
 
   def update(changeset) do
-    Exercises.Repo.update(changeset)
-    |> to_model
+    case Exercises.Repo.update(changeset) do
+      {:error, changeset} -> {:error, handle_error(changeset.errors)}
+      {:ok, model} -> to_model(model)
+    end
   end
 
   def count do
     {:ok, Exercises.Repo.aggregate(Exercise, :count, :id)}
   end
 
-  def delete(id) when is_integer(id) do
-    Exercises.Repo.delete_all(from e in Exercise,
-                              where: ^id == e.id)
+  def delete(changeset) do
+    Exercises.Repo.delete(changeset) |> to_model
   end
 
   def list_categories do

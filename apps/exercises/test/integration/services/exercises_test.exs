@@ -15,7 +15,7 @@ defmodule ExercisesTest do
   end
 
   test "#list should return a list of exercises", %{exercise: exercise} do
-    assert Services.Exercise.list === {:ok, [exercise]}
+    assert Services.Exercise.list == {:ok, [exercise]}
   end
 
   test "#list should return nothing if the filter does not match" do
@@ -54,12 +54,12 @@ defmodule ExercisesTest do
         Map.take(exercise, [:id, :name, :description, :categories, :type]),
         Map.take(exercise2, [:id, :name, :description, :categories, :type])
       ]
-      assert {:ok, expected} === Services.Exercise.list
+      assert {:ok, expected} = Services.Exercise.list
     end
   end
 
   test "#get should return an error if no exercise is found", %{exercise: %{id: id}} do
-    assert Services.Exercise.get(id + 1) === {:error, :enotfound}
+    assert Services.Exercise.get(id + 1) === {:error, {:enotfound, "Exercise not found", []}}
   end
 
   test "#get should return the found exercise", %{exercise: %{id: id} = exercise} do

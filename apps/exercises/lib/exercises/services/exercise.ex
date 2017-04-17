@@ -1,4 +1,8 @@
 defmodule Exercises.Services.Exercise do
+  #proposal
+  #internal struct object
+  #graphQL api will deal with this
+
   use GenServer
   alias Exercises.Schemas.Exercise
 
@@ -6,6 +10,8 @@ defmodule Exercises.Services.Exercise do
   @type create_payload :: %{name: String.t, description: String.t, categories: [String.t], type: String.t}
 
   @workout_repo Application.get_env(:exercises, :workout_repo)
+
+  import Exercises.Error, only: [handle_error: 1]
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
@@ -88,11 +94,7 @@ defmodule Exercises.Services.Exercise do
   end
 
   def handle_call({:get, id}, _from, state) do
-    result = case Exercises.Repositories.Exercise.get(id) do
-      nil -> {:error, :enotfound}
-      exercise -> {:ok, exercise}
-    end
-
+    result = find_exercise(id)
     {:reply, result, state}
   end
 
@@ -102,11 +104,11 @@ defmodule Exercises.Services.Exercise do
   end
 
   def handle_call({:update, payload}, _from, state) do
-    with {:ok, exercise} <- find_exercise(payload[:id]),
-         {:ok, changeset} <- Exercise.update_changeset(exercise, payload),
-         updated_exercise <- Exercises.Repositories.Exercise.update(changeset)
-    do
-      {:reply, {:ok, updated_exercise}, state}
+    with {:ok, exercise} <- find_exercise(payload[:id]) do
+      result = Exercise.update_changeset(exercise, payload)
+      |> Exercises.Repositories.Exercise.update
+
+      {:reply, result, state}
     else
       err -> {:reply, err, state}
     end
@@ -114,24 +116,20 @@ defmodule Exercises.Services.Exercise do
 
   def handle_call({:delete, id}, _from, state) do
     result = with {:ok, 0} <- @workout_repo.count(%{exercise_id: [id]}),
-                  {1, _} <- Exercises.Repositories.Exercise.delete(id)
+                  {:ok, exercise} <- find_exercise(id)
     do
-      {:ok, id}
+      {:ok, %{id: deleted_id}} = Exercise.delete_changeset(exercise)
+      |> Exercises.Repositories.Exercise.delete
+      {:ok, deleted_id}
     else
-      error -> case error do
-        {0, _} -> {:error, {:enotfound, "Exercise not found", []}}
-        {:ok, count} when count > 0 -> {:error, {:unprocessable, "The request could not be processed.", [{:id, "is used in a workout"}]}}
-        _ -> error
-      end
+      error -> handle_error(error)
     end
     {:reply, result, state}
   end
 
   def handle_call({:create, payload}, _from, state) do
-    result = case Exercise.create_changeset(payload) do
-      {:ok, changeset} -> Exercises.Repositories.Exercise.create(changeset)
-      {:error, error} -> {:error, error}
-    end
+    result = Exercise.create_changeset(payload)
+    |> Exercises.Repositories.Exercise.create
 
     {:reply, result, state}
   end
@@ -142,8 +140,8 @@ defmodule Exercises.Services.Exercise do
 
   defp find_exercise(id) do
     case Exercises.Repositories.Exercise.get(id) do
-      nil -> {:error, {:enotfound, "Exercise not found", []}}
-      exercise -> {:ok, exercise}
+      {:ok, nil} -> handle_error(:enotfound)
+      {:ok, exercise} -> {:ok, exercise}
     end
   end
 end
