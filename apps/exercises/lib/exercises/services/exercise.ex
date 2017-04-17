@@ -136,10 +136,6 @@ defmodule Exercises.Services.Exercise do
     {:reply, result, state}
   end
 
-  defp to_service_output(changeset) do
-    changeset
-  end
-
   def handle_call(:count, _from, state) do
     {:reply, Exercises.Repositories.Exercise.count, state}
   end

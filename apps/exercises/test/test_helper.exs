@@ -6,6 +6,6 @@ defmodule Exercises.RepoHelper do
     |> Exercises.Repo.insert!
     |> Exercises.Models.Exercise.to_model
 
-    data |> Map.from_struct
+    data
   end
 end
