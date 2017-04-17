@@ -23,7 +23,8 @@ defmodule Workout.Operations.Exercise do
       true ->
         indiced_exercises = for %{id: id} = exercise <- exercises, into: %{}, do: {id, exercise}
         full_exercise_data = for %{exercise_id: id} = exercise <- exercises_payload do
-          Map.merge(exercise, %{type: indiced_exercises[id][:type]})
+          %{type: type} = indiced_exercises[id]
+          Map.merge(exercise, %{type: type})
         end
         {:ok, full_exercise_data}
       false -> {:error, {:invalid, "The data sent was invalid", [{:exercise_id, "Not found"}]}}

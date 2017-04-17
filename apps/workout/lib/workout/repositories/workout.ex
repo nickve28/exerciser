@@ -1,25 +1,10 @@
 defmodule Workout.Repositories.Workout do
   @moduledoc false
+  import Workout.Models.Workout, only: [to_model: 1]
+
   alias Workout.Repo
   alias Workout.Schemas.{Workout, PerformedExercise}
   import Ecto.Query
-
-  @date_format "{YYYY}-{0M}-{0D}"
-  @exercise_fields [:exercise_id, :reps, :weight, :sets, :duration, :metric, :amount, :mode, :type]
-
-  def to_model(nil), do: nil
-
-  def to_model(data) when is_list(data), do: Enum.map(data, &to_model/1)
-
-  def to_model(%PerformedExercise{} = model) do
-    Map.take(model, @exercise_fields)
-  end
-
-  def to_model(workout) do
-    workout = Map.take(workout, [:id, :user_id, :workout_date, :performed_exercises, :description])
-    %{workout | workout_date: Timex.format!(workout[:workout_date], @date_format),
-                performed_exercises: to_model(workout[:performed_exercises])}
-  end
 
   defp preload_data(nil, _), do: nil
 
@@ -72,23 +57,24 @@ defmodule Workout.Repositories.Workout do
     |> order_by([workout], desc: workout.workout_date)
     |> preload([:performed_exercises])
     |> Repo.all
-    |> Enum.map(&to_model/1)
+    |> Enum.map(fn exercise ->
+      {:ok, exercise_model} = to_model(exercise)
+      exercise_model
+    end)
 
     {:ok, result}
   end
 
   def get(id) do
-    result = Repo.get(Workout, id)
+    Repo.get(Workout, id)
     |> preload_data(:performed_exercises)
     |> to_model
-
-    {:ok, result}
   end
 
   def create(changeset) do
     with {:ok, workout} <- Repo.insert(changeset)
     do
-      {:ok, to_model(workout)}
+      to_model(workout)
     else
       error -> error
     end
@@ -97,7 +83,7 @@ defmodule Workout.Repositories.Workout do
   def update(changeset) do
     with {:ok, updated_model} <- Repo.update(changeset)
     do
-      {:ok, to_model(updated_model)}
+      to_model(updated_model)
     else
       error -> error
     end
