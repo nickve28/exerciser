@@ -10,7 +10,7 @@ defmodule ExercisesTest do
     Repo.delete_all(Schemas.Exercise)
 
     exercise = RepoHelper.create_exercise(%{name: "Barbell Bench Press", description: "Barbell bench press",
-      categories: ["Triceps", "Chest"], type: "strength"})
+      categories: ["Triceps", "Chest"], type: "strength", metric: "kg"})
     {:ok, exercise: exercise}
   end
 
