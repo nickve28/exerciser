@@ -22,9 +22,9 @@ defmodule Exercises.Schemas.Exercise do
     |> cast_capitalize_all(:categories)
   end
 
-  def update_changeset(%{id: id, name: name, type: type, description: description, categories: categories}, payload) do
-    changeset = %Exercises.Schemas.Exercise{id: id, name: name, type: type, description: description, categories: categories}
-    |> cast(payload, [:description, :categories])
+  def update_changeset(%{id: id, name: name, type: type, description: description, categories: categories, metric: metric}, payload) do
+    changeset = %Exercises.Schemas.Exercise{id: id, name: name, type: type, description: description, categories: categories, metric: metric}
+    |> cast(payload, [:description, :categories, :metric])
     |> cast_capitalize_all(:categories)
   end
 

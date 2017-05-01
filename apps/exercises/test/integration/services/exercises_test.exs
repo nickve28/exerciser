@@ -31,9 +31,9 @@ defmodule ExercisesTest do
 
   test "#list should allow filter on ids" do
     %{id: id_two} = RepoHelper.create_exercise(%{name: "Squats", description: "Barbell bench press",
-      categories: ["Triceps", "Chest"], type: "strength"})
+      categories: ["Triceps", "Chest"], type: "strength", metric: "kg"})
     %{id: id_three} = RepoHelper.create_exercise(%{name: "Squats", description: "Barbell bench press",
-      categories: ["Triceps", "Chest"], type: "strength"})
+      categories: ["Triceps", "Chest"], type: "strength", metric: "kg"})
 
     payload = %{ids: [id_two, id_three]}
     assert {:ok, [%{id: ^id_two}, %{id: ^id_three}]} = Services.Exercise.list(payload)
@@ -42,17 +42,17 @@ defmodule ExercisesTest do
   describe "when multiple exercises exist" do
     setup do
       exercise2 = RepoHelper.create_exercise(%{name: "barbell Test", description: "A test",
-        categories: ["Triceps", "Chest"], type: "strength"})
+        categories: ["Triceps", "Chest"], type: "strength", metric: "kg"})
       exercise3 = RepoHelper.create_exercise(%{name: "a Test", description: "A test",
-        categories: ["Triceps", "Chest"], type: "strength"})
+        categories: ["Triceps", "Chest"], type: "strength", metric: "kg"})
       {:ok, exercise2: exercise2, exercise3: exercise3}
     end
 
     test "#list should order on name case independent", %{exercise: exercise, exercise2: exercise2, exercise3: exercise3} do
       expected = [
-        Map.take(exercise3, [:id, :name, :description, :categories, :type]),
-        Map.take(exercise, [:id, :name, :description, :categories, :type]),
-        Map.take(exercise2, [:id, :name, :description, :categories, :type])
+        Map.take(exercise3, [:id, :name, :description, :categories, :type, :metric]),
+        Map.take(exercise, [:id, :name, :description, :categories, :type, :metric]),
+        Map.take(exercise2, [:id, :name, :description, :categories, :type, :metric])
       ]
       assert {:ok, expected} = Services.Exercise.list
     end
@@ -95,9 +95,9 @@ defmodule ExercisesTest do
   describe "#count" do
     setup do
       exercise2 = RepoHelper.create_exercise(%{name: "barbell Test", description: "A test",
-        categories: ["Triceps", "Chest"], type: "strength"})
+        categories: ["Triceps", "Chest"], type: "strength", metric: "kg"})
       exercise3 = RepoHelper.create_exercise(%{name: "a Test", description: "A test",
-        categories: ["Triceps", "Chest"], type: "strength"})
+        categories: ["Triceps", "Chest"], type: "strength", metric: "kg"})
       {:ok, exercise2: exercise2, exercise3: exercise3}
     end
 

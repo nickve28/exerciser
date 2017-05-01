@@ -40,8 +40,20 @@ defmodule Exercises.UpdateTest do
   end
 
   @tag :update
+  test "#update allow update without a change on name or type", %{exercise: %{id: id}} do
+    assert {:ok, %{name: "Barbell Bench Press", type: "strength", id: ^id}} =
+      Services.Exercise.update(%{id: id, categories: ["foo", "bar", "baz"]})
+  end
+
+  @tag :update
   test "#update allow not change name or type", %{exercise: %{id: id}} do
     assert {:ok, %{name: "Barbell Bench Press", type: "strength", id: ^id}} =
       Services.Exercise.update(%{id: id, categories: ["foo", "bar", "baz"]})
+  end
+
+  @tag :update
+  test "#update allow metric update", %{exercise: %{id: id}} do
+    assert {:ok, %{name: "Barbell Bench Press", metric: "km/h", id: ^id}} =
+      Services.Exercise.update(%{id: id, metric: "km/h"})
   end
 end
