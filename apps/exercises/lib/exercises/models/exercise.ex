@@ -4,7 +4,8 @@ defmodule Exercises.Models.Exercise do
     name: nil,
     description: nil,
     categories: nil,
-    type: nil
+    type: nil,
+    metric: nil
   ]
 
   def to_model(nil), do: {:ok, nil} #no result etc
@@ -17,7 +18,8 @@ defmodule Exercises.Models.Exercise do
       name: model.name,
       description: model.description,
       categories: model.categories,
-      type: model.type
+      type: model.type,
+      metric: model.metric
     } }
   end
 end
