@@ -28,6 +28,7 @@ export default class ExerciseForm extends Component {
       description: '',
       type: null,
       categories: [],
+      metric: '',
       pageData: {showForm: false}
     }
     this._handleSubmit = this._handleSubmit.bind(this)
@@ -36,7 +37,7 @@ export default class ExerciseForm extends Component {
   _handleSubmit(e) {
     e.preventDefault()
     return this.props.handler(e, _.omit(this.state, 'pageData')).then(() => {
-      return this.setState({name: '', description: '', categories: [], pageData: {showForm: false}})
+      return this.setState({name: '', description: '', categories: [], metric: '', pageData: {showForm: false}})
     }).catch(() => {
       return true
     })
@@ -83,6 +84,11 @@ export default class ExerciseForm extends Component {
             <div className="form-group">
               <div><label>Description</label></div>
               <TextField name="description" value={this.state.description} onChange={(e) => this._setProperty('description', e)} />
+            </div>
+
+            <div className="form-group">
+              <div><label>Metric</label></div>
+              <TextField name="metric" value={this.state.metric} onChange={(e) => this._setProperty('metric', e)} />
             </div>
 
             <div className="form-group">
