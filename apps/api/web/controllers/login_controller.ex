@@ -5,7 +5,9 @@ defmodule Api.LoginController do
   def authenticate(conn, %{"name" => name, "password" => password}) do
     user_with_token = User.Services.User.authenticate(%{name: name, password: password})
     case user_with_token do
-      {:ok, user} -> render conn, %{data: Map.drop(user_with_token, [:password])} #todo test controller and split properly by responsibility
+      {:ok, user} ->
+        user = user |> Map.from_struct |> Map.take([:id, :name, :token])
+        render conn, %{data: user} #todo test controller and split properly by responsibility
       {:error, {:unauthorized, message, details}} ->
         details_map = Enum.into(details, %{})
         error = %{code: 401, message: message, details: details_map}
