@@ -27,6 +27,7 @@ defmodule Api.Schema.Types do
     field :categories, list_of(:string)
     field :description, :string
     field :type, :string
+    field :metric, :string
   end
 
   object :workout do
