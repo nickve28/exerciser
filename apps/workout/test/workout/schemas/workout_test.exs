@@ -51,23 +51,10 @@ defmodule Workout.Schemas.WorkoutTest do
         workout_date: "2017-01-01",
         user_id: 1,
         performed_exercises: [
-          %{exercise_id: "201", metric: "km/h", mode: 8, amount: 10, type: "endurance"}
+          %{exercise_id: "201", mode: 8, amount: 10, type: "endurance"}
         ]
       }
       assert {:error, {:invalid, _, [{:duration_0, "is required"}]}} = Workout.create_changeset(payload)
-    end
-
-    @tag :workout_schema
-    test "validation should fail if no metric is given" do
-      payload = %{
-        description: "sample workout",
-        workout_date: "2017-01-01",
-        user_id: 1,
-        performed_exercises: [
-          %{exercise_id: "201", duration: 15, mode: 8, amount: 10, type: "endurance"}
-        ]
-      }
-      assert {:error, {:invalid, _, [{:metric_0, "is required"}]}} = Workout.create_changeset(payload)
     end
 
     @tag :workout_schema
@@ -77,7 +64,7 @@ defmodule Workout.Schemas.WorkoutTest do
         workout_date: "2017-01-01",
         user_id: 1,
         performed_exercises: [
-          %{exercise_id: "201", metric: "km/h", duration: 8, amount: 10, type: "endurance"}
+          %{exercise_id: "201", duration: 8, amount: 10, type: "endurance"}
         ]
       }
       assert {:error, {:invalid, _, [{:mode_0, "is required"}]}} = Workout.create_changeset(payload)
@@ -90,7 +77,7 @@ defmodule Workout.Schemas.WorkoutTest do
         workout_date: "2017-01-01",
         user_id: 1,
         performed_exercises: [
-          %{exercise_id: "201", metric: "km/h", duration: 8, mode: 10, type: "endurance"}
+          %{exercise_id: "201", duration: 8, mode: 10, type: "endurance"}
         ]
       }
       assert {:error, {:invalid, _, [{:amount_0, "is required"}]}} = Workout.create_changeset(payload)

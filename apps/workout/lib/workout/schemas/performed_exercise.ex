@@ -11,7 +11,6 @@ defmodule Workout.Schemas.PerformedExercise do
     field :sets, :integer
     field :weight, :float
     field :duration, :float
-    field :metric, :string
     field :amount, :float
     field :mode, :float
   end

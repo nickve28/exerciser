@@ -59,7 +59,6 @@ defmodule Workout.Schemas.Workout do
     changeset
     |> validate_property(:duration, index, exercise)
     |> validate_property(:amount, index, exercise)
-    |> validate_property(:metric, index, exercise)
     |> validate_property(:mode, index, exercise)
   end
 
