@@ -45,7 +45,6 @@ defmodule Api.Schema.Types do
     field :mode, :float
     field :duration, :float
     field :amount, :float
-    field :metric, :string
   end
 
   object :progression do
@@ -56,7 +55,6 @@ defmodule Api.Schema.Types do
     field :mode, :float
     field :duration, :float
     field :amount, :float
-    field :metric, :string
   end
 
   object :progress do
