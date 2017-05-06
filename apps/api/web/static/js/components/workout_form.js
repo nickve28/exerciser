@@ -25,13 +25,12 @@ const EMPTY_EXERCISE = {
   reps: null,
   sets: null,
   mode: null,
-  metric: null,
   amount: null,
   duration: null
 }
 
 const STRENGTH_FIELDS = ['weight', 'sets', 'reps']
-const ENDURANCE_FIELDS = ['metric', 'amount', 'duration', 'mode']
+const ENDURANCE_FIELDS = ['amount', 'duration', 'mode']
 
 const decideFields = (exercise) => {
   if (_.isEmpty(exercise)) return []

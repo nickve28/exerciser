@@ -26,11 +26,6 @@ const CREATE_PERFORMED_EXERCISE_SCHEMA = Joi.object().keys({ //todo: edit
     then: Joi.number().integer().required(),
     else: Joi.forbidden()
   }),
-  metric: Joi.when('type', {
-    is: Joi.string().valid('endurance'),
-    then: Joi.string().required(),
-    else: Joi.forbidden()
-  }),
   duration: Joi.when('type', {
     is: Joi.string().valid('endurance'),
     then: Joi.number().required(),
