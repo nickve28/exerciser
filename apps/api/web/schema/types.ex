@@ -62,6 +62,7 @@ defmodule Api.Schema.Types do
   object :progress do
     field :exercise_id, :integer
     field :exercise_type, :string
+    field :exercise_metric, :string
     field :progress, list_of(:progression)
   end
 end
