@@ -18,6 +18,8 @@ defmodule Progress.Services.Progress do
   }
   @type progress :: %{
     exercise_id: integer,
+    exercise_type: String.t,
+    exercise_metric: String.t,
     progress: [progress_data]
   }
   @type unprocessable :: {:error, {:unprocessable, String.t, [{atom, String.t}]}}
@@ -44,7 +46,7 @@ defmodule Progress.Services.Progress do
     - until: Only fetch workout progression until and including this date (YYYY-MM-DD formatted string)\n
 
     iex> Progress.get(%{exercise_id: 3, user_id: 1})
-    {:ok, %{exercise_id: 3, exercise_type: "strength", progress: [%{date: "2017-01-01", weight: 1.0, sets: 2, reps: 3}]}}
+    {:ok, %{exercise_id: 3, exercise_type: "strength", exercise_metric: "kg", progress: [%{date: "2017-01-01", weight: 1.0, sets: 2, reps: 3}]}}
   """
   @spec get(get_payload) :: {:ok, progress} | {:error, unprocessable} | {:error, invalid} | {:error, internal}
   def get(payload) do
@@ -56,9 +58,14 @@ defmodule Progress.Services.Progress do
   def handle_call({:get, payload}, _from, state) do
     with :ok                                <- Validator.validate(:get, payload),
          {:ok, {_user, workouts, exercise}} <- retrieve_progress_associated_data(payload),
-         %{type: type}                      <- exercise,
+         %{type: type, metric: metric}      <- exercise,
          progression                        <- to_progression(workouts, payload[:exercise_id]),
-         result                             <- %{exercise_id: payload[:exercise_id], progress: progression, exercise_type: type}
+         result                             <- %{
+                                                  exercise_id: payload[:exercise_id],
+                                                  progress: progression,
+                                                  exercise_type: type,
+                                                  exercise_metric: metric
+                                                }
     do
       {:reply, {:ok, result}, state}
     else
