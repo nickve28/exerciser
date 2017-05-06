@@ -79,7 +79,7 @@ defmodule Progress.Services.Progress do
 
   defp to_progression(workouts, exercise_id) do
     for %{performed_exercises: exercises, workout_date: date} <- workouts do
-      Enum.find(exercises, &(&1[:exercise_id] === exercise_id))
+      Enum.find(exercises, &(&1.exercise_id === exercise_id))
       |> Map.take(@exercise_properties)
       |> Map.put(:date, date)
     end
