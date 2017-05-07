@@ -27,7 +27,7 @@ export const fetchProgress = ({exerciseId, fromDate, untilDate}) => {
     me {
       progress(${filters}) {
         exerciseId, exerciseType, exerciseMetric, progress {
-          weight, sets, reps, date, metric, amount, duration, mode
+          weight, sets, reps, date, amount, duration, mode
         }
       }
     }
