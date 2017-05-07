@@ -7,7 +7,10 @@ defmodule Workout do
 
     children = [
       worker(Workout.Repo, []),
-      worker(Workout.Pools.Workout, [])
+      worker(Workout.ExerciseRepo, []),
+      supervisor(Workout.Pools.Exercise, []),
+      supervisor(Workout.Pools.Category, []),
+      supervisor(Workout.Pools.Workout, [])
     ]
 
     opts = [strategy: :one_for_one, name: Workout.Supervisor]

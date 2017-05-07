@@ -7,5 +7,9 @@ config :workout, Workout.Repo,
   password: "postgres",
   hostname: "localhost"
 
-config :workout,
-  exercise_repo: Workout.Repositories.MockExercise
+config :workout, Workout.ExerciseRepo,
+  adapter: Ecto.Adapters.Postgres,
+  database: "exercises_test",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost"

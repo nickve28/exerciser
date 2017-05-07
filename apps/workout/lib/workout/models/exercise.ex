@@ -1,4 +1,4 @@
-defmodule Exercises.Models.Exercise do
+defmodule Workout.Models.Exercise do
   defstruct [
     id: nil,
     name: nil,

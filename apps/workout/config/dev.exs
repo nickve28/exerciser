@@ -6,3 +6,10 @@ config :workout, Workout.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost"
+
+config :workout, Workout.ExerciseRepo,
+  adapter: Ecto.Adapters.Postgres,
+  database: "exercises",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost"
