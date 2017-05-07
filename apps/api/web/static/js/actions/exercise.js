@@ -21,7 +21,7 @@ export const fetchExercises = () => {
     const headers = {
       authorization: `Bearer ${token}`
     }
-    return post('{exercises { name, id, categories, description, type }, exerciseCount }', {headers, url}).then(function (data) {
+    return post('{exercises { name, id, categories, description, type, metric }, exerciseCount }', {headers, url}).then(function (data) {
       return dispatch({
         type: FETCH_EXERCISES,
         payload: data
@@ -36,7 +36,7 @@ export const fetchExercise = (id) => {
     const headers = {
       authorization: `Bearer ${token}`
     }
-    return post(`{exercise(id: ${id}) { name, id, categories, description, type } }`, {headers, url}).then(function (data) {
+    return post(`{exercise(id: ${id}) { name, id, categories, description, type, metric } }`, {headers, url}).then(function (data) {
       return dispatch({
         type: FETCH_EXERCISE,
         payload: data.exercise
@@ -45,7 +45,7 @@ export const fetchExercise = (id) => {
   }
 }
 
-export const saveExercise = ({name, description, categories, type}) => {
+export const saveExercise = ({name, description, categories, type, metric}) => {
   const token = localStorage.getItem('auth_token')
   const formatted_categories = _.chain(categories)
                                 .map(category => `"${category}"`)
@@ -56,7 +56,7 @@ export const saveExercise = ({name, description, categories, type}) => {
   return dispatch => {
     const transport = new HttpTransport(url, {headers})
     return transport.send(`mutation {
-      create_exercise(name: "${name}", categories: [${formatted_categories}], description: "${description}", type: "${type}") {
+      create_exercise(name: "${name}", categories: [${formatted_categories}], description: "${description}", type: "${type}", metric: "${metric}") {
         name, id
       }
     }`).then(function (data) {
@@ -79,7 +79,7 @@ export const updateExercise = ({id, description, categories}) => {
   return dispatch => {
     return post(`mutation {
       update_exercise(id: ${id}, categories: [${formatted_categories}], description: "${description}") {
-        name, id, description, categories, type
+        name, id, description, categories, type, metric
       }
     }`, {url, headers}).then(function (data) {
       return dispatch({

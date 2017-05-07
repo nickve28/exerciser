@@ -36,6 +36,7 @@ defmodule Progress.Services.ProgressTest do
     expected = %{
       exercise_id: 2,
       exercise_type: "strength",
+      exercise_metric: "kg",
       progress: []
     }
 
@@ -47,6 +48,7 @@ defmodule Progress.Services.ProgressTest do
     expected = %{
       exercise_id: 1,
       exercise_type: "strength",
+      exercise_metric: "kg",
       progress: [
         %{date: "2017-01-01", weight: 10, sets: 2, reps: 2},
         %{date: "2017-01-03", weight: 20, sets: 2, reps: 2}
@@ -63,6 +65,7 @@ defmodule Progress.Services.ProgressTest do
     expected = %{
       exercise_id: 1,
       exercise_type: "strength",
+      exercise_metric: "kg",
       progress: [
         %{date: "2017-01-03", weight: 20, sets: 2, reps: 2}
       ]
@@ -77,6 +80,7 @@ defmodule Progress.Services.ProgressTest do
     expected = %{
       exercise_id: 1,
       exercise_type: "strength",
+      exercise_metric: "kg",
       progress: [
         %{date: "2017-01-01", weight: 10, sets: 2, reps: 2}
       ]

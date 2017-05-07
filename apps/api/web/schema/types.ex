@@ -27,6 +27,7 @@ defmodule Api.Schema.Types do
     field :categories, list_of(:string)
     field :description, :string
     field :type, :string
+    field :metric, :string
   end
 
   object :workout do
@@ -44,7 +45,6 @@ defmodule Api.Schema.Types do
     field :mode, :float
     field :duration, :float
     field :amount, :float
-    field :metric, :string
   end
 
   object :progression do
@@ -55,12 +55,12 @@ defmodule Api.Schema.Types do
     field :mode, :float
     field :duration, :float
     field :amount, :float
-    field :metric, :string
   end
 
   object :progress do
     field :exercise_id, :integer
     field :exercise_type, :string
+    field :exercise_metric, :string
     field :progress, list_of(:progression)
   end
 end

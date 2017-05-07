@@ -67,7 +67,7 @@ export const fetchWorkouts = (limit = 10, offset = 0, {append} = {append: false}
         workouts(limit: ${limit}, offset: ${offset}) {
           workout_date, performed_exercises {
             exercise_id, reps, weight, sets,
-            metric, mode, duration, amount
+            mode, duration, amount
           }, description, id },
         workout_count,
       }
@@ -93,7 +93,7 @@ export const fetchWorkoutTemplate = () => {
         workouts(limit: 1) {
           workout_date, performed_exercises {
             exercise_id, reps, weight, sets,
-            metric, mode, duration, amount
+            mode, duration, amount
           }, description, id },
       }
     }`).then(function (data) {
@@ -116,7 +116,7 @@ export const fetchWorkout = (id) => {
       workout(id: ${id}) {
         workout_date, performed_exercises {
           exercise_id, reps, weight, sets,
-          metric, mode, duration, amount
+          mode, duration, amount
         }, description, id }
     }`).then(function (data) {
       return dispatch({

@@ -1,7 +1,7 @@
 import moment from 'moment'
 import _ from 'lodash'
 
-const PERFORMED_EXERCISE_PROPS = ['exerciseId', 'weight', 'sets', 'reps', 'metric', 'mode', 'amount', 'duration']
+const PERFORMED_EXERCISE_PROPS = ['exerciseId', 'weight', 'sets', 'reps', 'mode', 'amount', 'duration']
 
 const toDecimal = _.partialRight(parseInt, 10)
 
@@ -15,11 +15,6 @@ export default (workoutPayload) => {
   payload.performedExercises = _.map(payload.performedExercises, pExercise => {
     let filteredExercise = _.pick(pExercise, PERFORMED_EXERCISE_PROPS)
     return _.reduce(_.keys(filteredExercise), (memo, prop) => {
-      if (prop === 'metric') {
-        memo[prop] = filteredExercise[prop]
-        return memo
-      }
-
       if (_.isNull(pExercise[prop])) {
         return memo
       }

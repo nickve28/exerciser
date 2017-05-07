@@ -30,7 +30,7 @@ export default ({progress}) => {
     memo = _.concat(memo, progressData)
     return memo
   }, [])
-  const metric = _.get(data, '0.metric')
+  const metric = progress.exerciseMetric
 
   return (
     <ResponsiveContainer width="95%" height={300}>

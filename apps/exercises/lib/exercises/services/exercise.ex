@@ -1,8 +1,4 @@
 defmodule Exercises.Services.Exercise do
-  #proposal
-  #internal struct object
-  #graphQL api will deal with this
-
   use GenServer
   alias Exercises.Schemas.Exercise
 

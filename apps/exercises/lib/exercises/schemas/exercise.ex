@@ -1,6 +1,7 @@
 defmodule Exercises.Schemas.Exercise do
   @moduledoc false
   @valid_types ["strength", "endurance"]
+  @required_create_properties [:name, :description, :categories, :type, :metric]
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -9,20 +10,21 @@ defmodule Exercises.Schemas.Exercise do
     field :description, :string
     field :categories, {:array, :string}
     field :type, :string
+    field :metric, :string
   end
 
   def create_changeset(payload) do
     changeset = %Exercises.Schemas.Exercise{}
-    |> cast(payload, [:name, :description, :categories, :type])
-    |> validate_required([:name, :description, :categories, :type])
+    |> cast(payload, @required_create_properties)
+    |> validate_required(@required_create_properties)
     |> validate_type
     |> cast_capitalize(:name)
     |> cast_capitalize_all(:categories)
   end
 
-  def update_changeset(%{id: id, name: name, type: type, description: description, categories: categories}, payload) do
-    changeset = %Exercises.Schemas.Exercise{id: id, name: name, type: type, description: description, categories: categories}
-    |> cast(payload, [:description, :categories])
+  def update_changeset(%{id: id, name: name, type: type, description: description, categories: categories, metric: metric}, payload) do
+    changeset = %Exercises.Schemas.Exercise{id: id, name: name, type: type, description: description, categories: categories, metric: metric}
+    |> cast(payload, [:description, :categories, :metric])
     |> cast_capitalize_all(:categories)
   end
 

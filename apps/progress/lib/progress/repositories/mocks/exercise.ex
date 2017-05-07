@@ -5,7 +5,8 @@ defmodule Progress.Repositories.Mocks.Exercise do
       name: "foo",
       type: "strength",
       description: "bar",
-      categories: ["baz"]
+      categories: ["baz"],
+      metric: "kg"
     }
     {:ok, exercise}
   end
