@@ -5,7 +5,7 @@ defmodule Workout.Services.Exercise do
   @type exercise :: %{id: integer, name: String.t, description: String.t, categories: [String.t]}
   @type create_payload :: %{name: String.t, description: String.t, categories: [String.t], type: String.t}
 
-  @workout_repo Workout.Repositories.Workout
+  @workout_repo Application.get_env(:workout, :workout_repo)
 
   import Workout.Error, only: [handle_error: 1]
 
@@ -38,11 +38,6 @@ defmodule Workout.Services.Exercise do
     - description (String): The description of the exercise\n
     - categories (String[]): An array of categories\n
     - type (String): The type of exercise. Can be: strength, endurance\n
-
-    ## Example
-
-      iex> Workout.Services.Exercise.create(%{name: "foo", categories: ["bar"], description: "baz", type: "strength"}
-      {:ok, %{name: "foo", categories: ["bar"], description: "baz", type: "strength", id: 1}}
   """
   @spec create(create_payload) :: {:ok, exercise} | {:error, any}
   def create(payload) do
@@ -80,7 +75,7 @@ defmodule Workout.Services.Exercise do
     ## Example
 
       iex> Workout.Services.Exercise.count
-      {:ok, 0}
+      {:ok, 1}
   """
   @spec count() :: {:ok, integer}
   def count do

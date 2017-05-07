@@ -24,6 +24,9 @@ config :workout,
 config :workout,
   exercise_repo: Workout.Repositories.Exercise
 
+config :workout,
+  workout_repo: Workout.Repositories.Workout
+
 config :workout, api_token: "55476a0d8ff88f1f28e9e7724cbdc825db1d729b"
 
 import_config "#{Mix.env}.exs"
