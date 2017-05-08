@@ -3,11 +3,11 @@ defmodule Workout.Services.CategoryTest do
   doctest Workout.Services.Category
   alias Workout.Schemas
   alias Workout.Services
-  alias Workout.ExerciseRepo
+  alias Workout.Repo
   alias Exercise.RepoHelper
 
   setup do
-    ExerciseRepo.delete_all(Schemas.Exercise)
+    Repo.delete_all(Schemas.Exercise)
 
     RepoHelper.create_exercise(%{name: "Barbell Bench Press", description: "Barbell bench press",
       categories: ["Triceps", "Chest", "Shoulders"], type: "strength", metric: "kg"})

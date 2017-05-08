@@ -24,7 +24,7 @@ end
 defmodule Exercise.RepoHelper do
   def create_exercise(%{name: name, description: description, categories: categories, type: type, metric: metric}) do
     {:ok, data} = %Workout.Schemas.Exercise{name: name, description: description, categories: categories, type: type, metric: metric}
-    |> Workout.ExerciseRepo.insert!
+    |> Workout.Repo.insert!
     |> Workout.Models.Exercise.to_model
 
     data

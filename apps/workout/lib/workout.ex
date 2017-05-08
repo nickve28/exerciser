@@ -7,7 +7,6 @@ defmodule Workout do
 
     children = [
       worker(Workout.Repo, []),
-      worker(Workout.ExerciseRepo, []),
       supervisor(Workout.Pools.Exercise, []),
       supervisor(Workout.Pools.Category, []),
       supervisor(Workout.Pools.Workout, [])

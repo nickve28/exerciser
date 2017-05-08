@@ -6,7 +6,7 @@ defmodule Workout.Repositories.Exercise do
   import Workout.Error, only: [handle_error: 1]
 
   def get(id) do
-    Workout.ExerciseRepo.get(Exercise, id)
+    Workout.Repo.get(Exercise, id)
     |> to_model
   end
 
@@ -30,7 +30,7 @@ defmodule Workout.Repositories.Exercise do
   defp list(query, %{}) do
     query
     |> order_by([exercise], [asc: fragment("lower(?)", exercise.name)])
-    |> Workout.ExerciseRepo.all
+    |> Workout.Repo.all
     |> Enum.map(fn exercise ->
       {:ok, model} = to_model(exercise)
       model
@@ -38,29 +38,29 @@ defmodule Workout.Repositories.Exercise do
   end
 
   def create(changeset) do
-    case Workout.ExerciseRepo.insert(changeset) do
+    case Workout.Repo.insert(changeset) do
       {:error, changeset} -> {:error, handle_error(changeset.errors)}
       {:ok, model} -> to_model(model)
     end
   end
 
   def update(changeset) do
-    case Workout.ExerciseRepo.update(changeset) do
+    case Workout.Repo.update(changeset) do
       {:error, changeset} -> {:error, handle_error(changeset.errors)}
       {:ok, model} -> to_model(model)
     end
   end
 
   def count do
-    {:ok, Workout.ExerciseRepo.aggregate(Exercise, :count, :id)}
+    {:ok, Workout.Repo.aggregate(Exercise, :count, :id)}
   end
 
   def delete(changeset) do
-    Workout.ExerciseRepo.delete(changeset) |> to_model
+    Workout.Repo.delete(changeset) |> to_model
   end
 
   def list_categories do
-    Workout.ExerciseRepo.all(from exercise in Exercise,
+    Workout.Repo.all(from exercise in Exercise,
              select: fragment("DISTINCT unnest(categories) as categories"),
              order_by: [asc: fragment("categories")])
   end

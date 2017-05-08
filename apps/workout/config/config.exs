@@ -7,7 +7,7 @@ config :workout, Workout.Repo,
   password: System.get_env("DB_PASS"),
   hostname: System.get_env("DB_HOST")
 
-config :workout, Workout.ExerciseRepo, #todo remove later
+config :workout, Workout.Repo, #todo remove later
   adapter: Ecto.Adapters.Postgres,
   database: "exercises",
   username: System.get_env("DB_USER"),
@@ -20,9 +20,6 @@ config :workout,
 
 config :workout,
   timezone: "Europe/Amsterdam"
-
-config :workout,
-  exercise_repo: Workout.Repositories.Exercise
 
 config :workout,
   workout_repo: Workout.Repositories.Workout
