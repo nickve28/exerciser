@@ -14,11 +14,8 @@ defmodule Workout.Repo.Migrations.DeriveExerciseMetric do
         other -> other
       end
 
-      Workout.Repo.update_all(
-        from e in "exercises",
-        where: e.id == ^id,
-        update: [set: [metric: ^new_metric]]
-      )
+      from(e in "exercises", where: e.id == ^id)
+      |> Workout.Repo.update_all(set: [metric: new_metric])
     end
   end
 end
