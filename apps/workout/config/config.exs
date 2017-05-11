@@ -7,14 +7,6 @@ config :workout, Workout.Repo,
   password: System.get_env("DB_PASS"),
   hostname: System.get_env("DB_HOST")
 
-config :workout, Workout.Repo, #todo remove later
-  adapter: Ecto.Adapters.Postgres,
-  database: "exercises",
-  username: System.get_env("DB_USER"),
-  password: System.get_env("DB_PASS"),
-  hostname: System.get_env("DB_HOST")
-
-
 config :workout,
   ecto_repos: [Workout.Repo]
 
