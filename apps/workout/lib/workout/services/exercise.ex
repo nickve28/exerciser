@@ -91,7 +91,7 @@ defmodule Workout.Services.Exercise do
 
   def handle_call({:list, filters}, _from, state) do
     exercises = Workout.Repositories.Exercise.list(filters)
-    {:reply, {:ok, exercises}, state}
+    {:reply, exercises, state}
   end
 
   def handle_call({:update, payload}, _from, state) do
