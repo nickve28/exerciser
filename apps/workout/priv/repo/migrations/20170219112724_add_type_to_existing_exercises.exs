@@ -1,8 +1,8 @@
-defmodule Exercises.Repo.Migrations.AddTypeToExistingExercises do
+defmodule Workout.Repo.Migrations.AddTypeToExistingExercises do
   use Ecto.Migration
-  alias Exercises.Repo
+  alias Workout.Repo
 
   def change do
-    Repo.update_all(Exercises.Schemas.Exercise, set: [type: "strength"])
+    Repo.update_all(Workout.Schemas.Exercise, set: [type: "strength"])
   end
 end
