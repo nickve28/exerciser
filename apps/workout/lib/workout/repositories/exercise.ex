@@ -28,13 +28,14 @@ defmodule Workout.Repositories.Exercise do
   end
 
   defp list(query, %{}) do
-    query
+    result = query
     |> order_by([exercise], [asc: fragment("lower(?)", exercise.name)])
     |> Workout.Repo.all
     |> Enum.map(fn exercise ->
       {:ok, model} = to_model(exercise)
       model
     end)
+    {:ok, result}
   end
 
   def create(changeset) do
