@@ -1,4 +1,4 @@
-defmodule Exercises.Schemas.Exercise do
+defmodule Workout.Schemas.Exercise do
   @moduledoc false
   @valid_types ["strength", "endurance"]
   @required_create_properties [:name, :description, :categories, :type, :metric]
@@ -14,7 +14,7 @@ defmodule Exercises.Schemas.Exercise do
   end
 
   def create_changeset(payload) do
-    changeset = %Exercises.Schemas.Exercise{}
+    changeset = %Workout.Schemas.Exercise{}
     |> cast(payload, @required_create_properties)
     |> validate_required(@required_create_properties)
     |> validate_type
@@ -23,13 +23,13 @@ defmodule Exercises.Schemas.Exercise do
   end
 
   def update_changeset(%{id: id, name: name, type: type, description: description, categories: categories, metric: metric}, payload) do
-    changeset = %Exercises.Schemas.Exercise{id: id, name: name, type: type, description: description, categories: categories, metric: metric}
+    changeset = %Workout.Schemas.Exercise{id: id, name: name, type: type, description: description, categories: categories, metric: metric}
     |> cast(payload, [:description, :categories, :metric])
     |> cast_capitalize_all(:categories)
   end
 
   def delete_changeset(%{id: id}) do
-    %Exercises.Schemas.Exercise{id: id}
+    %Workout.Schemas.Exercise{id: id}
   end
 
   defp validate_type(changeset) do

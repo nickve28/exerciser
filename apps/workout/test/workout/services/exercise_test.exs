@@ -1,10 +1,10 @@
-defmodule ExercisesTest do
+defmodule Workout.Services.ExerciseTest do
   use ExUnit.Case, async: false #since we reset DB each session as a clean slate
-  doctest Exercises
-  alias Exercises.Schemas
-  alias Exercises.Services
-  alias Exercises.Repo
-  alias Exercises.RepoHelper
+  doctest Workout.Services.Exercise
+  alias Workout.Schemas
+  alias Workout.Services
+  alias Workout.Repo
+  alias Exercise.RepoHelper
 
   setup do
     Repo.delete_all(Schemas.Exercise)
@@ -79,8 +79,8 @@ defmodule ExercisesTest do
   @tag :delete
   describe "when the exercise exists in a workout" do
     setup do
-      Exercises.Repositories.MockWorkout.set_count_response({:ok, 1})
-      on_exit(fn -> Exercises.Repositories.MockWorkout.stop end)
+      Workout.Repositories.MockWorkout.set_count_response({:ok, 1})
+      on_exit(fn -> Workout.Repositories.MockWorkout.stop end)
     end
 
     test "#delete should return unprocessable", %{exercise: %{id: id}} do
@@ -103,7 +103,7 @@ defmodule ExercisesTest do
 
     @tag :count
     test "should return the amount of exercises" do
-      assert {:ok, 3} === Exercises.Services.Exercise.count
+      assert {:ok, 3} === Workout.Services.Exercise.count
     end
   end
 end

@@ -1,10 +1,10 @@
-defmodule CategoryTest do
+defmodule Workout.Services.CategoryTest do
   use ExUnit.Case, async: false #since we reset DB each session as a clean slate
-  doctest Exercises
-  alias Exercises.Schemas
-  alias Exercises.Services
-  alias Exercises.Repo
-  alias Exercises.RepoHelper
+  doctest Workout.Services.Category
+  alias Workout.Schemas
+  alias Workout.Services
+  alias Workout.Repo
+  alias Exercise.RepoHelper
 
   setup do
     Repo.delete_all(Schemas.Exercise)

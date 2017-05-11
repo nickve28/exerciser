@@ -6,5 +6,5 @@ defmodule Progress.Repositories.Exercise do
   @doc """
     Finds an exercise by its id.
   """
-  def get(id) when is_integer(id), do: Exercises.Services.Exercise.get(id)
+  def get(id) when is_integer(id), do: Workout.Services.Exercise.get(id)
 end

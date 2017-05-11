@@ -1,4 +1,4 @@
-defmodule Exercises.Repositories.MockWorkout do
+defmodule Workout.Repositories.MockWorkout do
   use GenServer
 
   def init(_) do

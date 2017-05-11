@@ -1,13 +1,13 @@
-defmodule Exercises.Services.Exercise do
+defmodule Workout.Services.Exercise do
   use GenServer
-  alias Exercises.Schemas.Exercise
+  alias Workout.Schemas.Exercise
 
   @type exercise :: %{id: integer, name: String.t, description: String.t, categories: [String.t]}
   @type create_payload :: %{name: String.t, description: String.t, categories: [String.t], type: String.t}
 
-  @workout_repo Application.get_env(:exercises, :workout_repo)
+  @workout_repo Application.get_env(:workout, :workout_repo)
 
-  import Exercises.Error, only: [handle_error: 1]
+  import Workout.Error, only: [handle_error: 1]
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, [], [])
@@ -38,11 +38,6 @@ defmodule Exercises.Services.Exercise do
     - description (String): The description of the exercise\n
     - categories (String[]): An array of categories\n
     - type (String): The type of exercise. Can be: strength, endurance\n
-
-    ## Example
-
-      iex> Exercises.Services.Exercise.create(%{name: "foo", categories: ["bar"], description: "baz", type: "strength"}
-      {:ok, %{name: "foo", categories: ["bar"], description: "baz", type: "strength", id: 1}}
   """
   @spec create(create_payload) :: {:ok, exercise} | {:error, any}
   def create(payload) do
@@ -75,12 +70,12 @@ defmodule Exercises.Services.Exercise do
   end
 
   @doc """
-    This endpoint returns the amount of exercises known in the system
+    This endpoint returns the amount of Workout known in the system
 
     ## Example
 
-      iex> Exercises.Services.Exercise.count
-      {:ok, 0}
+      iex> Workout.Services.Exercise.count
+      {:ok, 1}
   """
   @spec count() :: {:ok, integer}
   def count do
@@ -95,14 +90,14 @@ defmodule Exercises.Services.Exercise do
   end
 
   def handle_call({:list, filters}, _from, state) do
-    exercises = Exercises.Repositories.Exercise.list(filters)
+    exercises = Workout.Repositories.Exercise.list(filters)
     {:reply, {:ok, exercises}, state}
   end
 
   def handle_call({:update, payload}, _from, state) do
     with {:ok, exercise} <- find_exercise(payload[:id]) do
       result = Exercise.update_changeset(exercise, payload)
-      |> Exercises.Repositories.Exercise.update
+      |> Workout.Repositories.Exercise.update
 
       {:reply, result, state}
     else
@@ -115,7 +110,7 @@ defmodule Exercises.Services.Exercise do
                   {:ok, exercise} <- find_exercise(id)
     do
       {:ok, %{id: deleted_id}} = Exercise.delete_changeset(exercise)
-      |> Exercises.Repositories.Exercise.delete
+      |> Workout.Repositories.Exercise.delete
       {:ok, deleted_id}
     else
       error -> handle_error(error)
@@ -125,17 +120,17 @@ defmodule Exercises.Services.Exercise do
 
   def handle_call({:create, payload}, _from, state) do
     result = Exercise.create_changeset(payload)
-    |> Exercises.Repositories.Exercise.create
+    |> Workout.Repositories.Exercise.create
 
     {:reply, result, state}
   end
 
   def handle_call(:count, _from, state) do
-    {:reply, Exercises.Repositories.Exercise.count, state}
+    {:reply, Workout.Repositories.Exercise.count, state}
   end
 
   defp find_exercise(id) do
-    case Exercises.Repositories.Exercise.get(id) do
+    case Workout.Repositories.Exercise.get(id) do
       {:ok, nil} -> handle_error(:enotfound)
       {:ok, exercise} -> {:ok, exercise}
     end

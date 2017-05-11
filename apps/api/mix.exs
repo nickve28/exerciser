@@ -21,7 +21,7 @@ defmodule Api.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Api, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :absinthe, :absinthe_plug, :joken, :exercises,
+     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :absinthe, :absinthe_plug, :joken,
      :user, :cors_plug, :progress]]
   end
 
@@ -45,7 +45,6 @@ defmodule Api.Mixfile do
       {:joken, "~> 1.3"},
       {:poison, "~> 2.0"},
       {:cors_plug, "~> 1.1"},
-      {:exercises, in_umbrella: true},
       {:user, in_umbrella: true},
       {:workout, in_umbrella: true},
       {:progress, in_umbrella: true},

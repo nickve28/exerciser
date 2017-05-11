@@ -9,3 +9,6 @@ config :workout, Workout.Repo,
 
 config :workout,
   exercise_repo: Workout.Repositories.MockExercise
+
+config :workout,
+  workout_repo: Workout.Repositories.MockWorkout

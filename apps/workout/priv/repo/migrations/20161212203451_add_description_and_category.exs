@@ -1,4 +1,4 @@
-defmodule Exercises.Repo.Migrations.AddDescriptionAndCategory do
+defmodule Workout.Repo.Migrations.AddDescriptionAndCategory do
   use Ecto.Migration
 
   def change do

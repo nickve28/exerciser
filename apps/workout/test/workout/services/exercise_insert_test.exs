@@ -1,10 +1,6 @@
-defmodule Exercises.InsertTest do
+defmodule Workout.Services.Exercise.InsertTest do
   use ExUnit.Case, async: false #since we reset DB each session as a clean slate
-  doctest Exercises
-  alias Exercises.Schemas
-  alias Exercises.Services
-  alias Exercises.Repo
-  alias Exercises.RepoHelper
+  alias Workout.Services
 
   @tag :create
   test "#insert should fail if no name is given" do

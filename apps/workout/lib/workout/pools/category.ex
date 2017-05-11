@@ -1,17 +1,17 @@
-defmodule Exercises.Pools.Exercise do
+defmodule Workout.Pools.Category do
   @moduledoc false
   use Supervisor
 
-  @pool_name :exercise_pool
+  @pool_name :category_pool
 
   def start_link do
-    Supervisor.start_link(__MODULE__, [], name: Exercises.Pools.Exercise)
+    Supervisor.start_link(__MODULE__, [], name: Workout.Pools.Category)
   end
 
   def init([]) do
     pool_options = [
       name: {:local, @pool_name},
-      worker_module: Exercises.Services.Exercise,
+      worker_module: Workout.Services.Category,
       size: 5,
       max_overflow: 10
     ]

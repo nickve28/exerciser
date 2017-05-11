@@ -1,10 +1,9 @@
-defmodule Exercises.UpdateTest do
+defmodule Workout.Services.Exercise.UpdateTest do
   use ExUnit.Case, async: false #since we reset DB each session as a clean slate
-  doctest Exercises
-  alias Exercises.Schemas
-  alias Exercises.Services
-  alias Exercises.Repo
-  alias Exercises.RepoHelper
+  alias Workout.Schemas
+  alias Workout.Services
+  alias Workout.Repo
+  alias Exercise.RepoHelper
 
   setup do
     Repo.delete_all(Schemas.Exercise)

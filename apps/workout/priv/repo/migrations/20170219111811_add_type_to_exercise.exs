@@ -1,4 +1,4 @@
-defmodule Exercises.Repo.Migrations.AddTypeToExercise do
+defmodule Workout.Repo.Migrations.AddTypeToExercise do
   use Ecto.Migration
 
   def change do

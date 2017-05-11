@@ -1,4 +1,4 @@
-defmodule Exercises.Services.Category do
+defmodule Workout.Services.Category do
   use GenServer
 
   def start_link(_args) do
@@ -15,7 +15,7 @@ defmodule Exercises.Services.Category do
   end
 
   def handle_call({:list}, _from, state) do
-    result = case Exercises.Repositories.Exercise.list_categories do
+    result = case Workout.Repositories.Exercise.list_categories do
       data when is_list(data) -> {:ok, data}
       _ -> {:error, "something went wrong"}
     end
