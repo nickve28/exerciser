@@ -33,10 +33,6 @@ defmodule Workout.Error do
     end
   end
 
-  def handle_error(_, _) do #catch all unknown errors
-    {:error, {:internal, "Internal Server error", []}}
-  end
-
   def handle_error({:error, {code, message, details}}), do: {:error, {code, message, details}}
 
   def handle_error(:enotfound) do
@@ -45,6 +41,10 @@ defmodule Workout.Error do
 
   def handle_error(error) do
     {:invalid, "The request was deemed invalid.", to_errors(error)}
+  end
+
+  def handle_error(_, _) do #catch all unknown errors
+    {:error, {:internal, "Internal Server error", []}}
   end
 
   defp to_errors(errors) do
