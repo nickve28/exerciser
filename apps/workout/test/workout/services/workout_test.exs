@@ -18,7 +18,6 @@ defmodule Workout.Services.WorkoutTest do
   end
 
   setup do
-    #It's broken, need to change to unit tests on this and make a few integration ones
     Repo.delete_all(Schemas.Workout)
     Repo.delete_all(Schemas.PerformedExercise)
     Repo.delete_all(Schemas.Exercise)
@@ -81,9 +80,15 @@ defmodule Workout.Services.WorkoutTest do
       datetime = Timex.to_datetime({{2017, 1, 1}, {0, 0, 0}})
       |> Timex.Ecto.DateTime.cast!
 
+      %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+      |> Exercise.RepoHelper.create_exercise
+
+      %{id: exercise_id2} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+      |> Exercise.RepoHelper.create_exercise
+
       %Schemas.Workout{description: "Saturday workout",
         workout_date: datetime, user_id: 1, performed_exercises: [
-          %{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}
+          %{exercise_id: exercise_id, reps: 2, weight: 60.0, sets: 2}
         ]}
       |> RepoHelper.create
 
@@ -92,16 +97,16 @@ defmodule Workout.Services.WorkoutTest do
 
       %Schemas.Workout{description: "Monday workout",
         workout_date: datetime, user_id: 1, performed_exercises: [
-          %{exercise_id: 2, reps: 2, weight: 50.0, sets: 2}
+          %{exercise_id: exercise_id2, reps: 2, weight: 50.0, sets: 2}
         ]}
       |> RepoHelper.create
 
-      :ok
+      {:ok, %{exercise_ids: [exercise_id, exercise_id2]}}
     end
 
     @tag :list
-    test "should filter on the exercise id" do
-      assert {:ok, [%{description: "Monday workout"}]} = Workout.Services.Workout.list(%{user_id: 1, exercise_id: 2})
+    test "should filter on the exercise id", %{exercise_ids: [_,second|_]} do
+      assert {:ok, [%{description: "Monday workout"}]} = Workout.Services.Workout.list(%{user_id: 1, exercise_id: second})
     end
 
     @tag :list
@@ -120,14 +125,18 @@ defmodule Workout.Services.WorkoutTest do
     datetime = Timex.to_datetime(:calendar.local_time)
     |> Timex.Ecto.DateTime.cast!
 
+
+    %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+    |> Exercise.RepoHelper.create_exercise
+
     %Schemas.Workout{description: "Saturday workout",
       workout_date: datetime, user_id: 1, performed_exercises: [
-        %{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}
+        %{exercise_id: exercise_id, reps: 2, weight: 60.0, sets: 2}
       ]}
     |> RepoHelper.create
 
     {:ok, [workout | _]} = Services.Workout.list(%{user_id: 1})
-    assert %{performed_exercises: [%{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}]} = Map.take(workout, [:performed_exercises])
+    assert %{performed_exercises: [%{exercise_id: ^exercise_id, reps: 2, weight: 60.0, sets: 2}]} = Map.take(workout, [:performed_exercises])
   end
 
   @tag :get
@@ -140,10 +149,16 @@ defmodule Workout.Services.WorkoutTest do
     datetime = Timex.to_datetime(:calendar.local_time)
     |> Timex.Ecto.DateTime.cast!
 
+    %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+    |> Exercise.RepoHelper.create_exercise
+
+    %{id: exercise_id2} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+    |> Exercise.RepoHelper.create_exercise
+
     workout = %Schemas.Workout{description: "Saturday workout",
       workout_date: datetime, user_id: 1, performed_exercises: [
-        %{exercise_id: 1, reps: 2, weight: 60.0},
-        %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, metric: "km/h"}
+        %{exercise_id: exercise_id, reps: 2, weight: 60.0},
+        %{exercise_id: exercise_id2, amount: 10.0, duration: 15.0, mode: 10.0, metric: "km/h"}
       ]}
     |> RepoHelper.create
 
@@ -156,30 +171,44 @@ defmodule Workout.Services.WorkoutTest do
     datetime = Timex.to_datetime(:calendar.local_time)
     |> Timex.Ecto.DateTime.cast!
 
+    %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+    |> Exercise.RepoHelper.create_exercise
+
+    %{id: exercise_id2} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+    |> Exercise.RepoHelper.create_exercise
+
     workout = %Schemas.Workout{description: "Saturday workout",
       workout_date: datetime, user_id: 1, performed_exercises: [
-        %{exercise_id: 1, reps: 2, weight: 60.0, type: "strength"},
-        %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, type: "endurance"}
+        %{exercise_id: exercise_id, reps: 2, weight: 60.0, type: "strength"},
+        %{exercise_id: exercise_id2, amount: 10.0, duration: 15.0, mode: 10.0, type: "endurance"}
       ]}
     |> RepoHelper.create
 
     id = workout.id
     assert {:ok, %{performed_exercises: [
-      %{exercise_id: 1, reps: 2, weight: 60.0, type: "strength"},
-      %{exercise_id: 2, amount: 10.0, duration: 15.0, mode: 10.0, type: "endurance"}
+      %{exercise_id: exercise_id, reps: 2, weight: 60.0, type: "strength"},
+      %{exercise_id: exercise_id2, amount: 10.0, duration: 15.0, mode: 10.0, type: "endurance"}
     ]}} = Services.Workout.get(%{id: workout.id})
   end
 
+  #up to here
   describe "#create" do
+    setup do
+      %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+      |> Exercise.RepoHelper.create_exercise
+
+      {:ok, %{exercise_id: exercise_id}}
+    end
+
     @tag :create
-    test "should return invalid if workout date can not be parsed to a datetime" do
+    test "should return invalid if workout date can not be parsed to a datetime", %{exercise_id: exercise_id} do
       payload = %{
         workout_date: "2016-12",
         description: "Some description",
         user_id: 1,
         performed_exercises: [
           %{
-            exercise_id: 1,
+            exercise_id: exercise_id,
             reps: 12,
             sets: 2,
             weight: 60.0
@@ -212,24 +241,17 @@ defmodule Workout.Services.WorkoutTest do
     end
 
     @tag :create
-    test "should return the created workout if it is valid" do
+    test "should return the created workout if it is valid", %{exercise_id: exercise_id} do
       payload = %{
         workout_date: "2016-12-01",
         description: "Some description",
         user_id: 1,
         performed_exercises: [
           %{
-            exercise_id: 1,
+            exercise_id: exercise_id,
             reps: 12,
             sets: 2,
             weight: 60.0
-          },
-          %{
-            exercise_id: 2,
-            metric: "km/h",
-            duration: 15.0,
-            amount: 10.0,
-            mode: 10.0
           }
         ]
       }
@@ -248,9 +270,12 @@ defmodule Workout.Services.WorkoutTest do
     datetime = Timex.to_datetime(:calendar.local_time)
     |> Timex.Ecto.DateTime.cast!
 
+    %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+    |> Exercise.RepoHelper.create_exercise
+
     exercise = %Schemas.Workout{description: "Saturday workout",
       workout_date: datetime, user_id: 1, performed_exercises: [
-        %{exercise_id: 1, reps: 2, weight: 60.0}
+        %{exercise_id: exercise_id, reps: 2, weight: 60.0}
       ]}
     |> RepoHelper.create
 
@@ -262,9 +287,12 @@ defmodule Workout.Services.WorkoutTest do
       datetime = Timex.to_datetime(:calendar.local_time)
       |> Timex.Ecto.DateTime.cast!
 
+      %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+      |> Exercise.RepoHelper.create_exercise
+
       workout = %Schemas.Workout{description: "Saturday workout",
         workout_date: datetime, user_id: 1, performed_exercises: [
-          %{exercise_id: 1, reps: 2, weight: 60.0, sets: 2}
+          %{exercise_id: exercise_id, reps: 2, weight: 60.0, sets: 2}
         ]}
       |> RepoHelper.create
       {:ok, workout: workout}
@@ -310,15 +338,18 @@ defmodule Workout.Services.WorkoutTest do
 
     @tag :update
     test "#update should create the new associations and remove properly", %{workout: %{id: id} = workout} do
+      %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+      |> Exercise.RepoHelper.create_exercise
+
       payload = workout
       |> Map.take([:id, :description, :workout_date, :performed_exercises])
-      |> Map.merge(%{workout_date: "2017-01-01", performed_exercises: [%{exercise_id: 2, weight: 1.0, reps: 1, sets: 1}]})
+      |> Map.merge(%{workout_date: "2017-01-01", performed_exercises: [%{exercise_id: exercise_id, weight: 1.0, reps: 1, sets: 1}]})
 
      {:ok, %{performed_exercises: exercises}} = Workout.Services.Workout.update(payload)
-     assert [%{exercise_id: 2}] = exercises
+     assert [%{exercise_id: exercise_id}] = exercises
 
      {:ok, %{performed_exercises: fetched_exercises}} = Workout.Services.Workout.get(%{id: id})
-     assert [%{exercise_id: 2}] = fetched_exercises
+     assert [%{exercise_id: exercise_id}] = fetched_exercises
     end
 
     @tag :update
@@ -336,9 +367,12 @@ defmodule Workout.Services.WorkoutTest do
       datetime = Timex.to_datetime(:calendar.local_time)
       |> Timex.Ecto.DateTime.cast!
 
+      %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+      |> Exercise.RepoHelper.create_exercise
+
       workout = %Schemas.Workout{description: "Saturday workout",
         workout_date: datetime, user_id: 2, performed_exercises: [
-          %{exercise_id: 1, reps: 2, weight: 60.0}
+          %{exercise_id: exercise_id, reps: 2, weight: 60.0}
         ]}
       |> RepoHelper.create
       {:ok, workout: workout}
@@ -355,16 +389,22 @@ defmodule Workout.Services.WorkoutTest do
       datetime = Timex.to_datetime(:calendar.local_time)
       |> Timex.Ecto.DateTime.cast!
 
+      %{id: exercise_id} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+      |> Exercise.RepoHelper.create_exercise
+
+      %{id: exercise_id2} = %Schemas.Exercise{name: "foo", categories: ["bar"], description: "baz", metric: "kg", type: "strength"}
+      |> Exercise.RepoHelper.create_exercise
+
       workout = %Schemas.Workout{description: "Saturday workout",
         workout_date: datetime, user_id: 1, performed_exercises: [
-          %{exercise_id: 1, reps: 2, weight: 60.0}
+          %{exercise_id: exercise_id, reps: 2, weight: 60.0}
         ]}
       |> RepoHelper.create
 
       %Schemas.Workout{description: "Saturday workout",
         workout_date: datetime, user_id: 1, performed_exercises: [
-          %{exercise_id: 1, reps: 2, weight: 60.0},
-          %{exercise_id: 2, reps: 2, weight: 60.0}
+          %{exercise_id: exercise_id, reps: 2, weight: 60.0},
+          %{exercise_id: exercise_id2, reps: 2, weight: 60.0}
         ]}
       |> RepoHelper.create
       {:ok, workout: workout}
@@ -376,13 +416,13 @@ defmodule Workout.Services.WorkoutTest do
     end
 
     @tag :count
-    test "#count should return 0 if the exercise id it not present in any workout" do
-      assert {:ok, 0} === Workout.Services.Workout.count(%{user_id: 1, exercise_id: [3]})
+    test "#count should return 0 if the exercise id it not present in any workout", %{workout: %{performed_exercises: [%{exercise_id: id}]}} do
+      assert {:ok, 0} === Workout.Services.Workout.count(%{user_id: 1, exercise_id: [id + 1337]})
     end
 
     @tag :count
-    test "#count should return the amount of workouts that match the exercise_id filter" do
-      assert {:ok, 2} === Workout.Services.Workout.count(%{user_id: 1, exercise_id: [1]})
+    test "#count should return the amount of workouts that match the exercise_id filter", %{workout: %{performed_exercises: [%{exercise_id: id}]}} do
+      assert {:ok, 2} === Workout.Services.Workout.count(%{user_id: 1, exercise_id: [id]})
     end
   end
 
