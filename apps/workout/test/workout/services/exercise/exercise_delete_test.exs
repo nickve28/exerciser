@@ -7,6 +7,7 @@ defmodule Workout.Services.ExerciseDeleteTest do
 
   setup do
     Workout.Repositories.MockWorkout.enable #enable mock genserver as proxy for test
+    Workout.Repositories.MockExercise.disable #just in case
 
     on_exit(fn -> Workout.Repositories.MockWorkout.disable end)
 
