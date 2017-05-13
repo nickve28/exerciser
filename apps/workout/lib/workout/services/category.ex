@@ -7,6 +7,9 @@ defmodule Workout.Services.Category do
 
   def init(state), do: {:ok, state}
 
+  @doc """
+    This endpoint lists all categories assigned to exercises in a single list.
+  """
   @spec list :: [String.t] | []
   def list do
     :poolboy.transaction(:category_pool, fn pid ->
