@@ -52,7 +52,7 @@ describe('<Exercises />', () => {
 
       const snackbar = wrapper.find('Snackbar')
       expect(snackbar.prop('open')).to.eql(true)
-      expect(snackbar.prop('message')).to.eql('The exercise is used in workouts and can not be deleted')
+      expect(snackbar.prop('message')).to.eql('The exercise is used in workouts.')
     })
   })
 

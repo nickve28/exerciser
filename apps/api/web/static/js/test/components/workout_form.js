@@ -25,7 +25,7 @@ describe('<WorkoutForm />', () => {
       expect(field.prop('label')).to.eql('Create')
     })
 
-    it('should show the load template link', () => {
+    it.skip('should show the load template link', () => {
       const wrapper = shallowRender(<LoginForm action="Create" />)
       const field = wrapper.find('small')
       expect(
@@ -33,7 +33,7 @@ describe('<WorkoutForm />', () => {
       ).to.eql(true)
     })
 
-    it('should load the template when clicked', () => {
+    it.skip('should load the template when clicked', () => {
       const wrapper = shallowRender(<LoginForm action="Create" />)
       const field = wrapper.find('small').find('a')
       field.simulate('click')
