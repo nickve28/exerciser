@@ -5,7 +5,8 @@ defmodule Workout.Schemas.PerformedExercise do
 
   schema "performed_exercises" do
     belongs_to :workout, Workout.Schemas.Workout
-    field :exercise_id, :integer, null: false
+    belongs_to :exercise, Workout.Schemas.Exercise
+
     field :type, :string, null: false
     field :reps, :integer
     field :sets, :integer

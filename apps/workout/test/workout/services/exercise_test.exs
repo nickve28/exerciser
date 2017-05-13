@@ -11,6 +11,8 @@ defmodule Workout.Services.ExerciseTest do
 
     on_exit(fn -> Workout.Repositories.MockWorkout.disable end)
 
+    Repo.delete_all(Schemas.PerformedExercise)
+    Repo.delete_all(Schemas.Workout)
     Repo.delete_all(Schemas.Exercise)
 
     exercise = RepoHelper.create_exercise(%{name: "Barbell Bench Press", description: "Barbell bench press",
@@ -72,22 +74,12 @@ defmodule Workout.Services.ExerciseTest do
 
   @tag :delete
   describe "when no exercise is found" do
-    setup do
-      Workout.Repositories.MockWorkout.stub(:count, {:ok, 0})
-      :ok
-    end
-
     test "#delete should return :enotfound when no exercise is found", %{exercise: %{id: id}} do
       assert {:error, {:enotfound, _, []}} = Services.Exercise.delete(%{id: id + 1})
     end
   end
 
   describe "when the exercise is not in used in a workout" do
-    setup do
-      Workout.Repositories.MockWorkout.stub(:count, {:ok, 0})
-      :ok
-    end
-
     @tag :delete
     test "#delete should return the exercise that is deleted", %{exercise: %{id: id}} do
       assert {:ok, id} === Services.Exercise.delete(%{id: id})
@@ -95,15 +87,24 @@ defmodule Workout.Services.ExerciseTest do
   end
 
   @tag :delete
+  @tag :delete_constraint
   describe "when the exercise exists in a workout" do
-    setup do
-      Workout.Repositories.MockWorkout.stub(:count, {:ok, 1})
-      :ok
-    end
-
     test "#delete should return unprocessable", %{exercise: %{id: id}} do
+      datetime = Timex.to_datetime(:calendar.local_time)
+      |> Timex.Ecto.DateTime.cast!
+
+      %Schemas.Workout{workout_date: datetime, description: "foo", user_id: 9, performed_exercises: [
+        %{
+          exercise_id: id,
+          weight: 1.0,
+          sets: 2,
+          reps: 3
+        }
+      ]}
+      |> Workout.RepoHelper.create
+
       expected = {:unprocessable, "The request could not be processed.", [
-        {:id, "is used in a workout"}
+        {:performed_exercises, "are still associated to this entry"}
       ]}
       assert {:error, expected} === Services.Exercise.delete(%{id: id})
     end

@@ -106,11 +106,10 @@ defmodule Workout.Services.Exercise do
   end
 
   def handle_call({:delete, id}, _from, state) do
-    result = with {:ok, 0} <- @workout_repo.count(%{exercise_id: [id]}),
-                  {:ok, exercise} <- find_exercise(id)
+    result = with {:ok, exercise} <- find_exercise(id),
+                  changeset <- Exercise.delete_changeset(exercise),
+                  {:ok, %{id: deleted_id}} <- Workout.Repositories.Exercise.delete(changeset)
     do
-      {:ok, %{id: deleted_id}} = Exercise.delete_changeset(exercise)
-      |> Workout.Repositories.Exercise.delete
       {:ok, deleted_id}
     else
       error -> handle_error(error)

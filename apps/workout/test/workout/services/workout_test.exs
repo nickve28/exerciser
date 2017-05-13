@@ -18,7 +18,11 @@ defmodule Workout.Services.WorkoutTest do
   end
 
   setup do
+    #It's broken, need to change to unit tests on this and make a few integration ones
     Repo.delete_all(Schemas.Workout)
+    Repo.delete_all(Schemas.PerformedExercise)
+    Repo.delete_all(Schemas.Exercise)
+
     :ok
   end
 

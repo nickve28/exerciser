@@ -6,6 +6,8 @@ defmodule Workout.Schemas.Exercise do
   import Ecto.Changeset
 
   schema "exercises" do
+    has_many :performed_exercises, Workout.Schemas.PerformedExercise, on_delete: :nothing #nothing = RESTRICT
+
     field :name, :string
     field :description, :string
     field :categories, {:array, :string}
@@ -30,6 +32,8 @@ defmodule Workout.Schemas.Exercise do
 
   def delete_changeset(%{id: id}) do
     %Workout.Schemas.Exercise{id: id}
+    |> change
+    |> no_assoc_constraint(:performed_exercises)
   end
 
   defp validate_type(changeset) do
