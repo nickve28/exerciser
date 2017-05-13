@@ -10,6 +10,13 @@ defmodule Workout.Services.WorkoutTest do
 
   @date_format "{YYYY}-{0M}-{0D}"
 
+  setup_all do
+    Workout.Repositories.MockExercise.enable #enable mock genserver as proxy for test
+
+    on_exit(fn -> Workout.Repositories.MockExercise.disable end)
+    :ok
+  end
+
   setup do
     Repo.delete_all(Schemas.Workout)
     :ok
