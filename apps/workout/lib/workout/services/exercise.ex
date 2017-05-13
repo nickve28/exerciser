@@ -15,6 +15,9 @@ defmodule Workout.Services.Exercise do
 
   def init(state), do: {:ok, state}
 
+  @doc """
+    This endpoint find the exercise in the system, with the specified id
+  """
   @spec get(integer) :: {:ok, exercise} | {:error, :enotfound}
   def get(id) when is_number(id) do
     :poolboy.transaction(:exercise_pool, fn pid ->
@@ -22,6 +25,14 @@ defmodule Workout.Services.Exercise do
     end)
   end
 
+  @doc """
+    This endpoint lists the exercises in the system
+
+    Valid parameters are:
+
+    - category (String): Filter exercised based on category
+    - ids (String[]): Only find exercises matching the specified ids
+  """
   @spec list(Map.t) :: {:ok, [exercise]} | {:ok, []}
   def list(payload \\ %{}) do
     :poolboy.transaction(:exercise_pool, fn pid ->
@@ -62,7 +73,12 @@ defmodule Workout.Services.Exercise do
     end)
   end
 
-  @spec delete(%{id: integer}) :: {:ok, integer}
+  @doc """
+    This endpoint will delete an exercise in the system. It will error if the exercise is in use in workouts.
+
+    - id (Integer): The id of the exercise (required)
+  """
+  @spec delete(%{id: integer}) :: {:ok, integer} | {:error, {:unprocesable, String.t, [{atom(), String.t}]}}
   def delete(%{id: id}) do
     :poolboy.transaction(:exercise_pool, fn pid ->
       GenServer.call(pid, {:delete, id})
@@ -84,6 +100,7 @@ defmodule Workout.Services.Exercise do
     end)
   end
 
+  #GenServer API
   def handle_call({:get, id}, _from, state) do
     result = find_exercise(id)
     {:reply, result, state}
