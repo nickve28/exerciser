@@ -4,6 +4,7 @@ Code.require_file("test/mocks/repositories/mock_exercise.ex")
 Code.require_file("test/mocks/repositories/mock_workout.ex")
 
 {:ok, _pid} = Workout.Repositories.MockExercise.start_link
+{:ok, _pid} = Workout.Repositories.MockWorkout.start_link
 
 ExUnit.start()
 

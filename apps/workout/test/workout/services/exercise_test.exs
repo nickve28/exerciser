@@ -7,6 +7,10 @@ defmodule Workout.Services.ExerciseTest do
   alias Exercise.RepoHelper
 
   setup do
+    Workout.Repositories.MockWorkout.enable #enable mock genserver as proxy for test
+
+    on_exit(fn -> Workout.Repositories.MockWorkout.disable end)
+
     Repo.delete_all(Schemas.Exercise)
 
     exercise = RepoHelper.create_exercise(%{name: "Barbell Bench Press", description: "Barbell bench press",
@@ -67,20 +71,34 @@ defmodule Workout.Services.ExerciseTest do
   end
 
   @tag :delete
-  test "#delete should return :enotfound when no exercise is found", %{exercise: %{id: id}} do
-    assert {:error, {:enotfound, _, []}} = Services.Exercise.delete(%{id: id + 1})
+  describe "when no exercise is found" do
+    setup do
+      Workout.Repositories.MockWorkout.stub(:count, {:ok, 0})
+      :ok
+    end
+
+    test "#delete should return :enotfound when no exercise is found", %{exercise: %{id: id}} do
+      assert {:error, {:enotfound, _, []}} = Services.Exercise.delete(%{id: id + 1})
+    end
   end
 
-  @tag :delete
-  test "#delete should return the exercise that is deleted", %{exercise: %{id: id}} do
-    assert {:ok, id} === Services.Exercise.delete(%{id: id})
+  describe "when the exercise is not in used in a workout" do
+    setup do
+      Workout.Repositories.MockWorkout.stub(:count, {:ok, 0})
+      :ok
+    end
+
+    @tag :delete
+    test "#delete should return the exercise that is deleted", %{exercise: %{id: id}} do
+      assert {:ok, id} === Services.Exercise.delete(%{id: id})
+    end
   end
 
   @tag :delete
   describe "when the exercise exists in a workout" do
     setup do
-      Workout.Repositories.MockWorkout.set_count_response({:ok, 1})
-      on_exit(fn -> Workout.Repositories.MockWorkout.stop end)
+      Workout.Repositories.MockWorkout.stub(:count, {:ok, 1})
+      :ok
     end
 
     test "#delete should return unprocessable", %{exercise: %{id: id}} do
