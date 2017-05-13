@@ -1,6 +1,5 @@
-defmodule Workout.Services.ExerciseTest do
+defmodule Workout.Services.ExerciseListTest do
   use ExUnit.Case, async: false #since we reset DB each session as a clean slate
-  doctest Workout.Services.Exercise
   alias Workout.Schemas
   alias Workout.Services
   alias Workout.Repo
@@ -61,68 +60,6 @@ defmodule Workout.Services.ExerciseTest do
         Map.take(exercise2, [:id, :name, :description, :categories, :type, :metric])
       ]
       assert {:ok, expected} = Services.Exercise.list
-    end
-  end
-
-  test "#get should return an error if no exercise is found", %{exercise: %{id: id}} do
-    assert Services.Exercise.get(id + 1) === {:error, {:enotfound, "Exercise not found", []}}
-  end
-
-  test "#get should return the found exercise", %{exercise: %{id: id} = exercise} do
-    assert {:ok, exercise} === Services.Exercise.get(id)
-  end
-
-  @tag :delete
-  describe "when no exercise is found" do
-    test "#delete should return :enotfound when no exercise is found", %{exercise: %{id: id}} do
-      assert {:error, {:enotfound, _, []}} = Services.Exercise.delete(%{id: id + 1})
-    end
-  end
-
-  describe "when the exercise is not in used in a workout" do
-    @tag :delete
-    test "#delete should return the exercise that is deleted", %{exercise: %{id: id}} do
-      assert {:ok, id} === Services.Exercise.delete(%{id: id})
-    end
-  end
-
-  @tag :delete
-  @tag :delete_constraint
-  describe "when the exercise exists in a workout" do
-    test "#delete should return unprocessable", %{exercise: %{id: id}} do
-      datetime = Timex.to_datetime(:calendar.local_time)
-      |> Timex.Ecto.DateTime.cast!
-
-      %Schemas.Workout{workout_date: datetime, description: "foo", user_id: 9, performed_exercises: [
-        %{
-          exercise_id: id,
-          weight: 1.0,
-          sets: 2,
-          reps: 3
-        }
-      ]}
-      |> Workout.RepoHelper.create
-
-      expected = {:unprocessable, "The request could not be processed.", [
-        {:performed_exercises, "are still associated to this entry"}
-      ]}
-      assert {:error, expected} === Services.Exercise.delete(%{id: id})
-    end
-  end
-
-
-  describe "#count" do
-    setup do
-      exercise2 = RepoHelper.create_exercise(%{name: "barbell Test", description: "A test",
-        categories: ["Triceps", "Chest"], type: "strength", metric: "kg"})
-      exercise3 = RepoHelper.create_exercise(%{name: "a Test", description: "A test",
-        categories: ["Triceps", "Chest"], type: "strength", metric: "kg"})
-      {:ok, exercise2: exercise2, exercise3: exercise3}
-    end
-
-    @tag :count
-    test "should return the amount of exercises" do
-      assert {:ok, 3} === Workout.Services.Exercise.count
     end
   end
 end
