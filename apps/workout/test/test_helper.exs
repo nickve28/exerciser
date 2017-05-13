@@ -1,3 +1,8 @@
+
+#Load any non default test dep
+Code.require_file("test/mocks/repositories/mock_exercise.ex")
+Code.require_file("test/mocks/repositories/mock_workout.ex")
+
 ExUnit.start()
 
 defmodule Workout.RepoHelper do
