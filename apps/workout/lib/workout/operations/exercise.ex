@@ -8,6 +8,7 @@ defmodule Workout.Operations.Exercise do
 
   @exercise_repo Application.get_env(:workout, :exercise_repo)
 
+  import Workout.Error
 
   @doc """
     Lists a set of exercises matching the ids sent
@@ -33,5 +34,12 @@ defmodule Workout.Operations.Exercise do
 
   def get_exercises_details(_) do
     {:error, {:invalid, "The request was deemed invalid", [performed_exercises: "is required"]}}
+  end
+
+  def find_exercise(id) do
+    case @exercise_repo.get(id) do
+      {:ok, nil} -> handle_error(:enotfound)
+      {:ok, exercise} -> {:ok, exercise}
+    end
   end
 end

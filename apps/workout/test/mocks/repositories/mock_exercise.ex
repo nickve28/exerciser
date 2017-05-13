@@ -21,6 +21,22 @@ defmodule Workout.Repositories.MockExercise do
     GenServer.call(__MODULE__, {:list, payload})
   end
 
+  def get(payload) do
+    GenServer.call(__MODULE__, {:get, payload})
+  end
+
+  def create(payload) do
+    GenServer.call(__MODULE__, {:create, payload})
+  end
+
+  def update(payload) do
+    GenServer.call(__MODULE__, {:update, payload})
+  end
+
+  def delete(payload) do
+    GenServer.call(__MODULE__, {:delete, payload})
+  end
+
   def handle_call(:enable, _from, _) do
     {:reply, :enabled, :enabled}
   end
@@ -61,7 +77,7 @@ defmodule Workout.Repositories.MockExercise do
   end
 
   #if disabled, use regular implementation
-  def handle_call({:list, payload}, _from, :disabled) do
-    {:reply, Workout.Repositories.Exercise.list(payload), :disabled}
+  def handle_call({operation, payload}, _from, :disabled) do
+    {:reply, apply(Workout.Repositories.Exercise, operation, [payload]), :disabled}
   end
 end

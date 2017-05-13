@@ -1,6 +1,7 @@
 defmodule Workout.Services.Exercise do
   use GenServer
   alias Workout.Schemas.Exercise
+  import Workout.Operations.Exercise, only: [find_exercise: 1]
 
   @type exercise :: %{id: integer, name: String.t, description: String.t, categories: [String.t]}
   @type create_payload :: %{name: String.t, description: String.t, categories: [String.t], type: String.t}
@@ -143,12 +144,5 @@ defmodule Workout.Services.Exercise do
 
   def handle_call(:count, _from, state) do
     {:reply, Workout.Repositories.Exercise.count, state}
-  end
-
-  defp find_exercise(id) do
-    case Workout.Repositories.Exercise.get(id) do
-      {:ok, nil} -> handle_error(:enotfound)
-      {:ok, exercise} -> {:ok, exercise}
-    end
   end
 end
