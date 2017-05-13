@@ -2,8 +2,6 @@ defmodule Workout.Helpers.ValidatorTest do
   use ExUnit.Case
   alias Workout.Helpers.Validator
 
-  @date_format "{YYYY}-{0M}-{0D}"
-
   test "validate_list should fail if specified from date is invalid" do
     result = Validator.validate_list(%{user_id: 1, limit: 10, offset: 0, from: "2017-2017-2017"})
     assert {:error, [{:from, "Invalid date, expected YYYY-MM-DD format"}]} === result
