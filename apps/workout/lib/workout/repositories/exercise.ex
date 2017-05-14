@@ -57,7 +57,10 @@ defmodule Workout.Repositories.Exercise do
   end
 
   def delete(changeset) do
-    Workout.Repo.delete(changeset) |> to_model
+    case Workout.Repo.delete(changeset) do
+      {:ok, model} -> model |> to_model
+      {:error, changeset} -> {:changeset_error, changeset}
+    end
   end
 
   def list_categories do

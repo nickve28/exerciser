@@ -6,6 +6,12 @@ defmodule Workout.Services.Exercise.UpdateTest do
   alias Exercise.RepoHelper
 
   setup do
+    Workout.Repositories.MockWorkout.enable #enable mock genserver as proxy for test
+
+    on_exit(fn -> Workout.Repositories.MockWorkout.disable end)
+
+    Repo.delete_all(Schemas.PerformedExercise)
+    Repo.delete_all(Schemas.Workout)
     Repo.delete_all(Schemas.Exercise)
 
     exercise = RepoHelper.create_exercise(%{name: "Barbell Bench Press", description: "Barbell bench press",

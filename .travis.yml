@@ -8,3 +8,5 @@ services:
   - postgresql
 before_script:
   - ./ci-database-prepare.sh
+addons:
+  postgresql: "9.4"

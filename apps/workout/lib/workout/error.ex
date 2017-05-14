@@ -13,6 +13,12 @@ defmodule Workout.Error do
     end
   end
 
+  def handle_error({:changeset_error, %{errors: errors}}) do
+    {:error,
+      {:unprocessable, "The request could not be processed.", to_errors(errors)}
+    }
+  end
+
   def handle_error(:update, error) do
     case error do
       {:error, error} -> {:error, error}
@@ -27,15 +33,7 @@ defmodule Workout.Error do
     end
   end
 
-  def handle_error(_, _) do #catch all unknown errors
-    {:error, {:internal, "Internal Server error", []}}
-  end
-
   def handle_error({:error, {code, message, details}}), do: {:error, {code, message, details}}
-
-  def handle_error({:ok, count}) when count > 0 do
-    {:error, {:unprocessable, "The request could not be processed.", [{:id, "is used in a workout"}]}}
-  end
 
   def handle_error(:enotfound) do
     {:error, {:enotfound, "Exercise not found", []}}
@@ -43,6 +41,10 @@ defmodule Workout.Error do
 
   def handle_error(error) do
     {:invalid, "The request was deemed invalid.", to_errors(error)}
+  end
+
+  def handle_error(_, _) do #catch all unknown errors
+    {:error, {:internal, "Internal Server error", []}}
   end
 
   defp to_errors(errors) do

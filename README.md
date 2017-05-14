@@ -32,13 +32,15 @@ This app holds the front end code and houses the graphQL API. It's the point of 
 2. User:
 This app contains the user model.
 
-3. Exercises:
-This app contains information about the available exercises, and the categories associated with them.
+3. Workout:
+This app tracks the workouts and its related data for the user. A workout consists of multiple performed exercises.
+This service consists of three subservices:
 
-4. Workout:
-This app tracks the workouts for the user. A workout consists of multiple performed exercises.
+- The exercise service allows creation, editing, reading and deleting exercises (Formerly the exercises service)
+- The categories services allows listing of all categories used in exercises throughout the system
+- The Workout service controls the workout model, and allows tracking of your workouts.
 
-5. Progress:
+4. Progress:
 This app measures progress for a user, using data from exercises and workouts.
 
 ### App level layout

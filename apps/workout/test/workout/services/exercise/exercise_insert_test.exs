@@ -1,6 +1,19 @@
 defmodule Workout.Services.Exercise.InsertTest do
   use ExUnit.Case, async: false #since we reset DB each session as a clean slate
   alias Workout.Services
+  alias Workout.Schemas
+  alias Workout.Repo
+
+  setup do
+    Workout.Repositories.MockWorkout.enable #enable mock genserver as proxy for test
+
+    on_exit(fn -> Workout.Repositories.MockWorkout.disable end)
+
+    Repo.delete_all(Schemas.PerformedExercise)
+    Repo.delete_all(Schemas.Workout)
+    Repo.delete_all(Schemas.Exercise)
+    :ok
+  end
 
   @tag :create
   test "#insert should fail if no name is given" do

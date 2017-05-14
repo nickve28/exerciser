@@ -18,7 +18,7 @@ export default (error, dispatch) => {
 
   //now some real error handling
   _.forEach(error.errors, ({code, details}) => {
-    const isWorkoutNotDeletedError = code === 422 && details.id === 'is used in a workout'
+    const isWorkoutNotDeletedError = code === 422 && _.has(details, 'performed_exercises')
     if (isWorkoutNotDeletedError) {
       dispatch({
         type: EXERCISE_NOT_DELETED

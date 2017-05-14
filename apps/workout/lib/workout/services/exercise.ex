@@ -1,6 +1,7 @@
 defmodule Workout.Services.Exercise do
   use GenServer
   alias Workout.Schemas.Exercise
+  import Workout.Operations.Exercise, only: [find_exercise: 1]
 
   @type exercise :: %{id: integer, name: String.t, description: String.t, categories: [String.t]}
   @type create_payload :: %{name: String.t, description: String.t, categories: [String.t], type: String.t}
@@ -15,6 +16,9 @@ defmodule Workout.Services.Exercise do
 
   def init(state), do: {:ok, state}
 
+  @doc """
+    This endpoint find the exercise in the system, with the specified id
+  """
   @spec get(integer) :: {:ok, exercise} | {:error, :enotfound}
   def get(id) when is_number(id) do
     :poolboy.transaction(:exercise_pool, fn pid ->
@@ -22,6 +26,14 @@ defmodule Workout.Services.Exercise do
     end)
   end
 
+  @doc """
+    This endpoint lists the exercises in the system
+
+    Valid parameters are:
+
+    - category (String): Filter exercised based on category
+    - ids (String[]): Only find exercises matching the specified ids
+  """
   @spec list(Map.t) :: {:ok, [exercise]} | {:ok, []}
   def list(payload \\ %{}) do
     :poolboy.transaction(:exercise_pool, fn pid ->
@@ -62,7 +74,12 @@ defmodule Workout.Services.Exercise do
     end)
   end
 
-  @spec delete(%{id: integer}) :: {:ok, integer}
+  @doc """
+    This endpoint will delete an exercise in the system. It will error if the exercise is in use in workouts.
+
+    - id (Integer): The id of the exercise (required)
+  """
+  @spec delete(%{id: integer}) :: {:ok, integer} | {:error, {:unprocesable, String.t, [{atom(), String.t}]}}
   def delete(%{id: id}) do
     :poolboy.transaction(:exercise_pool, fn pid ->
       GenServer.call(pid, {:delete, id})
@@ -84,6 +101,7 @@ defmodule Workout.Services.Exercise do
     end)
   end
 
+  #GenServer API
   def handle_call({:get, id}, _from, state) do
     result = find_exercise(id)
     {:reply, result, state}
@@ -106,11 +124,10 @@ defmodule Workout.Services.Exercise do
   end
 
   def handle_call({:delete, id}, _from, state) do
-    result = with {:ok, 0} <- @workout_repo.count(%{exercise_id: [id]}),
-                  {:ok, exercise} <- find_exercise(id)
+    result = with {:ok, exercise} <- find_exercise(id),
+                  changeset <- Exercise.delete_changeset(exercise),
+                  {:ok, %{id: deleted_id}} <- Workout.Repositories.Exercise.delete(changeset)
     do
-      {:ok, %{id: deleted_id}} = Exercise.delete_changeset(exercise)
-      |> Workout.Repositories.Exercise.delete
       {:ok, deleted_id}
     else
       error -> handle_error(error)
@@ -127,12 +144,5 @@ defmodule Workout.Services.Exercise do
 
   def handle_call(:count, _from, state) do
     {:reply, Workout.Repositories.Exercise.count, state}
-  end
-
-  defp find_exercise(id) do
-    case Workout.Repositories.Exercise.get(id) do
-      {:ok, nil} -> handle_error(:enotfound)
-      {:ok, exercise} -> {:ok, exercise}
-    end
   end
 end
