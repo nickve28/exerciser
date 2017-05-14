@@ -16,7 +16,7 @@ import createStore from '../helpers/store_helper'
 chai.use(chaiEnzyme())
 const expect = chai.expect
 
-describe.only('<Workouts />', () => {
+describe('<Workouts />', () => {
   beforeEach(function () {
     domHelper()
     sinon.stub(localStorage, 'getItem').returns('123')
