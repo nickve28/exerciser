@@ -13,7 +13,11 @@ export const SAVE_WORKOUT = 'SAVE_WORKOUT'
 export const FETCH_WORKOUT_TEMPLATE = 'FETCH_WORKOUT_TEMPLATE'
 export const DELETE_WORKOUT = 'DELETE_WORKOUT'
 export const DELETE_WORKOUT_NOTIFICATION_END = 'DELETE_WORKOUT_NOTIFICATION_END'
+export const UPDATE_WORKOUT_NOTIFICATION_END = 'UPDATE_WORKOUT_NOTIFICATION_END'
+export const SAVE_WORKOUT_NOTIFICATION_END = 'SAVE_WORKOUT_NOTIFICATION_END'
 export const UPDATE_WORKOUT = 'UPDATE_WORKOUT'
+
+const NOTIFICATION_TIMER = 3000
 
 const toFields = pExercise => {
   const fieldString = _.chain(pExercise)
@@ -47,6 +51,10 @@ export const updateWorkout = (id, {description, workoutDate, performedExercises}
         id
       }
     }`).then(function (data) {
+      setTimeout(() => {
+        dispatch({type: UPDATE_WORKOUT_NOTIFICATION_END})
+      }, NOTIFICATION_TIMER)
+
       return dispatch({
         type: UPDATE_WORKOUT,
         payload: data
@@ -143,6 +151,10 @@ export const saveWorkout = (payload) => {
         id
       }
     }`).then(function (data) {
+      setTimeout(() => {
+        dispatch({type: SAVE_WORKOUT_NOTIFICATION_END})
+      }, NOTIFICATION_TIMER)
+
       return dispatch({
         type: SAVE_WORKOUT,
         payload: data
@@ -161,9 +173,9 @@ export const deleteWorkout = (id) => {
     return transport.send(`mutation {
       delete_workout(id: ${id})
     }`).then(function (data) {
-      setInterval(() => {
+      setTimeout(() => {
         dispatch({type: DELETE_WORKOUT_NOTIFICATION_END})
-      }, 2000)
+      }, NOTIFICATION_TIMER)
 
       return dispatch({
         type: DELETE_WORKOUT,

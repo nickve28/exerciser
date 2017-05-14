@@ -1,6 +1,6 @@
 /* eslint-disable */
 var jsdom = require('jsdom')
-
+var _ = require('lodash')
 // setup the simplest document possible
 var doc = jsdom.jsdom('<!doctype html><html><body><div id="root" /></body></html>')
 
@@ -15,6 +15,10 @@ global.navigator = {
 // natural in the test environment
 global.document = doc
 global.window = win
+global.localStorage = {
+  getItem: _.noop,
+  setItem: _.noop
+}
 
 export default (window) => {
   for (let key in window) {

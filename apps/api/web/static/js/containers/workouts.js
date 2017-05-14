@@ -82,10 +82,23 @@ class Workouts extends Component {
 
 function renderNotification(notificationInfo) {
   return (
-    <Snackbar
-      open={notificationInfo.showWorkoutDeleted}
-      message="The workout has been deleted."
-    />
+    <div>
+      <Snackbar
+        id="snackbar-workout-deleted"
+        open={notificationInfo.showWorkoutDeleted}
+        message="The workout has been deleted."
+      />
+      <Snackbar
+        id="snackbar-workout-created"
+        open={notificationInfo.showWorkoutCreated}
+        message="Workout successfully created."
+      />
+      <Snackbar
+        id="snackbar-workout-updated"
+        open={notificationInfo.showWorkoutUpdated}
+        message="Workout successfully updated."
+      />
+    </div>
   )
 }
 
