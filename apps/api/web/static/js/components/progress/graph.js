@@ -30,11 +30,12 @@ export default ({progress}) => {
     memo = _.concat(memo, progressData)
     return memo
   }, [])
+  const metric = progress.exerciseMetric
 
   return (
     <ResponsiveContainer width="95%" height={300}>
       <LineChart data={graphData}>
-        <Line type="monotone" dataKey="weight" stroke="#8884d8" connectNulls={true} />
+        <Line type="monotone" name={metric} dataKey="weight" stroke="#8884d8" connectNulls={true} />
         <Line type="monotone" dataKey="reps" stroke="#000000" connectNulls={true} />
         <CartesianGrid stroke="#ccc" />
         <XAxis dataKey="date" />
