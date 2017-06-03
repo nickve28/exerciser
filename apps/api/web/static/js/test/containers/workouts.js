@@ -17,6 +17,7 @@ chai.use(chaiEnzyme())
 const expect = chai.expect
 
 describe('<Workouts />', () => {
+
   beforeEach(function () {
     domHelper()
     sinon.stub(localStorage, 'getItem').returns('123')

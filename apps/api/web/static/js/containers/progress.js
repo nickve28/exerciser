@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {fetchProgress, fetchExercises} from '../actions/index'
 
 import _ from 'lodash'
+import moment from 'moment'
 
 import SelectExercise from '../components/exercises/select'
 import SelectDateRange from '../components/select_date_range'
@@ -30,6 +31,10 @@ class Progress extends Component {
         if (key === 'until') return 'untilDate'
         return key
       }).value()
+
+    if (!requestPayload.from) {
+      requestPayload.fromDate = moment().subtract(3, 'months').format('YYYY-MM-DD')
+    }
 
     this.props.fetchProgress(requestPayload)
   }
