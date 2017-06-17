@@ -1,4 +1,5 @@
-//import "phoenix_html"
+import './phoenix.css'
+import './app.css'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
