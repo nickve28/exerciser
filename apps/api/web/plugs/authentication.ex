@@ -17,7 +17,6 @@ defmodule Api.Plugs.Authentication do
   def call(conn, _) do
     case is_authenticated(conn) do
       {:ok, context} ->
-        IO.inspect(context)
         put_private(conn, :absinthe, %{context: context})
       _ ->
         conn
