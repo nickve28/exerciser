@@ -34,6 +34,13 @@ defmodule Api.Schema do
   end
 
   mutation do
+    field :login, :login do
+      arg :username, non_null(:string)
+      arg :password, non_null(:string)
+
+      resolve &Api.Resolvers.UserResolver.login/2
+    end
+
     field :create_exercise, :exercise do
       arg :name, non_null(:string)
       arg :description, non_null(:string)

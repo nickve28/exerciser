@@ -21,6 +21,11 @@ defmodule Api.Schema.Types do
     end
   end
 
+  object :login do
+    field :id, :id
+    field :token, :string
+  end
+
   object :exercise do
     field :id, :id
     field :name, :string

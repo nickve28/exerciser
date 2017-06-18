@@ -23,6 +23,7 @@ defmodule Api.Router do
     scope "/api" do
 
       #Since I want to handle auth as hook, besides this endpoint. Login is a separate rest endpoint
+      #Deprecated
       scope "/login", Api do
         pipe_through [:api]
         post "/", LoginController, :authenticate
@@ -32,7 +33,7 @@ defmodule Api.Router do
         schema: Api.Schema
 
       scope "/" do
-        pipe_through [:authentication]
+        #pipe_through [:authentication]
 
 
         forward "/", Absinthe.Plug,

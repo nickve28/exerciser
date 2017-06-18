@@ -1,10 +1,12 @@
 defmodule Api.Resolvers.UserResolver do
   @moduledoc false
-  def authenticate(%{name: name, password: password}, _info) do
+  def login(%{username: name, password: password}, _info) do
     User.Services.User.authenticate(%{name: name, password: password})
+    |> handle_result
+    |> IO.inspect
   end
 
-  def authenticate(_, _) do
+  def login(_, _) do
     {:error, "Please provide name and password"}
   end
 
@@ -20,6 +22,11 @@ defmodule Api.Resolvers.UserResolver do
   defp handle_result({:error, {:invalid, _, details}}) do
     detail_map = Enum.into(details, %{})
     {:error, %{message: "The request was deemed invalid. Refer to the error details", code: 400, details: detail_map}}
+  end
+
+  defp handle_result({:error, {:unauthorized, _, details}}) do
+    detail_map = Enum.into(details, %{})
+    {:error, %{message: "Authentication failed", code: 401, details: detail_map}}
   end
 
   defp handle_result(_) do
