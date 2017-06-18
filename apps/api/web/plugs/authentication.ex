@@ -18,14 +18,9 @@ defmodule Api.Plugs.Authentication do
     case is_authenticated(conn) do
       {:ok, context} ->
         put_private(conn, :absinthe, %{context: context})
-      {:error, reason} ->
-        conn
-        |> send_resp(@unauthenticated, reason)
-        |> halt()
       _ ->
         conn
-        |> send_resp(@bad_request, "Bad request")
-        |> halt()
+        |> put_private(:absinthe, %{context: %{authenticated: false}})
     end
   end
 

@@ -3,7 +3,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import ReduxThunk from 'redux-thunk'
 
 import reducers from './reducers/index'
@@ -20,15 +20,25 @@ import Progress from './containers/progress'
 
 import injectTapEventPlugin from 'react-tap-event-plugin'
 
-
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 
-const createStoreWithMiddleware = applyMiddleware(ReduxThunk)(createStore)
+const composeEnhancers =
+  typeof window === 'object' &&
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+      // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+    }) : compose
+
+const enhancer = composeEnhancers(
+  applyMiddleware(ReduxThunk)
+)
+
+const store = createStore(reducers, enhancer)
 
 injectTapEventPlugin()
 
 ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(reducers)}>
+  <Provider store={store}>
     <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
       <Route path="/" component={Root}>
         <IndexRoute component={Exercises} />

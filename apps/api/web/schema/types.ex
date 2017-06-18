@@ -21,6 +21,11 @@ defmodule Api.Schema.Types do
     end
   end
 
+  object :login do
+    field :id, :id
+    field :token, :string
+  end
+
   object :exercise do
     field :id, :id
     field :name, :string
@@ -28,13 +33,6 @@ defmodule Api.Schema.Types do
     field :description, :string
     field :type, :string
     field :metric, :string
-  end
-
-  object :workout do
-    field :id, :id
-    field :workout_date, :string
-    field :description, :string
-    field :performed_exercises, list_of(:performed_exercise)
   end
 
   object :performed_exercise do
@@ -45,6 +43,17 @@ defmodule Api.Schema.Types do
     field :mode, :float
     field :duration, :float
     field :amount, :float
+  end
+
+  input_object :new_performed_exercise do
+    import_fields :performed_exercise
+  end
+
+  object :workout do
+    field :id, :id
+    field :workout_date, :string
+    field :description, :string
+    field :performed_exercises, list_of(:performed_exercise)
   end
 
   object :progression do
