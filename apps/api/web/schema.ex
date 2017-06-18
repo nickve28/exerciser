@@ -61,7 +61,7 @@ defmodule Api.Schema do
     field :create_workout, :workout do
       arg :description, non_null(:string)
       arg :workout_date, non_null(:string)
-      arg :performed_exercises, list_of(:performed_exercise)
+      arg :performed_exercises, list_of(:new_performed_exercise)
 
       resolve &Api.Resolvers.WorkoutResolver.create/2
     end
@@ -70,7 +70,7 @@ defmodule Api.Schema do
       arg :id, non_null(:integer)
       arg :description, non_null(:string)
       arg :workout_date, non_null(:string)
-      arg :performed_exercises, list_of(:performed_exercise)
+      arg :performed_exercises, list_of(:new_performed_exercise)
 
       resolve &Api.Resolvers.WorkoutResolver.update/2
     end
