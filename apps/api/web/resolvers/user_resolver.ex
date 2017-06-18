@@ -3,7 +3,6 @@ defmodule Api.Resolvers.UserResolver do
   def login(%{username: name, password: password}, _info) do
     User.Services.User.authenticate(%{name: name, password: password})
     |> handle_result
-    |> IO.inspect
   end
 
   def login(_, _) do
