@@ -5,7 +5,7 @@ import {RESET_NOTIFICATIONS} from './index'
 
 export default (error, dispatch) => {
   //no idea how lokka does error handling...
-  const isUnauthorized = _.includes(error.toString(), '401')
+  const isUnauthorized = _.some(_.castArray(error), err => err && err.code === 401)
   if (isUnauthorized) {
     localStorage.removeItem('auth_token')
     dispatch({type: USER_LOGIN_EXPIRED})
