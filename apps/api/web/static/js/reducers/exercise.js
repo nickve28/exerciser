@@ -37,7 +37,7 @@ export default (state = INITIAL_STATE, action = {}) => {
     const {id} = exercise
     const newStore = _.defaults({[id]: exercise}, state.exercises)
 
-    return {count: state.count, exercises: newStore}
+    return {...state, count: state.count, exercises: newStore}
   }
   return state
 }
