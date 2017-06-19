@@ -15,10 +15,14 @@ global.navigator = {
 // natural in the test environment
 global.document = doc
 global.window = win
-global.localStorage = {
+
+export const localStorage = {
   getItem: _.noop,
-  setItem: _.noop
+  setItem: _.noop,
+  removeItem: _.noop
 }
+
+global.localStorage = localStorage
 
 export default (window) => {
   for (let key in window) {
