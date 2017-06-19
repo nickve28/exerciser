@@ -3,6 +3,10 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+var APP_ENV       = process.env.APP_ENV || process.NODE_ENV || 'development';
+var IS_PROD_BUILD = ! ["development", "test"].includes(APP_ENV);
+
+
 module.exports = {
   entry: './web/static/js/app.js',
   output: { path: __dirname, filename: './priv/static/js/app.js' },
@@ -18,9 +22,8 @@ module.exports = {
       {
         test: /.jsx?$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
         query: {
-          presets: ['es2015', 'react']
+          presets: ['es2015', 'es2016', 'react', 'stage-3']
         }
       },
       {
@@ -44,3 +47,12 @@ module.exports = {
     new ExtractTextPlugin('./priv/static/js/app.css')
   ]
 };
+
+if (IS_PROD_BUILD) {
+  module.exports.plugins.push(new webpack.optimize.UglifyJsPlugin({minimize: true}));
+  module.exports.plugins.push(new CompressionPlugin({
+			asset: "[file]",
+			algorithm: "gzip",
+			test: /\.(js)$/
+  }));
+}
