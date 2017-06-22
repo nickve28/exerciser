@@ -7,6 +7,8 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import ReduxThunk from 'redux-thunk'
 
+import middlewares from './middlewares/index'
+
 import reducers from './reducers/index'
 
 import Root from './containers/root'
@@ -31,10 +33,19 @@ const composeEnhancers =
     }) : compose
 
 const enhancer = composeEnhancers(
-  applyMiddleware(ReduxThunk)
+  applyMiddleware(ReduxThunk, ...middlewares)
 )
 
-const store = createStore(reducers, enhancer)
+const token = localStorage.getItem('auth_token')
+const initialState = {
+  authentication: {
+    token,
+    loginState: token ? 'logged_in' : 'logged_out'
+  }
+}
+
+//middleware not loaded?
+const store = createStore(reducers, initialState, enhancer)
 
 injectTapEventPlugin()
 
