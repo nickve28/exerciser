@@ -7,11 +7,9 @@ export const MeReducer = (state = {}, action) => {
   return state
 }
 
-const token = localStorage.getItem('auth_token')
-
 const initialState = {
-  token,
-  loginState: token ? 'logged_in' : 'logged_out'
+  token: null,
+  loginState: 'logged_out'
 }
 
 export const AuthenticationReducer = (state = initialState, action) => {
