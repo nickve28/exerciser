@@ -9,7 +9,7 @@ import HttpTransport from 'lokka-transport-http'
 
 export const FETCH_EXERCISES = 'FETCH_EXERCISES'
 export const FETCH_EXERCISE = 'FETCH_EXERCISE'
-export const SAVE_EXERCISE = 'SAVE_EXERCISE'
+export const CREATE_EXERCISE = 'CREATE_EXERCISE'
 export const DELETE_EXERCISE = 'DELETE_EXERCISE'
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 export const EXERCISE_NOT_DELETED = 'EXERCISE_NOT_DELETED'
@@ -56,12 +56,12 @@ export const saveExercise = ({name, description, categories, type, metric}) => {
   return dispatch => {
     const transport = new HttpTransport(url, {headers})
     return transport.send(`mutation {
-      create_exercise(name: "${name}", categories: [${formatted_categories}], description: "${description}", type: "${type}", metric: "${metric}") {
-        name, id
+      createExercise(name: "${name}", categories: [${formatted_categories}], description: "${description}", type: "${type}", metric: "${metric}") {
+        name, id, categories, metric, type, description
       }
     }`).then(function (data) {
       return dispatch({
-        type: SAVE_EXERCISE,
+        type: CREATE_EXERCISE,
         payload: data
       })
     }).catch(err => handleErrors(err, dispatch))
@@ -78,10 +78,10 @@ export const updateExercise = ({id, description, categories}) => {
   }
   return dispatch => {
     return post(`mutation {
-      update_exercise(id: ${id}, categories: [${formatted_categories}], description: "${description}") {
+      updateExercise(id: ${id}, categories: [${formatted_categories}], description: "${description}") {
         name, id, description, categories, type, metric
       }
-    }`, {url, headers}).then(function (data) {
+    }`, { url, headers }).then(function (data) {
       return dispatch({
         type: UPDATE_EXERCISE,
         payload: data

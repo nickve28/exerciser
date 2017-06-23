@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
-import {connect} from 'react-redux'
-import {fetchExercise, fetchCategories, updateExercise} from '../../actions/index'
+import { connect } from 'react-redux'
+import { fetchExercise, fetchCategories, updateExercise } from '../../actions/index'
 
 import _ from 'lodash'
 import Promise from 'bluebird'
@@ -16,40 +16,46 @@ class ExerciseDetails extends Component {
   }
 
   componentDidMount() {
-    const id = this.props.params.id
-    const exerciseNotPresent = !_.get(this.props.exercises, id)
-    if (exerciseNotPresent) {
+    const { exercise } = this.props
+
+    if (!exercise) {
       return Promise.join(
-        this.props.fetchExercise(id),
+        this.props.fetchExercise(this.props.params.id),
         this.props.fetchCategories()
       )
     }
   }
 
   handleUpdate(payload) {
-    const selectedExercise = _.get(this.props.exercises, this.props.params.id)
-    const newPayload = _.defaults(payload, selectedExercise)
+    const { exercise } = this.props
+    const newPayload = { ...exercise, ...payload }
 
     return this.props.updateExercise(newPayload)
   }
 
   render() {
-    const selectedExercise = _.get(this.props.exercises, this.props.params.id)
-    if (_.isEmpty(selectedExercise)) {
+    const { exercise, categories } = this.props
+
+    if (_.isEmpty(exercise)) {
       return <div>Loading...</div>
     }
     return <ExerciseDetailData
-      categories={_.values(this.props.categories)}
-      exercise={selectedExercise}
+      categories={categories}
+      exercise={exercise}
       handleUpdate={this.handleUpdate}
     />
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
+  const { id } = props.params
+
   return {
-    exercises: state.exercises.exercises
+    exercise: state.exercises.data.entities[id],
+    categories: state.categories
   }
 }
 
-export default connect(mapStateToProps, {fetchExercise, fetchCategories, updateExercise})(ExerciseDetails)
+export default connect(
+  mapStateToProps, { fetchExercise, fetchCategories, updateExercise }
+)(ExerciseDetails)
