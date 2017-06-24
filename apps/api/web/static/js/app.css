@@ -1,9 +1,5 @@
 /* This file is for your main application css. */
 
-/* TODO IMPROVE */
-
-
-/* END PHOENIX */
 
 body {
   margin-bottom: 0px;
@@ -22,36 +18,84 @@ body {
   background-color: #f2f2f2;
   box-shadow: 1px 1px 1px 1px #ccc;
   min-height: 500px;
+  padding-top: 10px;
 }
 
-.exerciser-logo {
-  width: 450px;
-  height: 75px;
-  display: inline-block;
-  margin-bottom: 1em;
-  background-image: url('/images/exerciser_banner.png');
-  background-size: 519px 71px;
+/* container content */
+.content .title-box {
+  padding-bottom: 20px;
 }
 
-.clickable:hover {
-  cursor: pointer;
+/* LIST VIEW */
+
+/* -- old */
+.listitem-enter {
+  opacity: 0.01;
 }
 
-.list-group-item-gray {
-  margin-bottom: 3px;
-  border: 1px solid #BDBDBD;
-  background-color: #FFF;
+.listitem-enter.listitem-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
 }
 
+.listitem-leave {
+  opacity: 1;
+}
+
+.listitem-leave.listitem-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+/* -- current */
+
+.list-view-group {
+  list-style: none;
+  width: 100%;
+  padding-left: 0;
+}
+
+.list-view-group-item {
+  width: 100%;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  padding: 10px 15px;
+}
+
+.list-view-group-item:first-child {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-top: 1px solid #ddd;
+}
+
+.list-view-group-item:last-child {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.list-view-group-item a {
+  display: inline;
+}
+
+.list-view-group-item button {
+  float: right;
+}
+
+
+/* ERROR TEXT */
 .error-text {
   color: #DC143C
 }
 
+/* show-more options */
 .show-more-li-non-styled {
   text-align: center;
   list-style: none
 }
 
+/* Navigation bar stuff */
 .user-nav {
   display: flex;
   margin-right: 20px;
@@ -72,24 +116,6 @@ body {
 .margin-vertical {
   margin-top: 10px;
   margin-bottom: 20px;
-}
-
-.listitem-enter {
-  opacity: 0.01;
-}
-
-.listitem-enter.listitem-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
-.listitem-leave {
-  opacity: 1;
-}
-
-.listitem-leave.listitem-leave-active {
-  opacity: 0.01;
-  transition: opacity 300ms ease-in;
 }
 
 .fadein {

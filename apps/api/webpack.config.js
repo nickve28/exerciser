@@ -15,7 +15,8 @@ module.exports = {
     net: 'mock'
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    modules: [path.resolve(__dirname, "web/static/js"), "node_modules"]
   },
   module: {
     loaders: [
@@ -55,4 +56,7 @@ if (IS_PROD_BUILD) {
 			algorithm: "gzip",
 			test: /\.(js)$/
   }));
+} else {
+  var exclude = /node_modules/
+  module.exports.module.loaders[0].exclude = exclude
 }

@@ -12,7 +12,7 @@ import middlewares from './middlewares/index'
 import reducers from './reducers/index'
 
 import Root from './containers/root'
-import Exercises from './containers/exercises'
+import Exercises from './sections/exercises/containers/list'
 import ExerciseDetails from './containers/exercises/details'
 import Workouts from './containers/workouts'
 import WorkoutDetail from './containers/workout_detail'
