@@ -9,6 +9,10 @@ body {
   line-height: 1.3;
 }
 
+#root > div > div {
+  height: 100%;
+}
+
 .float-right {
   float: right !important;
 }
