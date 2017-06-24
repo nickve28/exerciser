@@ -9,7 +9,9 @@ import {
 
 const category = {
   actions: {
-    [FETCH_CATEGORIES]: ['categories']
+    [FETCH_CATEGORIES]: ['categories'],
+    cache: [FETCH_CATEGORIES],
+    cacheTime: 2
   }
 }
 

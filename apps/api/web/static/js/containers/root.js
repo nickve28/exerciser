@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 
 import Login from './login'
 import NavigationBar from '../components/navigation_bar'
+import Notifications from 'sections/notifications/containers/notifications'
 
 import {fetchMe} from '../actions/index'
 
@@ -29,6 +30,7 @@ class BodyData extends Component {
         <div className="container-fluid app-container app-container-size">
           {this.props.children}
         </div>
+        <Notifications />
       </div>
     )
   }

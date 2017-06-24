@@ -1,4 +1,4 @@
 import React from 'react'
 
-export default ({ children }) =>
-  <button className="button button-danger">{children}</button>
+export default props =>
+  <button {...props} className="button button-danger">{props.children}</button>

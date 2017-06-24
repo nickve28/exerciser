@@ -18,11 +18,11 @@ export default config => {
     if (!responseFields || action.status !== 'pending') {
       return next(action)
     }
+
     //check if we did a recent success request, then no further action is required
     const { requests } = store.getState().exercises
     const request = requests[action.type]
 
-    //need this only for get requests somehow
     const isRecentSuccessRequest =
       request &&
       request.type === action.type &&
@@ -36,6 +36,7 @@ export default config => {
       return true
     }
 
+    //Dispatch action and start API request
     next(action)
 
     const token = store.getState().authentication.token
