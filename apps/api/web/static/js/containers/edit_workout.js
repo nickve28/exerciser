@@ -103,7 +103,15 @@ function validate(data) {
 }
 
 function mapStateToProps(state) {
-  const exercises = values(state.exercises.data.entities)
+  const exercises = state.exercises.data.entities
+
+  if (_.isEmpty(exercises)) {
+    return {
+      exercises: [],
+      exerciseOrder: [],
+      initialValues: {}
+    }
+  }
 
   const initialValues = state.workouts.selectedWorkout
   if (initialValues) {
@@ -115,7 +123,7 @@ function mapStateToProps(state) {
 
   return {
     exercises: exercises,
-    exerciseOrder: state.exercises.exerciseOrder,
+    exerciseOrder: state.exercises.data.order,
     initialValues: initialValues
   }
 }

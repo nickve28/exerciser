@@ -115,7 +115,7 @@ function mapStateToProps(state) {
 
   return {
     exercises: exercises,
-    exerciseOrder: state.exercises.exerciseOrder,
+    exerciseOrder: state.exercises.data.order,
     initialValues: initialValues
   }
 }
