@@ -2,7 +2,7 @@ import { createSelector } from 'reselect'
 
 import _ from 'lodash'
 
-const exerciseSelector = state => state.exercises.exercises
+const exerciseSelector = state => state.exercises.data.entities
 const workoutSelector =  state => state.workouts.selectedWorkout
 
 const toViewModel = (exercises, workout) => {

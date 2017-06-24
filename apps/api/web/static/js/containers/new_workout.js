@@ -103,7 +103,8 @@ function validate(data) {
 }
 
 function mapStateToProps(state) {
-  const exercises = state.exercises.exercises
+  const exercises = state.exercises.data.entities
+
   const initialValues = state.workouts.workoutTemplate
   if (initialValues) {
     initialValues.workoutDate = moment(initialValues.workoutDate).toDate()
@@ -114,7 +115,7 @@ function mapStateToProps(state) {
 
   return {
     exercises: exercises,
-    exerciseOrder: state.exercises.exerciseOrder,
+    exerciseOrder: state.exercises.data.order,
     initialValues: initialValues
   }
 }

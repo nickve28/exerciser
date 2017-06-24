@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-import CategoryReducer from './category'
-import ExerciseReducer from './exercise'
+import ExerciseReducer from '../sections/exercises/reducers/exercise'
+import CategoryReducer from '../sections/exercises/reducers/category'
 import {MeReducer, AuthenticationReducer} from './user'
 import WorkoutReducer from './workout'
 import NotificationReducer from './notification'

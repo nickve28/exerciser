@@ -8,7 +8,7 @@ import {validateWorkoutCreate, validatePExerciseCreate, validatePExerciseUnique}
 import { SubmissionError } from 'redux-form'
 
 import moment from 'moment'
-import _ from 'lodash'
+import _, { values } from 'lodash'
 import Promise from 'bluebird'
 
 import WorkoutForm from '../components/workout_form'
@@ -103,7 +103,16 @@ function validate(data) {
 }
 
 function mapStateToProps(state) {
-  const exercises = state.exercises.exercises
+  const exercises = state.exercises.data.entities
+
+  if (_.isEmpty(exercises)) {
+    return {
+      exercises: [],
+      exerciseOrder: [],
+      initialValues: {}
+    }
+  }
+
   const initialValues = state.workouts.selectedWorkout
   if (initialValues) {
     initialValues.workoutDate = moment(initialValues.workoutDate).toDate()
@@ -114,7 +123,7 @@ function mapStateToProps(state) {
 
   return {
     exercises: exercises,
-    exerciseOrder: state.exercises.exerciseOrder,
+    exerciseOrder: state.exercises.data.order,
     initialValues: initialValues
   }
 }

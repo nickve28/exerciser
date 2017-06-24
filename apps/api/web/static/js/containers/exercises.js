@@ -36,12 +36,11 @@ class Exercises extends Component {
   _handleSubmit(e, exercise) {
     e.preventDefault()
 
+    //validation in middleware todo
     const validationError = validate(exercise).error
     return Promise.try(() => {
       if (!validationError) {
-        return this.props.saveExercise(exercise).then(() => {
-          this.loadData()
-        })
+        return this.props.saveExercise(exercise)
       }
       throw validationError
     })
@@ -49,9 +48,7 @@ class Exercises extends Component {
 
   _handleDelete(exercise) {
     const {id} = exercise
-    return this.props.deleteExercise(id).then(() => {
-      return this.loadData()
-    })
+    return this.props.deleteExercise(id)
   }
 
   render() {
@@ -92,12 +89,12 @@ class Exercises extends Component {
 
 const mapStateToProps = state => {
   return {
-    exercises: state.exercises.exercises,
-    exerciseOrder: state.exercises.exerciseOrder,
-    exerciseCount: state.exercises.count,
+    exercises: state.exercises.data.entities,
+    exerciseOrder: state.exercises.data.order,
+    exerciseCount: state.exercises.data.count,
     categories: state.categories,
     showNoExerciseDeleted: state.notifications.showNoExerciseDeleted
   }
 }
 
-export default connect(mapStateToProps, {fetchExercises, saveExercise, fetchCategories, deleteExercise})(Exercises)
+export default connect(mapStateToProps, { fetchExercises, saveExercise, fetchCategories, deleteExercise })(Exercises)
