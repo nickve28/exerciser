@@ -1,4 +1,4 @@
-import { FETCH_CATEGORIES } from '../actions/categories'
+import { FETCH_CATEGORIES } from '../actions/category'
 
 export default (state = [], action) => {
   if (action.type === FETCH_CATEGORIES && action.status === 'success') {

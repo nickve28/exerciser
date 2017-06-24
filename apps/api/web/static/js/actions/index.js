@@ -22,7 +22,7 @@ export {
 export {
   FETCH_CATEGORIES,
   fetchCategories
-} from '../sections/exercises/actions/categories'
+} from '../sections/exercises/actions/category'
 
 export {
   USER_LOGIN, USER_LOGIN_EXPIRED, USER_LOGIN_PENDING, USER_LOGIN_FAILED, USER_LOGIN_EXPIRE_END,

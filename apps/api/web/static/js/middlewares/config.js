@@ -20,7 +20,9 @@ const exercises = {
     [CREATE_EXERCISE]: ['createExercise'],
     [UPDATE_EXERCISE]: ['updateExercise'],
     [DELETE_EXERCISE]: ['deleteExercise']
-  }
+  },
+  cache: [FETCH_EXERCISE, FETCH_EXERCISES],
+  cacheTime: 5
 }
 
 export default [

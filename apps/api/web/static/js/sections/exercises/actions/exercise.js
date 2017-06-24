@@ -1,11 +1,4 @@
-import handleErrors from '../../../actions/error'
-
-import configuration from '../../../configs/index'
-import { post } from '../../../helpers/request'
-export const url = `${configuration.apiHost}:${configuration.apiPort}/api/graphql`
-
 import _ from 'lodash'
-import HttpTransport from 'lokka-transport-http'
 
 export const FETCH_EXERCISES = 'FETCH_EXERCISES'
 export const FETCH_EXERCISE = 'FETCH_EXERCISE'
