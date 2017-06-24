@@ -1,8 +1,17 @@
+import createReducer from '../../../reducers/api_reducer'
+
 import { FETCH_CATEGORIES } from '../actions/category'
 
-export default (state = [], action) => {
-  if (action.type === FETCH_CATEGORIES && action.status === 'success') {
-    return action.payload.categories
+const categoryConfig = {
+  dataType: 'category',
+  plural: 'categories',
+  actions: {
+    list: FETCH_CATEGORIES
+  },
+  initialState: {
+    entities: {}
   }
-  return state
 }
+
+export default createReducer(categoryConfig)
+

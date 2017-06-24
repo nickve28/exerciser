@@ -29,7 +29,7 @@ export default class ExerciseForm extends Component {
       type: null,
       categories: [],
       metric: '',
-      pageData: {showForm: false}
+      pageData: {showForm: true}
     }
     this._handleSubmit = this._handleSubmit.bind(this)
   }

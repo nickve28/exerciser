@@ -13,6 +13,7 @@ import reducers from './reducers/index'
 
 import Root from './containers/root'
 import Exercises from './sections/exercises/containers/list'
+import NewExercise from './sections/exercises/containers/new'
 import ExerciseDetails from './containers/exercises/details'
 import Workouts from './containers/workouts'
 import WorkoutDetail from './containers/workout_detail'
@@ -55,6 +56,7 @@ ReactDOM.render(
       <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
         <Route path="/" component={Root}>
           <IndexRoute component={Exercises} />
+          <Route path="/exercises/new" component={NewExercise} />
           <Route path ="/exercises/:id" component={ExerciseDetails} />
           <Route path ="/workouts" component={Workouts} />
           <Route path="/workouts/new" component={NewWorkout} />

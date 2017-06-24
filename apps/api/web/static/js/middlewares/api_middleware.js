@@ -20,7 +20,7 @@ export default config => {
     }
 
     //check if we did a recent success request, then no further action is required
-    const { requests } = store.getState().exercises
+    const { requests } = store.getState()[config.plural]
     const request = requests[action.type]
 
     const isRecentSuccessRequest =
@@ -28,9 +28,15 @@ export default config => {
       request.type === action.type &&
       request.status === 'success' &&
       isFewerThanCacheTime(request.timestamp, config.cacheTime)
+    console.log("action", action);
+
+    console.log("isRecentSuccessRequest", isRecentSuccessRequest);
+
 
     const shouldCache =
       includes(config.cache, action.type)
+    console.log("shouldCache", shouldCache);
+
 
     if (shouldCache && isRecentSuccessRequest) {
       return true

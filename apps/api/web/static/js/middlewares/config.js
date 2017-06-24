@@ -8,14 +8,16 @@ import {
 } from '../actions/index'
 
 const category = {
+  plural: 'categories',
   actions: {
-    [FETCH_CATEGORIES]: ['categories'],
-    cache: [FETCH_CATEGORIES],
-    cacheTime: 2
-  }
+    [FETCH_CATEGORIES]: ['categories']
+  },
+  cache: [FETCH_CATEGORIES],
+  cacheTime: 5
 }
 
 const exercises = {
+  plural: 'exercises',
   actions: {
     [FETCH_EXERCISES]: ['exercises', 'exerciseCount'],
     [FETCH_EXERCISE]: ['exercise'],
