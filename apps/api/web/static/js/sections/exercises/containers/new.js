@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router'
 
 import Title from 'components/title'
 
@@ -13,7 +14,9 @@ const NewExercise = ({ categories, fetchCategories }) => {
   fetchCategories()
 
   return <div className="content">
-    <Title title="Create exercise" />
+    <Title title="Create exercise">
+      <Link className="pull-right" to="/">Go back</Link>
+    </Title>
     <ExerciseForm categories={categories} />
   </div>
 }

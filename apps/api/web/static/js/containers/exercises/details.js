@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fetchExercise, fetchCategories, updateExercise } from '../../actions/index'
 
+import getCategories from 'selectors/get_categories'
+
 import _ from 'lodash'
 import Promise from 'bluebird'
 
@@ -52,7 +54,7 @@ const mapStateToProps = (state, props) => {
 
   return {
     exercise: state.exercises.data.entities[id],
-    categories: state.categories
+    categories: getCategories(state)
   }
 }
 
