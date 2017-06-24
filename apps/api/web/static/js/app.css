@@ -21,6 +21,18 @@ body {
   padding-top: 10px;
 }
 
+/* button */
+.button {
+  border: 0;
+  background: #2980b9;
+  color: #FFF;
+  border-radius: 3px;
+}
+
+.button-danger {
+  background: #d9534f;
+}
+
 /* container content */
 .content .title-box {
   padding-bottom: 20px;
