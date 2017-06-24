@@ -1,4 +1,4 @@
-import { values, includes, map, chain, upperFirst, omit } from 'lodash'
+import { values, includes, map, chain, upperFirst, omit, get, reject } from 'lodash'
 import { combineReducers } from 'redux'
 
 export default config => {
@@ -13,9 +13,7 @@ export default config => {
   const deleteField = `delete${upperFirst(config.dataType)}`
 
   const removeElement = (arr, e) => {
-    const newArr = arr.slice()
-    newArr.splice(newArr.indexOf(e), 1)
-    return newArr
+    return reject(arr, element => element == e) //intentional 2 == for now, API quirk
   }
 
   ///// DATA REDUCER
@@ -82,9 +80,14 @@ export default config => {
   //// REQUEST REDUCER
   const requestReducer = (state = {}, action) => {
     if (action.type === config.actions.list) {
+
+      const payload = action.status === 'failed' ?
+        action.error :
+        map(get(action), `payload.${config.plural}.id`)
+
       const result = {
+        payload,
         status: action.status,
-        payload: map(action.payload[config.plural], 'id'),
         type: action.type,
         timestamp: new Date()
       }
@@ -98,7 +101,7 @@ export default config => {
     if (includes(allActions, action.type)) {
       const result = {
         status: action.status,
-        payload: map(action.payload, x => x.id || x),
+        payload: map(action.payload, 'id'),
         type: action.type,
         timestamp: new Date()
       }
@@ -111,5 +114,5 @@ export default config => {
     return state
   }
 
-  return combineReducers({data: dataReducer, requests: requestReducer })
+  return combineReducers({ data: dataReducer, requests: requestReducer })
 }

@@ -44,63 +44,46 @@ export const fetchExercise = (id) => {
 }
 
 export const saveExercise = ({name, description, categories, type, metric}) => {
-  const token = localStorage.getItem('auth_token')
   const formatted_categories = _.chain(categories)
                                 .map(category => `"${category}"`)
                                 .join(',').value()
-  const headers = {
-    authorization: `Bearer ${token}`
-  }
-  return dispatch => {
-    const transport = new HttpTransport(url, {headers})
-    return transport.send(`mutation {
-      createExercise(name: "${name}", categories: [${formatted_categories}], description: "${description}", type: "${type}", metric: "${metric}") {
-        name, id, categories, metric, type, description
-      }
-    }`).then(function (data) {
-      return dispatch({
-        type: CREATE_EXERCISE,
-        payload: data
-      })
-    }).catch(err => handleErrors(err, dispatch))
+  const payload = `mutation {
+    createExercise(name: "${name}", categories: [${formatted_categories}], description: "${description}", type: "${type}", metric: "${metric}") {
+      name, id, categories, metric, type, description
+    }
+  }`
+
+  return {
+    payload,
+    type: CREATE_EXERCISE,
+    status: 'pending'
   }
 }
 
 export const updateExercise = ({id, description, categories}) => {
-  const token = localStorage.getItem('auth_token')
   const formatted_categories = _.chain(categories)
                                 .map(category => `"${category}"`)
                                 .join(',').value()
-  const headers = {
-    authorization: `Bearer ${token}`
-  }
-  return dispatch => {
-    return post(`mutation {
-      updateExercise(id: ${id}, categories: [${formatted_categories}], description: "${description}") {
-        name, id, description, categories, type, metric
-      }
-    }`, { url, headers }).then(function (data) {
-      return dispatch({
-        type: UPDATE_EXERCISE,
-        payload: data
-      })
-    }).catch(err => handleErrors(err, dispatch))
+  const payload = `mutation {
+    updateExercise(id: ${id}, categories: [${formatted_categories}], description: "${description}") {
+      name, id, description, categories, type, metric
+    }
+  }`
+
+  return {
+    payload,
+    type: UPDATE_EXERCISE,
+    status: 'pending'
   }
 }
 
 export const deleteExercise = (id) => {
-  const token = localStorage.getItem('auth_token')
-  return dispatch => {
-    const headers = {
-      authorization: `Bearer ${token}`
-    }
-    return post(`mutation {
-      deleteExercise(id: ${id})
-    }`, {url, headers}).then(data => {
-      return dispatch({
-        type: DELETE_EXERCISE,
-        payload: data
-      })
-    }).catch(err => handleErrors(err, dispatch))
+  const payload = `mutation {
+    deleteExercise(id: ${id})
+  }`
+  return {
+    payload,
+    type: DELETE_EXERCISE,
+    status: 'pending'
   }
 }

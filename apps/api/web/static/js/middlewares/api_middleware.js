@@ -32,10 +32,11 @@ export default config => {
 
         return store.dispatch(successAction)
       }).catch(error => {
+
         const failedAction = {
+          error: (error instanceof Error) ? error.message : error,
           type: action.type,
-          status: 'failed',
-          error: error.toJSON()
+          status: 'failed'
         }
         return store.dispatch(failedAction)
       })

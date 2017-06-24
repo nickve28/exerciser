@@ -14,7 +14,7 @@ export {
 export {FETCH_ME, fetchMe} from './user'
 
 export {
-  FETCH_EXERCISES, SAVE_EXERCISE, DELETE_EXERCISE, EXERCISE_NOT_DELETED, FETCH_EXERCISE,
+  FETCH_EXERCISES, CREATE_EXERCISE, DELETE_EXERCISE, EXERCISE_NOT_DELETED, FETCH_EXERCISE,
   UPDATE_EXERCISE,
   fetchExercises, saveExercise, deleteExercise, fetchExercise, updateExercise
 } from '../sections/exercises/actions/exercise'
