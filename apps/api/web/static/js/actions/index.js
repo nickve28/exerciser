@@ -14,10 +14,15 @@ export {
 export {FETCH_ME, fetchMe} from './user'
 
 export {
-  FETCH_EXERCISES, SAVE_EXERCISE, DELETE_EXERCISE, FETCH_CATEGORIES, EXERCISE_NOT_DELETED, FETCH_EXERCISE,
+  FETCH_EXERCISES, SAVE_EXERCISE, DELETE_EXERCISE, EXERCISE_NOT_DELETED, FETCH_EXERCISE,
   UPDATE_EXERCISE,
-  fetchExercises, saveExercise, deleteExercise, fetchCategories, fetchExercise, updateExercise
-} from './exercise'
+  fetchExercises, saveExercise, deleteExercise, fetchExercise, updateExercise
+} from '../sections/exercises/actions/exercise'
+
+export {
+  FETCH_CATEGORIES,
+  fetchCategories
+} from '../sections/exercises/actions/categories'
 
 export {
   USER_LOGIN, USER_LOGIN_EXPIRED, USER_LOGIN_PENDING, USER_LOGIN_FAILED, USER_LOGIN_EXPIRE_END,

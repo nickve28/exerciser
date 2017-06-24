@@ -1,4 +1,4 @@
-import { values, includes, map, chain, upperFirst } from 'lodash'
+import { values, includes, map, chain, upperFirst, omit } from 'lodash'
 import { combineReducers } from 'redux'
 
 export default config => {
@@ -10,10 +10,21 @@ export default config => {
   const allActions = values(config.actions)
   const createFieldName = `create${upperFirst(config.dataType)}`
   const updateFieldName = `update${upperFirst(config.dataType)}`
+  const deleteField = `delete${upperFirst(config.dataType)}`
+
+  const removeElement = (arr, e) => {
+    const newArr = arr.slice()
+    newArr.splice(newArr.indexOf(e), 1)
+    return newArr
+  }
 
   ///// DATA REDUCER
 
   const dataReducer = (state = config.initialState, action) => {
+    if (action.status !== 'success') {
+      return state
+    }
+
     //List
     if (action.type === config.actions.list) {
       return {
@@ -27,7 +38,10 @@ export default config => {
     if (action.type === config.actions.get) {
       return {
         ...state,
-        entities: { ...state.entities, [action.payload.id]: action.payload }
+        entities: {
+          ...state.entities,
+          [action.payload[config.dataType].id]: action.payload[config.dataType]
+        }
       }
     }
 
@@ -57,9 +71,9 @@ export default config => {
     if (action.type === config.actions.delete) {
       return {
         ...state,
-        order: state.order.splice(state.order.indexOf(action.payload.id), 1),
+        order: removeElement(state.order, action.payload[deleteField]),
         count: state.count - 1,
-        entities: { ...state.entities, [action.payload.id]: action.payload }
+        entities: omit(state.entities, action.payload[deleteField])
       }
     }
     return state
@@ -84,7 +98,7 @@ export default config => {
     if (includes(allActions, action.type)) {
       const result = {
         status: action.status,
-        payload: map(action.payload, 'id'),
+        payload: map(action.payload, x => x.id || x),
         type: action.type,
         timestamp: new Date()
       }

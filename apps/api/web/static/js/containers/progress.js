@@ -40,15 +40,14 @@ class Progress extends Component {
   }
 
   render() {
-    const {progress, exercises} = this.props
-    const exerciseOverview = exercises.exercises
+    const { progress, exercises } = this.props
 
     const progressData = _.get(progress, 'progress', [])
     const exerciseType = _.get(progress, 'exerciseType')
     const startDate = _.get(_.last(progressData), 'date')
     const endDate = _.get(_.first(progressData), 'date')
 
-    if (_.isEmpty(exerciseOverview)) {
+    if (_.isEmpty(exercises)) {
       return <div>Loading...</div>
     }
 
@@ -60,7 +59,7 @@ class Progress extends Component {
           <h3 style={{display: 'inline'}}>Progress</h3>
         </div>
 
-        <SelectExercise exercises={exerciseOverview}
+        <SelectExercise exercises={exercises}
           selectedExercise={this.state.exerciseId}
           onSelect={exerciseId => this.onSelect({exerciseId})}
         />
@@ -75,8 +74,8 @@ class Progress extends Component {
   }
 }
 
-const mapStateToProps = ({progress, exercises}) => {
-  return {progress, exercises}
+const mapStateToProps = ({ progress, exercises }) => {
+  return { progress, exercises: exercises.data.entities }
 }
 
 export default connect(mapStateToProps, {fetchProgress, fetchExercises})(Progress)

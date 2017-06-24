@@ -1,7 +1,7 @@
-import handleErrors from './error'
+import handleErrors from '../../../actions/error'
 
-import configuration from '../configs/index'
-import {post} from '../helpers/request'
+import configuration from '../../../configs/index'
+import { post } from '../../../helpers/request'
 export const url = `${configuration.apiHost}:${configuration.apiPort}/api/graphql`
 
 import _ from 'lodash'
@@ -11,37 +11,35 @@ export const FETCH_EXERCISES = 'FETCH_EXERCISES'
 export const FETCH_EXERCISE = 'FETCH_EXERCISE'
 export const CREATE_EXERCISE = 'CREATE_EXERCISE'
 export const DELETE_EXERCISE = 'DELETE_EXERCISE'
-export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 export const EXERCISE_NOT_DELETED = 'EXERCISE_NOT_DELETED'
 export const UPDATE_EXERCISE = 'UPDATE_EXERCISE'
 
 export const fetchExercises = () => {
-  const token = localStorage.getItem('auth_token')
-  return dispatch => {
-    const headers = {
-      authorization: `Bearer ${token}`
-    }
-    return post('{exercises { name, id, categories, description, type, metric }, exerciseCount }', {headers, url}).then(function (data) {
-      return dispatch({
-        type: FETCH_EXERCISES,
-        payload: data
-      })
-    }).catch(err => handleErrors(err, dispatch))
+  const payload = `{
+    exercises {
+      name, id, categories, description, type, metric
+    },
+    exerciseCount
+  }`
+
+  return {
+    payload,
+    type: FETCH_EXERCISES,
+    status: 'pending'
   }
 }
 
 export const fetchExercise = (id) => {
-  const token = localStorage.getItem('auth_token')
-  return dispatch => {
-    const headers = {
-      authorization: `Bearer ${token}`
+  const query = `{
+    exercise(id: ${id}) {
+      name, id, categories, description, type, metric
     }
-    return post(`{exercise(id: ${id}) { name, id, categories, description, type, metric } }`, {headers, url}).then(function (data) {
-      return dispatch({
-        type: FETCH_EXERCISE,
-        payload: data.exercise
-      })
-    }).catch(err => handleErrors(err, dispatch))
+  }`
+
+  return {
+    type: FETCH_EXERCISE,
+    payload: query,
+    status: 'pending'
   }
 }
 
@@ -97,27 +95,11 @@ export const deleteExercise = (id) => {
       authorization: `Bearer ${token}`
     }
     return post(`mutation {
-      delete_exercise(id: ${id})
+      deleteExercise(id: ${id})
     }`, {url, headers}).then(data => {
       return dispatch({
         type: DELETE_EXERCISE,
         payload: data
-      })
-    }).catch(err => handleErrors(err, dispatch))
-  }
-}
-
-export const fetchCategories = () => {
-  const token = localStorage.getItem('auth_token')
-  return dispatch => {
-    const headers = {
-      authorization: `Bearer ${token}`
-    }
-    const transport = new HttpTransport(url, {headers})
-    transport.send('{categories}').then(function (data) {
-      return dispatch({
-        type: FETCH_CATEGORIES,
-        payload: data.categories
       })
     }).catch(err => handleErrors(err, dispatch))
   }

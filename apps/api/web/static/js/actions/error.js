@@ -1,10 +1,9 @@
 import _ from 'lodash'
-import {USER_LOGIN_EXPIRED, USER_LOGIN_EXPIRE_END} from './authentication'
-import {EXERCISE_NOT_DELETED} from './exercise'
-import {RESET_NOTIFICATIONS} from './index'
+import { USER_LOGIN_EXPIRED, USER_LOGIN_EXPIRE_END } from './authentication'
+import { EXERCISE_NOT_DELETED } from './index'
+import { RESET_NOTIFICATIONS}  from './index'
 
 export default (error, dispatch) => {
-  //no idea how lokka does error handling...
   const isUnauthorized = _.some(_.castArray(error), err => err && err.code === 401)
   if (isUnauthorized) {
     localStorage.removeItem('auth_token')
@@ -17,7 +16,7 @@ export default (error, dispatch) => {
   }
 
   //now some real error handling
-  _.forEach(error.errors, ({code, details}) => {
+  _.forEach(error.errors, ({ code, details }) => {
     const isWorkoutNotDeletedError = code === 422 && _.has(details, 'performed_exercises')
     if (isWorkoutNotDeletedError) {
       dispatch({
