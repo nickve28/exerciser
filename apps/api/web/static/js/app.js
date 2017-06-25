@@ -12,7 +12,8 @@ import middlewares from './middlewares/index'
 import reducers from './reducers/index'
 
 import Root from './containers/root'
-import Exercises from './containers/exercises'
+import Exercises from './sections/exercises/containers/list'
+import NewExercise from './sections/exercises/containers/new'
 import ExerciseDetails from './containers/exercises/details'
 import Workouts from './containers/workouts'
 import WorkoutDetail from './containers/workout_detail'
@@ -51,16 +52,19 @@ injectTapEventPlugin()
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
-      <Route path="/" component={Root}>
-        <IndexRoute component={Exercises} />
-        <Route path ="/exercises/:id" component={ExerciseDetails} />
-        <Route path ="/workouts" component={Workouts} />
-        <Route path="/workouts/new" component={NewWorkout} />
-        <Route path="/workouts/:id" component={WorkoutDetail} />
-        <Route path="/workouts/:id/edit" component={EditWorkout} />
-        <Route path="/progress" component={Progress} />
-      </Route>
-    </Router>
+    <div>
+      <Router onUpdate={() => window.scrollTo(0, 0)} history={browserHistory}>
+        <Route path="/" component={Root}>
+          <IndexRoute component={Exercises} />
+          <Route path="/exercises/new" component={NewExercise} />
+          <Route path ="/exercises/:id" component={ExerciseDetails} />
+          <Route path ="/workouts" component={Workouts} />
+          <Route path="/workouts/new" component={NewWorkout} />
+          <Route path="/workouts/:id" component={WorkoutDetail} />
+          <Route path="/workouts/:id/edit" component={EditWorkout} />
+          <Route path="/progress" component={Progress} />
+        </Route>
+      </Router>
+    </div>
   </Provider>
   , document.querySelector('#root'))
