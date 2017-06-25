@@ -19,7 +19,9 @@ const exerciseConfig = {
     delete: DELETE_EXERCISE
   },
   initialState: {
-    entities: {}
+    entities: {},
+    order: [],
+    count: 0
   }
 }
 

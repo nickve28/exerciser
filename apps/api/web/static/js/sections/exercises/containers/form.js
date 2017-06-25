@@ -1,6 +1,5 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import { compose, withProps } from 'recompose'
 import { partial } from 'lodash'
 
 import MaterialCreateButton from 'components/material/form/create_button'
@@ -23,8 +22,6 @@ const ExerciseForm = props => {
     pristine,
     submitting
   } = props
-  console.log(handleFormSubmit);
-
 
   return <form onSubmit={handleSubmit(handleFormSubmit)}>
     <Field

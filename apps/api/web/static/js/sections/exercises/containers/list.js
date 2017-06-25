@@ -14,7 +14,7 @@ const ExerciseList = ({ exercises, count, fetch, remove }) => {
   fetch()
 
   return (
-    <div className="content"> {/*Move generic when everything migrated */}
+    <div className="content">
       <Title title="Exercises" count={count}>
         <Link className="pull-right" to="/exercises/new">Create exercise </Link>
       </Title>
