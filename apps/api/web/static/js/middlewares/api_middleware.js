@@ -59,8 +59,6 @@ export default config => {
 
         return store.dispatch(successAction)
       }).catch(error => {
-        console.log(error);
-
 
         const failedAction = {
           error: (error instanceof Error) ? error.message : error,

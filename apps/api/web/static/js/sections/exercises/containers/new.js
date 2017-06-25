@@ -11,7 +11,12 @@ import getCategories from 'selectors/get_categories'
 
 import ExerciseForm from '../containers/form'
 
-const NewExercise = ({ categories, fetchCategories, saveExercise }) => {
+//recompose, something with old props vs new props pending vs success compare
+const NewExercise = ({
+  categories,
+  fetchCategories,
+  saveExercise
+}) => {
   fetchCategories()
 
   return <div className="content">
@@ -25,7 +30,9 @@ const NewExercise = ({ categories, fetchCategories, saveExercise }) => {
   </div>
 }
 
-const mapStateToProps = state => ({ categories: getCategories(state) })
+const mapStateToProps = state => ({
+  categories: getCategories(state)
+})
 
 export default connect(
   mapStateToProps,

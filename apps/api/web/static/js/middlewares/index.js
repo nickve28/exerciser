@@ -5,6 +5,7 @@ import createApiMiddleware from './api_middleware'
 import errorMiddleware from './error'
 import configs from './config'
 import CategoryTransformMiddleware from './category_transform'
+import SuccessMutationRedirectMiddleware from './succesfull_mutation'
 
 const middlewares = [
   CategoryTransformMiddleware,
@@ -12,6 +13,7 @@ const middlewares = [
   LoggedInMiddleware,
   LoginExpiredMiddleware,
   errorMiddleware,
+  SuccessMutationRedirectMiddleware,
   ...configs.map(createApiMiddleware)
 ]
 
