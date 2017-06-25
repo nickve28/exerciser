@@ -27,12 +27,13 @@ export default config => {
     if (action.type === config.actions.list) {
       return {
         ...state,
-        order: map(action.payload[config.plural], 'id'),
+        order: [...state.order, ...map(action.payload[config.plural], 'id')],
         count: action.payload[`${config.dataType}Count`] || action.payload[`${config.dataType}_count`],
-        entities: toKeyStore(action.payload[config.plural])
+        entities: { ...state.entities, ...toKeyStore(action.payload[config.plural]) }
       }
     }
 
+    // Get
     if (action.type === config.actions.get) {
       return {
         ...state,
@@ -83,7 +84,7 @@ export default config => {
 
       const payload = action.status === 'failed' ?
         action.error :
-        map(get(action), `payload.${config.plural}.id`)
+        map(get(action, `payload.${config.plural}`), 'id')
 
       const result = {
         payload,
