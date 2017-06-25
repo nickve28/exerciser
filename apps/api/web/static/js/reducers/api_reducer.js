@@ -99,6 +99,20 @@ export default config => {
       }
     }
 
+    if (action.type === config.actions.delete) {
+      const result = {
+        payload: [action.payload[deleteField]],
+        status: action.status,
+        type: action.type,
+        timestamp: new Date()
+      }
+
+      return {
+        ...state,
+        [action.type]: result
+      }
+    }
+
     if (includes(allActions, action.type)) {
       const result = {
         status: action.status,
