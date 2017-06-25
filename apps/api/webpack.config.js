@@ -2,7 +2,6 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CompressionPlugin = require('compression-webpack-plugin');
 
 var APP_ENV       = process.env.APP_ENV || process.env.NODE_ENV || 'development';
 var IS_PROD_BUILD = ! ["development", "test"].includes(APP_ENV);
@@ -52,11 +51,6 @@ module.exports = {
 
 if (IS_PROD_BUILD) {
   module.exports.plugins.push(new webpack.optimize.UglifyJsPlugin({minimize: true}));
-  module.exports.plugins.push(new CompressionPlugin({
-			asset: "[file]",
-			algorithm: "gzip",
-			test: /\.(js)$/
-  }));
 } else {
   var exclude = /node_modules/
   module.exports.module.loaders[0].exclude = exclude
