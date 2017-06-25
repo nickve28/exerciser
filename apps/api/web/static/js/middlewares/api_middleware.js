@@ -28,15 +28,9 @@ export default config => {
       request.type === action.type &&
       request.status === 'success' &&
       isFewerThanCacheTime(request.timestamp, config.cacheTime)
-    console.log("action", action);
-
-    console.log("isRecentSuccessRequest", isRecentSuccessRequest);
-
 
     const shouldCache =
       includes(config.cache, action.type)
-    console.log("shouldCache", shouldCache);
-
 
     if (shouldCache && isRecentSuccessRequest) {
       return true

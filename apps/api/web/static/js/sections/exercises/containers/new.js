@@ -5,19 +5,23 @@ import { Link } from 'react-router'
 import Title from 'components/title'
 
 import { fetchCategories } from '../actions/category'
+import { saveExercise } from '../actions/exercise'
 
 import getCategories from 'selectors/get_categories'
 
-import ExerciseForm from '../components/form'
+import ExerciseForm from '../containers/form'
 
-const NewExercise = ({ categories, fetchCategories }) => {
+const NewExercise = ({ categories, fetchCategories, saveExercise }) => {
   fetchCategories()
 
   return <div className="content">
     <Title title="Create exercise">
       <Link className="pull-right" to="/">Go back</Link>
     </Title>
-    <ExerciseForm categories={categories} />
+    <ExerciseForm
+      categories={categories}
+      handleFormSubmit={saveExercise}
+    />
   </div>
 }
 
@@ -25,5 +29,5 @@ const mapStateToProps = state => ({ categories: getCategories(state) })
 
 export default connect(
   mapStateToProps,
-  { fetchCategories }
+  { fetchCategories, saveExercise }
 )(NewExercise)
