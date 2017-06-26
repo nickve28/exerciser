@@ -105,12 +105,17 @@ function validate(data) {
 function mapStateToProps(state) {
   const exercises = state.exercises.data.entities
 
-  const initialValues = state.workouts.workoutTemplate
+  //dirty hack for now!
+  let initialValues = state.workouts.workoutTemplate
   if (initialValues) {
-    initialValues.workoutDate = moment(initialValues.workoutDate).toDate()
+    const recentWorkoutId = state.workoutFetch.data.order[0]
+    initialValues = state.workoutFetch.data.entities[recentWorkoutId]
+
+    //initialValues.workoutDate = moment(initialValues.workoutDate).toDate()
     initialValues.performedExercises = _.map(initialValues.performedExercises, pExercise => {
       return _.merge({}, pExercise, {type: exercises[pExercise.exerciseId].type})
     })
+    initialValues.workoutDate = new Date(initialValues.workoutDate)
   }
 
   return {

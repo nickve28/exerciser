@@ -50,7 +50,7 @@ class Workouts extends Component {
   }
 
   render() {
-    const {workouts, count} = this.props
+    const { workouts, count, workoutOrder } = this.props
     return (
       <div>
         <div style={{marginBottom: '50px'}}>
@@ -66,7 +66,8 @@ class Workouts extends Component {
           transitionLeaveTimeout={300}
         >
           {
-            _.map(workouts, workout => {
+            _.map(workoutOrder, id => {
+              const workout = workouts[id]
               return <WorkoutEntry key={workout.id} workout={workout} onDelete={_.partial(this.onDelete, workout)} />
             })
           }
@@ -104,7 +105,8 @@ function mapStateToProps(state) {
   return {
     workouts: state.workoutFetch.data.entities,
     count: state.workoutFetch.data.count,
-    notifications: state.notifications
+    notifications: state.notifications,
+    workoutOrder: state.workoutFetch.data.order
   }
 }
 
