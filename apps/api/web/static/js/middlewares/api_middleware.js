@@ -29,6 +29,7 @@ export default config => {
 
     //check if we did a recent success request, then no further action is required
     const { requests } = store.getState()[pluralName]
+
     const request = requests[query]
 
     const isRecentSuccessRequest =
