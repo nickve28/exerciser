@@ -15,14 +15,20 @@ const isFewerThanCacheTime = (timestamp, cacheMinutes) => {
 export default config => {
   return store => next => action => {
     const responseFields = config.actions[action.type]
+
     if (!responseFields || action.status !== 'pending') {
       return next(action)
     }
 
     const { query } = action
 
+    let pluralName = config.plural
+    if (config.plural === 'workouts') {
+      pluralName = 'workoutFetch' //TEMP FOR THE WORKOUT MIGRATION
+    }
+
     //check if we did a recent success request, then no further action is required
-    const { requests } = store.getState()[config.plural]
+    const { requests } = store.getState()[pluralName]
     const request = requests[query]
 
     const isRecentSuccessRequest =
@@ -49,6 +55,7 @@ export default config => {
     return post(action.query, { url, headers })
       .then(response => {
         const payload = pick(response, config.actions[action.type], null)
+
         if (some(values(payload), isNull)) {
           throw new Error('No result returned')
         }
@@ -62,7 +69,6 @@ export default config => {
 
         return store.dispatch(successAction)
       }).catch(error => {
-
         const failedAction = {
           query,
           error: (error instanceof Error) ? error.message : error,

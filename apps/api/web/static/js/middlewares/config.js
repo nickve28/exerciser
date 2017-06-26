@@ -4,7 +4,9 @@ import {
   CREATE_EXERCISE,
   UPDATE_EXERCISE,
   DELETE_EXERCISE,
-  FETCH_CATEGORIES
+  FETCH_CATEGORIES,
+  FETCH_WORKOUTS,
+  FETCH_WORKOUT
 } from '../actions/index'
 
 const category = {
@@ -29,7 +31,17 @@ const exercises = {
   cacheTime: 5
 }
 
+const workouts = {
+  plural: 'workouts',
+  actions: {
+    [FETCH_WORKOUTS]: ['me.workouts', 'me.workoutCount'],
+    [FETCH_WORKOUT]: ['workout']
+  },
+  cache: [FETCH_WORKOUTS, FETCH_WORKOUT],
+  cacheTime: 5
+}
 export default [
   category,
-  exercises
+  exercises,
+  workouts
 ]

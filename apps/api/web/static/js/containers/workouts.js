@@ -29,7 +29,7 @@ class Workouts extends Component {
   }
 
   loadWorkouts(limit, offset) {
-    this.props.fetchWorkouts(limit, offset, {append: true})
+    this.props.fetchWorkouts(limit, offset)
   }
 
   renderMoreButton() {
@@ -53,8 +53,6 @@ class Workouts extends Component {
     const {workouts, count} = this.props
     return (
       <div>
-        <div style={{marginBottom: '10px'}} />
-
         <div style={{marginBottom: '50px'}}>
           <h3 style={{display: 'inline'}}>Workouts ({count})</h3>
           <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
@@ -104,8 +102,8 @@ function renderNotification(notificationInfo) {
 
 function mapStateToProps(state) {
   return {
-    workouts: state.workouts.workouts,
-    count: state.workouts.workoutCount,
+    workouts: state.workoutFetch.data.entities,
+    count: state.workoutFetch.data.count,
     notifications: state.notifications
   }
 }
