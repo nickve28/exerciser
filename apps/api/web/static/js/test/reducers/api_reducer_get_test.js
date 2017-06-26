@@ -91,7 +91,7 @@ describe('Api Reducer #Get Specs', () => {
       }
 
       const { requests } = reducer(state, action)
-      const request = requests[action.type]
+      const request = requests[action.query]
 
       expect(request).to.exist
       expect(request.timestamp).to.deep.eq(new Date())
@@ -109,7 +109,7 @@ describe('Api Reducer #Get Specs', () => {
       }
 
       const { requests } = reducer(state, action)
-      const request = requests[action.type]
+      const request = requests[action.query]
 
       expect(request).to.exist
       expect(request.status).to.eq('success')
@@ -127,7 +127,7 @@ describe('Api Reducer #Get Specs', () => {
       }
 
       const { requests } = reducer(state, action)
-      const request = requests[action.type]
+      const request = requests[action.query]
 
       expect(request).to.exist
       expect(request.payload).to.deep.eq([1])

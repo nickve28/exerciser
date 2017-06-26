@@ -95,7 +95,7 @@ export default config => {
 
       return {
         ...state,
-        [action.type]: result
+        [action.query]: result
       }
     }
 
@@ -109,7 +109,7 @@ export default config => {
 
       return {
         ...state,
-        [action.type]: result
+        [action.query]: result
       }
     }
 
@@ -123,7 +123,7 @@ export default config => {
 
       return {
         ...state,
-        [action.type]: result
+        [action.query]: result
       }
     }
     return state
