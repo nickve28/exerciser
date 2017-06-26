@@ -29,15 +29,16 @@ class Workouts extends Component {
   }
 
   loadWorkouts(limit, offset) {
+
     this.props.fetchWorkouts(limit, offset)
   }
 
   renderMoreButton() {
     const {workouts, count} = this.props
-    const moreAvailable = workouts && workouts.length < count
+    const moreAvailable = workouts && Object.values(workouts).length < count
 
     if (moreAvailable) {
-      const offset = workouts.length
+      const offset = Object.values(workouts).length
       const limit = 10
 
       return (
