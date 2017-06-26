@@ -46,16 +46,21 @@ export const updateWorkout = (id, {description, workoutDate, performedExercises}
   }
   return dispatch => {
     const transport = new HttpTransport(URL, {headers})
-    return transport.send(`mutation {
-      update_workout(id: ${id}, description: "${description}", workout_date: "${workoutDate}", performed_exercises: [${formattedExercises}]) {
-        id
+    const query = `mutation {
+      updateWorkout(id: ${id}, description: "${description}", workoutDate: "${workoutDate}", performedExercises: [${formattedExercises}]) {
+        id, description, workoutDate, performedExercises {
+          exerciseId, weight, sets, reps, amount, duration
+        }
       }
-    }`).then(function (data) {
+    }`
+    return transport.send(query).then(function (data) {
       setTimeout(() => {
         dispatch({type: UPDATE_WORKOUT_NOTIFICATION_END})
       }, NOTIFICATION_TIMER)
 
       return dispatch({
+        query,
+        status: 'success',
         type: UPDATE_WORKOUT,
         payload: data
       })
@@ -63,29 +68,21 @@ export const updateWorkout = (id, {description, workoutDate, performedExercises}
   }
 }
 
-export const fetchWorkouts = (limit = 10, offset = 0, {append} = {append: false}) => {
-  const token = localStorage.getItem('auth_token')
-  return dispatch => {
-    const headers = {
-      authorization: `Bearer ${token}`
+export const fetchWorkouts = (limit = 10, offset = 0) => {
+  const query = `{
+    me {
+      workouts(limit: ${limit}, offset: ${offset}) {
+        workoutDate, performedExercises {
+          exerciseId, reps, weight, sets,
+          mode, duration, amount
+        }, description, id },
+      workoutCount,
     }
-    const transport = new HttpTransport(URL, {headers})
-    transport.send(`{
-      me {
-        workouts(limit: ${limit}, offset: ${offset}) {
-          workout_date, performed_exercises {
-            exercise_id, reps, weight, sets,
-            mode, duration, amount
-          }, description, id },
-        workout_count,
-      }
-    }`).then(function (data) {
-      const action = append ? FETCH_MORE_WORKOUTS : FETCH_WORKOUTS
-      return dispatch({
-        type: action,
-        payload: data.me
-      })
-    }).catch(err => handleUnauthorized(err, dispatch))
+  }`
+  return {
+    query,
+    type: FETCH_WORKOUTS,
+    status: 'pending'
   }
 }
 
@@ -114,24 +111,18 @@ export const fetchWorkoutTemplate = () => {
 }
 
 export const fetchWorkout = (id) => {
-  const token = localStorage.getItem('auth_token')
-  return dispatch => {
-    const headers = {
-      authorization: `Bearer ${token}`
-    }
-    const transport = new HttpTransport(URL, {headers})
-    transport.send(`{
-      workout(id: ${id}) {
-        workout_date, performed_exercises {
-          exercise_id, reps, weight, sets,
-          mode, duration, amount
-        }, description, id }
-    }`).then(function (data) {
-      return dispatch({
-        type: FETCH_WORKOUT,
-        payload: data.workout
-      })
-    }).catch(err => handleUnauthorized(err, dispatch))
+  const query = `{
+    workout(id: ${id}) {
+      workoutDate, performedExercises {
+        exerciseId, reps, weight, sets,
+        mode, duration, amount
+      }, description, id }
+  }`
+
+  return {
+    query,
+    type: FETCH_WORKOUT,
+    status: 'pending'
   }
 }
 
@@ -146,16 +137,21 @@ export const saveWorkout = (payload) => {
   }
   return dispatch => {
     const transport = new HttpTransport(URL, {headers})
-    return transport.send(`mutation {
-      create_workout(description: "${description}", workout_date: "${workoutDate}", performed_exercises: [${formattedExercises}]) {
-        id
+    const query = `mutation {
+      createWorkout(description: "${description}", workoutDate: "${workoutDate}", performedExercises: [${formattedExercises}]) {
+        id, description, workoutDate, performedExercises {
+          exerciseId, weight, sets, reps, amount, duration
+        }
       }
-    }`).then(function (data) {
+    }`
+    return transport.send(query).then(function (data) {
       setTimeout(() => {
         dispatch({type: SAVE_WORKOUT_NOTIFICATION_END})
       }, NOTIFICATION_TIMER)
 
       return dispatch({
+        query,
+        status: 'success',
         type: SAVE_WORKOUT,
         payload: data
       })
@@ -170,14 +166,17 @@ export const deleteWorkout = (id) => {
       authorization: `Bearer ${token}`
     }
     const transport = new HttpTransport(URL, {headers})
-    return transport.send(`mutation {
-      delete_workout(id: ${id})
-    }`).then(function (data) {
+    const query = `mutation {
+      deleteWorkout(id: ${id})
+    }`
+    return transport.send(query).then(function (data) {
       setTimeout(() => {
         dispatch({type: DELETE_WORKOUT_NOTIFICATION_END})
       }, NOTIFICATION_TIMER)
 
       return dispatch({
+        query,
+        status: 'success',
         type: DELETE_WORKOUT,
         payload: data
       })

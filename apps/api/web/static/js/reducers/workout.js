@@ -26,19 +26,19 @@ const toWorkoutModel = (workoutData) => {
 }
 
 export default (state = INITIAL_STATE, action = {}) => {
-  if (action.type === FETCH_WORKOUTS) {
-    const workoutCount = action.payload.workout_count
-    return _.defaults({
-      workoutCount,
-      workouts: _.map(action.payload.workouts, toWorkoutModel)
-    }, INITIAL_STATE)
-  }
+  // if (action.type === FETCH_WORKOUTS) {
+  //   const workoutCount = action.payload.workout_count
+  //   return _.defaults({
+  //     workoutCount,
+  //     workouts: _.map(action.payload.workouts, toWorkoutModel)
+  //   }, INITIAL_STATE)
+  // }
 
-  if (action.type === FETCH_WORKOUT) {
-    return _.defaults({
-      selectedWorkout: toWorkoutModel(action.payload)
-    }, INITIAL_STATE)
-  }
+  // if (action.type === FETCH_WORKOUT) {
+  //   return _.defaults({
+  //     selectedWorkout: toWorkoutModel(action.payload)
+  //   }, INITIAL_STATE)
+  // }
 
   if (action.type === FETCH_WORKOUT_TEMPLATE) {
     return _.defaults({
@@ -46,14 +46,14 @@ export default (state = INITIAL_STATE, action = {}) => {
     }, INITIAL_STATE)
   }
 
-  if (action.type === FETCH_MORE_WORKOUTS) {
-    const workoutCount = action.payload.workout_count
+  // if (action.type === FETCH_MORE_WORKOUTS) {
+  //   const workoutCount = action.payload.workout_count
 
-    return _.defaults({
-      workoutCount,
-      workouts: _.concat(state.workouts, _.map(action.payload.workouts, toWorkoutModel))
-    }, INITIAL_STATE)
-  }
+  //   return _.defaults({
+  //     workoutCount,
+  //     workouts: _.concat(state.workouts, _.map(action.payload.workouts, toWorkoutModel))
+  //   }, INITIAL_STATE)
+  // }
 
   return state
 }

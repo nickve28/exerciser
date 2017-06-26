@@ -29,15 +29,16 @@ class Workouts extends Component {
   }
 
   loadWorkouts(limit, offset) {
-    this.props.fetchWorkouts(limit, offset, {append: true})
+
+    this.props.fetchWorkouts(limit, offset)
   }
 
   renderMoreButton() {
     const {workouts, count} = this.props
-    const moreAvailable = workouts && workouts.length < count
+    const moreAvailable = workouts && Object.values(workouts).length < count
 
     if (moreAvailable) {
-      const offset = workouts.length
+      const offset = Object.values(workouts).length
       const limit = 10
 
       return (
@@ -50,11 +51,9 @@ class Workouts extends Component {
   }
 
   render() {
-    const {workouts, count} = this.props
+    const { workouts, count, workoutOrder } = this.props
     return (
       <div>
-        <div style={{marginBottom: '10px'}} />
-
         <div style={{marginBottom: '50px'}}>
           <h3 style={{display: 'inline'}}>Workouts ({count})</h3>
           <Link to="/workouts/new" style={{float: 'right'}}>Add Workout</Link>
@@ -68,7 +67,8 @@ class Workouts extends Component {
           transitionLeaveTimeout={300}
         >
           {
-            _.map(workouts, workout => {
+            _.map(workoutOrder, id => {
+              const workout = workouts[id]
               return <WorkoutEntry key={workout.id} workout={workout} onDelete={_.partial(this.onDelete, workout)} />
             })
           }
@@ -104,9 +104,10 @@ function renderNotification(notificationInfo) {
 
 function mapStateToProps(state) {
   return {
-    workouts: state.workouts.workouts,
-    count: state.workouts.workoutCount,
-    notifications: state.notifications
+    workouts: state.workoutFetch.data.entities,
+    count: state.workoutFetch.data.count,
+    notifications: state.notifications,
+    workoutOrder: state.workoutFetch.data.order
   }
 }
 

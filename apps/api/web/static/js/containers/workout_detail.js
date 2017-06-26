@@ -4,7 +4,7 @@ import {fetchWorkout, fetchExercises} from '../actions/index'
 import _ from 'lodash'
 
 import {Link} from 'react-router'
-import workoutSelector from '../selectors/workout_selector'
+//import workoutSelector from '../selectors/workout_selector'
 
 import StrengthExerciseDetails from '../components/workouts/strength_exercise_details'
 import EnduranceExerciseDetails from '../components/workouts/endurance_exercise_details'
@@ -13,7 +13,12 @@ import Promise from 'bluebird'
 
 class WorkoutDetail extends Component {
   componentWillMount() {
-    const fetchWorkouts = this.props.fetchWorkout(this.props.params.id)
+    const { workout } = this.props
+
+    let fetchWorkouts = true
+    if (!workout) {
+      fetchWorkouts = this.props.fetchWorkout(this.props.params.id)
+    }
 
     let fetchExercises = true
     if (_.isEmpty(this.props.exercises)) {
@@ -60,10 +65,19 @@ class WorkoutDetail extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
+  const exercises = state.exercises.data.entities || {}
+
+  const workout = state.workoutFetch.data.entities[props.params.id]
+  //also temp..
+  if (workout) {
+    workout.performedExercises = workout.performedExercises.map(
+      pE => ({ ...pE, ...exercises[pE.exerciseId] })
+    )
+  }
+
   return {
-    workout: workoutSelector(state),
-    exercises: state.exercises.exercises
+    workout, exercises
   }
 }
 

@@ -6,8 +6,10 @@ import errorMiddleware from './error'
 import configs from './config'
 import CategoryTransformMiddleware from './category_transform'
 import SuccessMutationRedirectMiddleware from './succesfull_mutation'
+import WorkoutTransformMiddleware from './workout_transform'
 
 const middlewares = [
+  WorkoutTransformMiddleware,
   CategoryTransformMiddleware,
   AuthenticateMiddleware,
   LoggedInMiddleware,

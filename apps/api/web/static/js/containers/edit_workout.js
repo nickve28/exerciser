@@ -26,13 +26,11 @@ class EditWorkout extends Component {
   }
 
   componentDidMount() {
-    const fetchWorkouts = this.props.fetchWorkout(this.props.params.id)
+    //const fetchWorkouts = this.props.fetchWorkout(this.props.params.id)
 
-    let fetchExercises = true
     if (_.isEmpty(this.props.exercises)) {
-      fetchExercises = this.props.fetchExercises()
+      return this.props.fetchExercises()
     }
-    return Promise.join(fetchWorkouts, fetchExercises)
   }
 
   render() {
@@ -102,7 +100,7 @@ function validate(data) {
   return errorMessages
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
   const exercises = state.exercises.data.entities
 
   if (_.isEmpty(exercises)) {
@@ -113,7 +111,7 @@ function mapStateToProps(state) {
     }
   }
 
-  const initialValues = state.workouts.selectedWorkout
+  const initialValues = state.workoutFetch.data.entities[props.params.id]
   if (initialValues) {
     initialValues.workoutDate = moment(initialValues.workoutDate).toDate()
     initialValues.performedExercises = _.map(initialValues.performedExercises, pExercise => {
