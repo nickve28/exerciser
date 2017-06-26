@@ -19,9 +19,11 @@ export default config => {
       return next(action)
     }
 
+    const { query } = action
+
     //check if we did a recent success request, then no further action is required
     const { requests } = store.getState()[config.plural]
-    const request = requests[action.type]
+    const request = requests[query]
 
     const isRecentSuccessRequest =
       request &&
@@ -44,7 +46,7 @@ export default config => {
       authorization: `Bearer ${token}`
     }
 
-    return post(action.payload, { url, headers })
+    return post(action.query, { url, headers })
       .then(response => {
         const payload = pick(response, config.actions[action.type], null)
         if (some(values(payload), isNull)) {
@@ -52,6 +54,7 @@ export default config => {
         }
 
         const successAction = {
+          query,
           payload: response,
           type: action.type,
           status: 'success'
@@ -61,6 +64,7 @@ export default config => {
       }).catch(error => {
 
         const failedAction = {
+          query,
           error: (error instanceof Error) ? error.message : error,
           type: action.type,
           status: 'failed'

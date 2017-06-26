@@ -1,11 +1,11 @@
 export const FETCH_CATEGORIES = 'FETCH_CATEGORIES'
 
 export const fetchCategories = () => {
-  const payload = `{
+  const query = `{
     categories
   }`
   return {
-    payload,
+    query,
     type: FETCH_CATEGORIES,
     status: 'pending'
   }

@@ -8,7 +8,7 @@ export const EXERCISE_NOT_DELETED = 'EXERCISE_NOT_DELETED'
 export const UPDATE_EXERCISE = 'UPDATE_EXERCISE'
 
 export const fetchExercises = () => {
-  const payload = `{
+  const query = `{
     exercises {
       name, id, categories, description, type, metric
     },
@@ -16,7 +16,7 @@ export const fetchExercises = () => {
   }`
 
   return {
-    payload,
+    query,
     type: FETCH_EXERCISES,
     status: 'pending'
   }
@@ -31,7 +31,7 @@ export const fetchExercise = (id) => {
 
   return {
     type: FETCH_EXERCISE,
-    payload: query,
+    query: query,
     status: 'pending'
   }
 }
@@ -40,14 +40,14 @@ export const saveExercise = ({name, description, categories, type, metric}) => {
   const formatted_categories = _.chain(categories)
                                 .map(category => `"${category}"`)
                                 .join(',').value()
-  const payload = `mutation {
+  const query = `mutation {
     createExercise(name: "${name}", categories: [${formatted_categories}], description: "${description}", type: "${type}", metric: "${metric}") {
       name, id, categories, metric, type, description
     }
   }`
 
   return {
-    payload,
+    query,
     type: CREATE_EXERCISE,
     status: 'pending'
   }
@@ -57,25 +57,25 @@ export const updateExercise = ({id, description, categories}) => {
   const formatted_categories = _.chain(categories)
                                 .map(category => `"${category}"`)
                                 .join(',').value()
-  const payload = `mutation {
+  const query = `mutation {
     updateExercise(id: ${id}, categories: [${formatted_categories}], description: "${description}") {
       name, id, description, categories, type, metric
     }
   }`
 
   return {
-    payload,
+    query,
     type: UPDATE_EXERCISE,
     status: 'pending'
   }
 }
 
 export const deleteExercise = (id) => {
-  const payload = `mutation {
+  const query = `mutation {
     deleteExercise(id: ${id})
   }`
   return {
-    payload,
+    query,
     type: DELETE_EXERCISE,
     status: 'pending'
   }
