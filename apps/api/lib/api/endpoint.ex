@@ -40,7 +40,7 @@ defmodule Api.Endpoint do
     key: "_api_key",
     signing_salt: "4GTnBtjJ"
 
-  plug CORSPlug, origin: ["http://localhost"] ++ Application.get_env(:api, :cors_hosts)
+  plug CORSPlug
 
   plug Api.Router
 end

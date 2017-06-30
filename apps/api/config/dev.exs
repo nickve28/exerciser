@@ -4,10 +4,7 @@ config :api, Api.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
-  check_origin: false,
-  watchers: [npm: ["run", "watch", "--stdin",
-                    cd: Path.expand("../", __DIR__)]]
-
+  check_origin: false
 
 config :api, token_secret: "mytoken_secret"
 
