@@ -40,7 +40,7 @@ defmodule Api.Endpoint do
     key: "_api_key",
     signing_salt: "4GTnBtjJ"
 
-  plug CORSPlug
+  plug CORSPlug, origin: ["http://localhost:8080", "https://devnix.nl:25570"]
 
   plug Api.Router
 end

@@ -12,11 +12,11 @@ config :logger, :console,
   metadata: [:request_id]
 
 config :api, token_secret: System.get_env("TOKEN_SECRET")
-#config :api, cors_hosts: ["*", "localhost:8080", "http://localhost:8080"]
 
-config :cors_plug,
-  origin: ["*"],
-  max_age: 86400,
-  methods: ["GET", "POST", "PUT", "DELETE"]
+# config :cors_plug,
+#   origin: ["http://localhost:8080"],
+#   max_age: 86400,
+#   methods: ["GET", "POST"],
+#   credentials: false
 
 import_config "#{Mix.env}.exs"
