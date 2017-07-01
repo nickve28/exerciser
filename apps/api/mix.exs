@@ -44,7 +44,7 @@ defmodule Api.Mixfile do
       {:absinthe_plug, "~> 1.3.0"},
       {:joken, "~> 1.3"},
       {:poison, "~> 2.0"},
-      {:cors_plug, "~> 1.1"},
+      {:cors_plug, "~> 1.3.0"},
       {:user, in_umbrella: true},
       {:workout, in_umbrella: true},
       {:progress, in_umbrella: true},

@@ -42,9 +42,9 @@ def deploy_version(new_version, type):
     call([cmd], shell=True, cwd="./")
 
 if __name__ == '__main__':
-    type = UPGRADE if ('upgrade' in  sys.argv) else RELEASE
+    #type = UPGRADE if ('upgrade' in  sys.argv) else RELEASE
     run_migrations()
-    build_fe()
-    new_version = increase_number('rel/config.exs')
-    build_release(type)
-    deploy_version(new_version, type)
+    #build_fe()
+    #new_version = increase_number('rel/config.exs')
+    build_release(RELEASE)
+    #deploy_version(new_version, type)

@@ -3,14 +3,6 @@ defmodule Api.Router do
 
   use Api.Web, :router
 
-  pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -21,7 +13,7 @@ defmodule Api.Router do
 
   scope "/" do
     scope "/api" do
-      pipe_through [:authentication]
+      pipe_through [:authentication, :api]
 
       forward "/graphiql", Absinthe.Plug.GraphiQL,
         schema: Api.Schema
@@ -31,15 +23,5 @@ defmodule Api.Router do
           schema: Api.Schema
       end
     end
-
-    scope "/" do
-      pipe_through [:browser]
-      get "/*any", Api.PageController, :index
-    end
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", Api do
-  #   pipe_through :api
-  # end
 end
