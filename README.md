@@ -2,6 +2,8 @@
 
 This is a hobby project which I use to track my workout progression.
 
+The frontend can be found [here](https://github.com/nickve28/exerciser_frontend)
+
 ## Technology Stack
 
 ### Elixir
@@ -11,10 +13,6 @@ The backend part is written in Elixir/Phoenix, and split up using umbrella proje
 ### PostgreSQL
 
 PostgreSQL's support for array/objects but also having a strict schema seems like a perfect fit. Next to being my favourite DBMS to work with :P
-
-###  React.JS
-
-React.JS is used to create the FE.
 
 ### GraphQL
 
@@ -27,7 +25,7 @@ To get associated with graphQL, the API has been written in graphQL instead of a
 The project currently consists of 5 apps.
 
 1. Api:
-This app holds the front end code and houses the graphQL API. It's the point of communication for the consumers.
+This app contains the graphQL API. It's the point of communication for the consumers.
 
 2. User:
 This app contains the user model.
