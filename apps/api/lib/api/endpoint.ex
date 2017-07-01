@@ -40,7 +40,14 @@ defmodule Api.Endpoint do
     key: "_api_key",
     signing_salt: "4GTnBtjJ"
 
-  plug CORSPlug, origin: ["http://localhost:8080", "https://devnix.nl:25570"]
+  #for some reason it refuses to load the config, so we use a manual workaround, while
+  #still using a config
+  cors_config = Application.get_env(:api, :cors_config)
+  plug CORSPlug,
+    origin: cors_config[:origin],
+    methods: cors_config[:methods],
+    credentials: cors_config[:credentials],
+    max_age: cors_config[:max_age]
 
   plug Api.Router
 end
