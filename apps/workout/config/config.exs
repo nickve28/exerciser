@@ -21,4 +21,6 @@ config :workout,
 
 config :workout, api_token: "55476a0d8ff88f1f28e9e7724cbdc825db1d729b"
 
+config :logger, level: :warn
+
 import_config "#{Mix.env}.exs"

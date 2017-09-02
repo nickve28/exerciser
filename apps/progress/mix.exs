@@ -18,7 +18,7 @@ defmodule Progress.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :workout, :user, :vex],
+    [applications: [:logger, :workout, :vex],
      mod: {Progress, []}]
   end
 
@@ -38,8 +38,7 @@ defmodule Progress.Mixfile do
   defp deps do
     [
       {:vex, "~> 0.6.0"},
-      {:workout, in_umbrella: true},
-      {:user, in_umbrella: true}
+      {:workout, in_umbrella: true}
     ]
   end
 end
