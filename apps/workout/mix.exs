@@ -37,8 +37,8 @@ defmodule Workout.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 2.0.0"},
+      {:postgrex, ">= 0.13.0"},
+      {:ecto, "~> 2.1.0"},
       {:poolboy, "~> 1.5"},
       {:timex, "~> 3.0"},
       {:timex_ecto, "~> 3.0"},
