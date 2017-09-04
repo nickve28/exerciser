@@ -40,7 +40,7 @@ defmodule Workout.Mixfile do
       {:postgrex, ">= 0.13.0"},
       {:ecto, "~> 2.1.0"},
       {:poolboy, "~> 1.5"},
-      {:timex, "3.1.23"},
+      {:timex, "3.1.24"},
       {:timex_ecto, "3.1.1"},
       {:vex, "~> 0.6.0"}
     ]
