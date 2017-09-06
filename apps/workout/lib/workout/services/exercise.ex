@@ -6,7 +6,7 @@ defmodule Workout.Services.Exercise do
   @type exercise :: %{id: integer, name: String.t, description: String.t, categories: [String.t]}
   @type create_payload :: %{name: String.t, description: String.t, categories: [String.t], type: String.t}
 
-  @workout_repo Application.get_env(:workout, :workout_repo)
+  @workout_repo Application.get_env(:workout, :workout_repo) || Workout.Repositories.Workout
 
   import Workout.Error, only: [handle_error: 1]
 

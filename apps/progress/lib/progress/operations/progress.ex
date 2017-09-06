@@ -1,7 +1,7 @@
 defmodule Progress.Operations.Progress do
-  @user_repo Application.get_env(:progress, :user_repo)
-  @workout_repo Application.get_env(:progress, :workout_repo)
-  @exercise_repo Application.get_env(:progress, :exercise_repo)
+  @user_repo Application.get_env(:progress, :user_repo) || Progress.Repositories.User
+  @workout_repo Application.get_env(:progress, :workout_repo) || Progress.Repositories.Workout
+  @exercise_repo Application.get_env(:progress, :exercise_repo) || Progress.Repositories.Exercise
 
   @list_workout_filters [:user_id, :exercise_id, :from, :until]
 

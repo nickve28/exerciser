@@ -6,7 +6,7 @@ defmodule Workout.Operations.Exercise do
     This module contains operations for Exercises
   """
 
-  @exercise_repo Application.get_env(:workout, :exercise_repo)
+  @exercise_repo Application.get_env(:workout, :exercise_repo) || Workout.Repositories.Exercise
 
   import Workout.Error
 
