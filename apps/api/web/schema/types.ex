@@ -24,6 +24,7 @@ defmodule Api.Schema.Types do
   object :login do
     field :id, :id
     field :token, :string
+    field :refresh_token, :string
   end
 
   object :exercise do

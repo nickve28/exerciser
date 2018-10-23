@@ -3,7 +3,7 @@ defmodule User.Services.User do
   import Joken
 
   @type user :: %{name: String.t, password: String.t, id: Integer.t}
-  @type user_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t}
+  @type user_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t, refresh_token: String.t}
   @type user_auth_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t, id: integer}
 
   @type bad_request :: {:invalid, String.t, [{atom(), String.t}]}
@@ -30,6 +30,13 @@ defmodule User.Services.User do
   def authenticate(%{name: username, password: password}) do
     :poolboy.transaction(:user_pool, fn pid ->
       GenServer.call(pid, {:authenticate, %{name: username, password: password}})
+    end)
+  end
+
+  @spec refresh_token(%{id: Integer.t, refresh_token: String.t}) :: {:ok, user_info} | {:error, unauthorized} | {:error, internal}
+  def refresh_token(%{id: id, refresh_token: refresh_token}) do
+    :poolboy.transaction(:user_pool, fn pid ->
+      GenServer.call(pid, {:refresh_token, %{id: id, refresh_token: refresh_token}})
     end)
   end
 
@@ -87,6 +94,16 @@ defmodule User.Services.User do
     {:reply, result, state}
   end
 
+  def handle_call({:refresh_token, %{id: id, refresh_token: refresh_token}}, _from, state) do
+    result = with {:ok, user} <- User.Repositories.User.get(id),
+                  :ok <- verify_refresh_token(user, refresh_token)
+    do
+      sign_tokens_for_user(user)
+    end
+
+    {:reply, result, state}
+  end
+
   defp find_user(payload) do
     case User.Repositories.User.get_by(payload) do
       {:ok, nil} -> {:error, {:unauthorized, "The request is not authorized", [{:username, "not found"}]}}
@@ -96,7 +113,26 @@ defmodule User.Services.User do
 
   defp verify_user(%{password: password} = user, password), do: {:ok, user}
 
-  defp verify_user(_, _), do: {:error, {:unauthorized, "The request is not authorized", [{:password, "no match"}]}}
+  defp verify_user(_, _), do: {:error, unauthorized_error([{:password, "no match"}])}
+
+  defp verify_refresh_token(%{id: id}, refresh_token) do
+    token_data = refresh_token
+    |> token
+    |> with_signer(hs256(@refresh_token_secret))
+    |> with_validation("exp", &(&1 > current_time))
+    |> with_validation("id", &(&1 == id))
+    |> verify
+    |> get_claims
+
+    case token_data do
+      %{"id" => id} -> :ok
+      _ -> {:error, unauthorized_error([{:refresh_token, "not valid"}])}
+    end
+  end
+
+  defp unauthorized_error(details) when is_list(details) do
+    {:unauthorized, "The request is not authorized", details}
+  end
 
   defp sign_tokens_for_user(user) do
     token = sign_token(user, secret: @token_secret, duration: @one_hour)
