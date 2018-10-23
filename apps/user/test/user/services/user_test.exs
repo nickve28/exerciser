@@ -58,5 +58,12 @@ defmodule User.Services.UserTest do
       assert {:ok, %{token: token}} = Services.User.authenticate(payload)
       assert token != nil
     end
+
+    test "should return the refresh token if the user is authorized" do
+      payload = %{name: "Nick", password: "foo"}
+
+      assert {:ok, %{refresh_token: token}} = Services.User.authenticate(payload)
+      assert token != nil
+    end
   end
 end

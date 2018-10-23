@@ -9,6 +9,11 @@ defmodule Api.Resolvers.UserResolver do
     {:error, "Please provide name and password"}
   end
 
+  def refresh_token(%{id: id, refresh_token: token}, _info) do
+    User.Services.User.refresh_token(%{id: id, refresh_token: token})
+    |> handle_result
+  end
+
   def get(_args, %{context: %{user_id: user_id}}) do
     User.Services.User.get(user_id)
     |> handle_result

@@ -53,6 +53,13 @@ defmodule Api.Schema do
       resolve &Api.Resolvers.UserResolver.login/2
     end
 
+    field :refresh_token, :login do
+      arg :id, non_null(:integer)
+      arg :refresh_token, non_null(:string)
+
+      resolve &Api.Resolvers.UserResolver.refresh_token/2
+    end
+
     field :create_exercise, :exercise do
       middleware Api.Web.Middleware.CurrentUser
 

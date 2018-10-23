@@ -3,7 +3,7 @@ defmodule User.Services.User do
   import Joken
 
   @type user :: %{name: String.t, password: String.t, id: Integer.t}
-  @type user_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t}
+  @type user_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t, refresh_token: String.t}
   @type user_auth_info :: %{name: String.t, password: String.t, id: Integer.t, token: String.t, id: integer}
 
   @type bad_request :: {:invalid, String.t, [{atom(), String.t}]}
@@ -13,8 +13,10 @@ defmodule User.Services.User do
 
   @salt Application.get_env(:user, :salt)
   @token_secret Application.get_env(:user, :token_secret)
+  @refresh_token_secret Application.get_env(:user, :refresh_token_secret)
   @empty_pass %{password: nil}
   @one_hour 3600
+  @one_week 60 * 60 * 24 * 7
 
   @spec start_link([any()]) :: {:ok, pid()}
   def start_link(_args) do
@@ -28,6 +30,13 @@ defmodule User.Services.User do
   def authenticate(%{name: username, password: password}) do
     :poolboy.transaction(:user_pool, fn pid ->
       GenServer.call(pid, {:authenticate, %{name: username, password: password}})
+    end)
+  end
+
+  @spec refresh_token(%{id: Integer.t, refresh_token: String.t}) :: {:ok, user_info} | {:error, unauthorized} | {:error, internal}
+  def refresh_token(%{id: id, refresh_token: refresh_token}) do
+    :poolboy.transaction(:user_pool, fn pid ->
+      GenServer.call(pid, {:refresh_token, %{id: id, refresh_token: refresh_token}})
     end)
   end
 
@@ -77,9 +86,19 @@ defmodule User.Services.User do
                   hashed_pw        <- to_string(hashed_pw),
                   {:ok, user_data} <- verify_user(user, hashed_pw)
     do
-      sign_token_for_user(user_data)
+      sign_tokens_for_user(user_data)
     else
       error -> error
+    end
+
+    {:reply, result, state}
+  end
+
+  def handle_call({:refresh_token, %{id: id, refresh_token: refresh_token}}, _from, state) do
+    result = with {:ok, user} <- User.Repositories.User.get(id),
+                  :ok <- verify_refresh_token(user, refresh_token)
+    do
+      sign_tokens_for_user(user)
     end
 
     {:reply, result, state}
@@ -94,17 +113,41 @@ defmodule User.Services.User do
 
   defp verify_user(%{password: password} = user, password), do: {:ok, user}
 
-  defp verify_user(_, _), do: {:error, {:unauthorized, "The request is not authorized", [{:password, "no match"}]}}
+  defp verify_user(_, _), do: {:error, unauthorized_error([{:password, "no match"}])}
 
-  defp sign_token_for_user(user) do
-    token = Map.take(user, [:id])
+  defp verify_refresh_token(%{id: id}, refresh_token) do
+    token_data = refresh_token
     |> token
-    |> with_signer(hs256(@token_secret))
-    |> with_exp(Joken.current_time + @one_hour)
+    |> with_signer(hs256(@refresh_token_secret))
+    |> with_validation("exp", &(&1 > current_time))
+    |> with_validation("id", &(&1 == id))
+    |> verify
+    |> get_claims
+
+    case token_data do
+      %{"id" => id} -> :ok
+      _ -> {:error, unauthorized_error([{:refresh_token, "not valid"}])}
+    end
+  end
+
+  defp unauthorized_error(details) when is_list(details) do
+    {:unauthorized, "The request is not authorized", details}
+  end
+
+  defp sign_tokens_for_user(user) do
+    token = sign_token(user, secret: @token_secret, duration: @one_hour)
+    refresh_token = sign_token(user, secret: @refresh_token_secret, duration: @one_week)
+
+    user = %User.Models.User{user | token: token, refresh_token: refresh_token}
+    {:ok, user}
+  end
+
+  defp sign_token(user, secret: secret, duration: duration) do
+    Map.take(user, [:id])
+    |> token
+    |> with_signer(hs256(secret))
+    |> with_exp(Joken.current_time + duration)
     |> sign
     |> get_compact
-
-    user = %User.Models.User{user | token: token}
-    {:ok, user}
   end
 end
