@@ -3,7 +3,8 @@ defmodule User.Models.User do
     id: nil,
     name: nil,
     password: nil,
-    token: nil
+    token: nil,
+    refresh_token: nil
   ]
 
   def to_model(nil), do: {:ok, nil} #no result etc
@@ -15,7 +16,8 @@ defmodule User.Models.User do
       id: model.id,
       name: model.name,
       password: model.password, #truncated on API level
-      token: nil
+      token: nil,
+      refresh_token: nil
     } } #no token present in DB model
   end
 end

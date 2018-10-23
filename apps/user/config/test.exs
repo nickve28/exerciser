@@ -9,3 +9,4 @@ config :user, User.Repo,
 
 config :user, salt: "$2a$12$OwMtd.uRLWHZ.EZphqKDCO"
 config :user, token_secret: "mytoken_secret"
+config :user, refresh_token_secret: "myrefreshtoken_secret"
